@@ -1,0 +1,8 @@
+; $Id: signup_status_notifications.info,v 1.2 2009/09/19 20:49:01 dww Exp $
+name = Signup status notifications
+description = Subscribe users to notifications when they signup to a node.
+package = Signup
+dependencies[] = signup_status
+dependencies[] = notifications
+core = 6.x
+

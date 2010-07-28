@@ -1,0 +1,6 @@
+; $Id: signup_status.info,v 1.5 2009/09/19 09:18:45 dww Exp $
+name = Signup status
+description = Allow signed up users to be of a certain status.
+package = Signup
+dependencies[] = signup
+core = 6.x
