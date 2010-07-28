@@ -1,0 +1,13 @@
+; $Id: twitter_actions.info,v 1.1.2.1 2010/02/23 18:47:06 eaton Exp $
+name = Twitter actions
+description = Exposes Drupal actions to send Twitter messages.
+dependencies[] = twitter
+dependencies[] = token
+core = 6.x
+
+; Information added by drupal.org packaging script on 2010-07-11
+version = "6.x-2.x-dev"
+core = "6.x"
+project = "twitter"
+datestamp = "1278836046"
+

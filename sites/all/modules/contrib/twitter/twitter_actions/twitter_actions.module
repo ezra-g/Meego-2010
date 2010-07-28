@@ -1,0 +1,145 @@
+<?php
+// $Id: twitter_actions.module,v 1.1.2.5 2010/02/23 19:09:23 eaton Exp $
+
+/**
+ * @file
+ * Exposes Drupal actions for sending Twitter messages.
+ */
+
+/**
+ * Implementation of hook_action_info().
+ */
+function twitter_actions_action_info() {
+  return array(
+    'twitter_actions_set_status_action' => array(
+      'type' => 'system',
+      'description' => t('Post a message to Twitter'),
+      'configurable' => TRUE,
+      'hooks' => array(
+        'nodeapi' => array('view', 'insert', 'update', 'delete'),
+        'comment' => array('view', 'insert', 'update', 'delete'),
+        'user' => array('view', 'insert', 'update', 'delete', 'login'),
+        'cron' => array('run'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Return a form definition so the Send email action can be configured.
+ *
+ * @param $context
+ *   Default values (if we are editing an existing action instance).
+ * @return
+ *   Form definition.
+ */
+function twitter_actions_set_status_action_form($context = array()) {
+  // Set default values for form.
+  $context += array(
+    'screen_name' => '',
+    'password' => '',
+    'message' => '',
+    'node_types' => '',
+  );
+
+  $form['screen_name'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Twitter account name'),
+    '#default_value' => $context['screen_name'],
+    '#size'          => 25,
+    '#required'      => TRUE,
+  );
+
+  $form['password'] = array(
+    '#title'         => t('Twitter password'),
+    '#type'          => 'password',
+    '#size'          => 25,
+    '#required'      => TRUE,
+  );
+
+  $node_types = node_get_types();
+  $options = drupal_map_assoc(array_keys($node_types));
+  $form['node_types'] = array(
+    '#type' => 'select',
+    '#title' => t('Node types'),
+    '#options' => $options,
+    '#description' => t('Nodes of these types will be tweeted (only applies if the trigger for this action is a content trigger).'),
+    '#default_value' => $context['node_types'],
+    '#required' => TRUE,
+    '#multiple' => TRUE,
+  );
+
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#default_value' => $context['message'],
+    '#cols' => '80',
+    '#rows' => '3',
+    '#description' => t('The message that should be sent.'),
+    '#required'      => TRUE,
+  );
+
+  if (module_exists('token')) {
+    $form['help'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t('Placeholder tokens'),
+      '#description' => t("The following placeholder tokens can be used in the status message. Some tokens may not be available, depending on the context in which the action is triggered. In addition, when node actions twigger this action, a special [shorturl] token can be used."),
+    );
+
+    $form['help']['tokens'] = array(
+      '#value' => theme('token_help', 'all'),
+    );
+  }
+
+  return $form;
+}
+
+function twitter_actions_set_status_action_validate($form, $form_state) {
+  module_load_include('inc', 'twitter');
+  $verify = FALSE;
+
+  $pass = $form_state['values']['password'];
+  $name = $form_state['values']['screen_name'];
+
+  module_load_include('inc', 'twitter');
+
+  $valid = twitter_authenticate($name, $pass);
+  if (!$valid) {
+    form_set_error('password', t('Twitter authentication failed. Please check your account name and try again.'));
+  }
+}
+
+function twitter_actions_set_status_action_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'screen_name' => $form_values['screen_name'],
+    'password'   => $form_values['password'],
+    'message'   => $form_values['message'],
+    'node_types' => $form_values['node_types'],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ * Sends an email.
+ */
+function twitter_actions_set_status_action($object, $context) {
+  module_load_include('inc', 'twitter');
+  if (module_exists('token')) {
+    $message = token_replace_multiple($context['message'], $context);
+    if ($node = $context['node']) {
+	  if(!isset($context['node_types'][$node->type])) {
+        return;
+      }
+      else if ((strstr($message, '[shorturl]') !== FALSE)) {
+       $message = str_replace($message, twitter_shorten_url(url('node/'. $node->nid, array('absolute' => TRUE))), '[shorturl]');
+      }
+    }
+  }
+  twitter_set_status($context['screen_name'], $context['password'], $message);
+}
