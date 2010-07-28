@@ -1,0 +1,200 @@
+/* $Id: navigation.css,v 1.5 2009/11/04 19:42:41 johnalbin Exp $ */
+
+/**
+ * @file
+ * Navigation Styling
+ */
+
+
+/*
+ * The active item in a Drupal menu
+ */
+li a.active,
+li a.active-trail {
+  color: #333333;
+  font-weight: bold;
+}
+
+/*
+ * Navigation bar
+ */
+#navigation {
+  border-top: 4px solid #333333;
+  border-bottom: 4px solid #EAEAEA;
+}
+
+.front #navigation {
+  border-top: 4px solid #333333;
+  border-bottom: none;
+}
+
+.region-navigation {
+}
+
+/*
+ * Breadcrumb navigation
+ */
+.breadcrumb /* The path to the current page in the form of a list of links */ {
+  padding-bottom: 0; /* Undo system.css */
+  padding-top: 15px;
+}
+
+.breadcrumb .separator {
+  padding: 0 6px;
+}
+
+.breadcrumb .separator img {
+  padding: 0 0 2px 0;
+}
+
+/*
+ * Primary menu links
+ */
+#navigation .section {
+  border-bottom: 1px solid #333333;
+  height: 42px;
+}
+ 
+#main-menu {
+  background-color: #EAEAEA;
+  height: 41px;
+  line-height: 40px;
+  white-space:nowrap;
+}
+
+#main-menu li {
+  padding: 0;
+  font-size: 1.1em;
+
+}
+
+#main-menu a {
+  color: #333333;
+  padding: 0 10px;
+  text-decoration: none;
+  border: none;
+  height: 41px;
+}
+
+#main-menu a:hover,
+#main-menu li.active-trail a {
+  color: #fff;
+  background: #333333 none repeat scroll 0 0;
+  border: none;
+  font-weight: normal;
+}
+
+/*
+ * Links: includes #account-menu links in header
+ * and .node-links below node content
+ */
+#account-menu .block {
+  margin: 0 0 2px 0;
+  font-size: .9em;
+}
+
+#account-menu .menu li {
+  display: inline;
+  font-weight: bold;
+}
+
+#account-menu .menu li,
+.node-links .links li {
+  border-right: 1px solid #333333;
+}
+
+#account-menu .menu li a {
+  padding: 0 8px 0 4px;
+  border-bottom: none;
+}
+
+#account-menu .menu li.last,
+#account-menu .menu li.last a,
+.node-links .links li.last,
+.node-links .links li.last a {
+  padding-right: 0;
+  border-right: none; /* LTR */
+}
+
+.book-navigation {
+  margin: 10px 0;
+  text-align: right;
+}
+
+/*
+ * Menu blocks
+ */
+.block-menu,
+.block-menu_block {
+}
+
+.sidebar .block-menu_block h2.title,
+.sidebar .block-developers h2.title,
+.sidebar .block-book h2.title,
+.sidebar .block-og h2.title {
+  background-color: #929294;
+  color: #fff;
+  font-size: 1em;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+}
+
+.sidebar .block-menu_block .content,
+.sidebar .block-developers .content,
+.sidebar .block-book .content,
+.sidebar .block-og .content {
+  border-top: 2px solid #EAEAEA;
+  padding: 4px 0;
+  margin-top: 4px;
+}
+
+.sidebar .block-menu_block .menu-level-2,
+.sidebar .block-og .item-list {
+  background-color: #EAEAEA;
+}
+
+.sidebar .block-menu_block ul.menu,
+.sidebar .block-og ul {
+  padding: 4px 0;
+}
+
+.sidebar .block-menu_block ul.menu li,
+.sidebar .block-developers ul.menu li,
+.sidebar .block-book ul.menu li,
+.sidebar .block-og .item-list ul li,
+#block-menu-menu-event-presentation-create ul.menu li {
+  background-image: url(../icons/bullet_pink.png);
+  background-repeat: no-repeat;
+  background-position: .5em .8em;
+  padding: .2em .2em .2em 1.2em;
+  margin: 0;
+  list-style-type: none;
+  list-style-image: none;
+}
+
+a.dhtmlMenuControl:link,
+a.dhtmlMenuControl:active,
+a.dhtmlMenuControl:hover,
+a.dhtmlMenuControl:focus {
+  border: none;
+}
+
+.sidebar .block-developers ul.menu li.collapsed {
+  background-image: url(../icons/bullet_arrow_right.png);
+  background-position: left 4px;
+}
+
+.sidebar .block-developers ul.menu li.expanded {
+  background-image: url(../icons/bullet_arrow_down.png);
+  background-position: left 4px;
+}
+
+/*
+ * Create content blocks and menu items
+ */
+#block-menu-menu-event-presentation-create ul.menu li {
+  background-image: url(../icons/content_add.png);
+  background-repeat: no-repeat;
+  background-position: .2em .3em;
+  padding: .2em .2em .2em 2em;
+}

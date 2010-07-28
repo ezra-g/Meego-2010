@@ -1,0 +1,4 @@
+name = Meego Site Tweaks
+description = Misc tweaks for the Meego site.
+core = 6.x
+package = Meego

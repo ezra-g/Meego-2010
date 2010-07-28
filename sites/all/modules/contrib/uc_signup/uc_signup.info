@@ -1,0 +1,17 @@
+; $Id: uc_signup.info,v 1.3 2009/09/24 19:37:39 ezrag Exp $
+name = Signup integration for Ubercart
+description = "Allows users to purchase signup.module signups via Ubercart"
+core = 6.x
+package = Signup
+dependencies[] = signup
+dependencies[] = uc_product
+dependencies[] = ca
+dependencies[] = date
+dependencies[] = profile
+
+; Information added by drupal.org packaging script on 2010-07-04
+version = "6.x-1.0-beta5"
+core = "6.x"
+project = "uc_signup"
+datestamp = "1278219617"
+

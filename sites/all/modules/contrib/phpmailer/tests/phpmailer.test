@@ -1,0 +1,60 @@
+<?php
+// $Id: phpmailer.test,v 1.2 2009/11/21 17:06:13 smk Exp $
+
+/**
+ * @file
+ * PHPMailer tests.
+ */
+
+class PHPMailerUnitTestCase extends DrupalUnitTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('E-mail address parser'),
+      'description' => t('Validates e-mail address extraction.'),
+      'group' => t('PHPMailer'),
+    );
+  }
+
+  /**
+   * Test e-mail address extraction using phpmailer_parse_address().
+   */
+  function testAddressParser() {
+    // Set up various address formats as per RFC 5322.
+    $addresses = array(
+      // addr-spec.
+      'user-1@domain.tld' => array(
+        'mail' => 'user-1@domain.tld',
+        'name' => ''
+      ),
+      // Invalid, but supported angle-addr without preceding display-name.
+      '<user-2@domain.tld>' => array(
+        'mail' => 'user-2@domain.tld',
+        'name' => ''
+      ),
+      // name-addr using atom in display-name.
+      'John Doe <user-3@domain.tld>' => array(
+        'mail' => 'user-3@domain.tld',
+        'name' => 'John Doe'
+      ),
+      // name-addr using quoted-string with comma in display-name.
+      '"John \"The Dude\" Doe (Foo, Bar)" <user-4@domain.tld>' => array(
+        'mail' => 'user-4@domain.tld',
+        'name' => 'John "The Dude" Doe (Foo, Bar)'
+      ),
+    );
+
+    // Validate each address format is correctly parsed.
+    foreach ($addresses as $string => $expected_result) {
+      $this->assertEqual(phpmailer_parse_address($string), array($expected_result), t('E-mail address @email could be extracted.', array('@email' => $expected_result['mail'])), 'PHPMailer');
+    }
+
+    // One final test with all addresses concatenated.
+    $string = implode(', ', array_keys($addresses));
+    $expected_result = array_values($addresses);
+    $this->assertEqual(phpmailer_parse_address($string), $expected_result, t('Concatenated e-mail addresses could be extracted.'), 'PHPMailer');
+  }
+}
+

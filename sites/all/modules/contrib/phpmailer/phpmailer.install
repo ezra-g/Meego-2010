@@ -1,0 +1,62 @@
+<?php
+// $Id: phpmailer.install,v 1.6 2009/11/21 19:05:37 smk Exp $
+
+/**
+ * @file
+ * PHPMailer installation functions.
+ */
+
+/**
+ * Implementation of hook_requirements().
+ */
+function phpmailer_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time.
+  $t = get_t();
+
+  if ($phase == 'install') {
+    $path = libraries_get_path('phpmailer');
+    if (!file_exists('./' . $path . '/class.phpmailer.php') || !file_exists('./' . $path . '/class.smtp.php')) {
+      $requirements['phpmailer'] = array(
+        'title' => $t('PHPMailer library'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('PHPMailer module requires the <a href="@phpmailer-url">PHPMailer</a> library to properly send mail. Please download the PHPMailer package for PHP5/6, extract the archive and copy its contents to the following location: @phpmailer-path. Make sure the main PHPMailer class is located at @phpmailer-class-path.', array(
+          '@phpmailer-url' => 'http://sourceforge.net/projects/phpmailer/files/phpmailer%20for%20php5_6/',
+          '@phpmailer-path' => $path,
+          '@phpmailer-class-path' => $path . '/class.phpmailer.php',
+        )),
+      );
+    }
+  }
+  else if ($phase == 'runtime') {
+    $requirements['phpmailer'] = array('title' => $t('PHPMailer library'));
+    if (phpmailer_load_library()) {
+      $mail = new PHPMailer();
+      $requirements['phpmailer']['value'] = $mail->Version;
+      $requirements['phpmailer']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['phpmailer']['value'] = $t('missing');
+      $requirements['phpmailer']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function phpmailer_uninstall() {
+  variable_del('smtp_on');
+  variable_del('smtp_host');
+  variable_del('smtp_hostbackup');
+  variable_del('smtp_port');
+  variable_del('smtp_protocol');
+  variable_del('smtp_fromname');
+  variable_del('smtp_username');
+  variable_del('smtp_password');
+  variable_del('smtp_keepalive');
+  variable_del('smtp_debug');
+}
+

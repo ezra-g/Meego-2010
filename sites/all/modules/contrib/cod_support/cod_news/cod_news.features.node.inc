@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * Helper to implementation of hook_node_info().
+ */
+function _cod_news_node_info() {
+  $items = array(
+    'news' => array(
+      'name' => t('News'),
+      'module' => 'features',
+      'description' => t('Post news updates to the site using this content type. The default is that they will be shown in a view on /news and the most recent one (or few) will be shown on the home page.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
+}
