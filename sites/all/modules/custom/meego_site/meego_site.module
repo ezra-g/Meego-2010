@@ -32,3 +32,15 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
     }
   }
 }
+
+/**
+ * Implement hook_signup_data_alter().
+ * Automatically assign attendees the correct status baed on their organization.
+ */
+function meego_site_signup_data_alter(&$signup, $form_values) {
+  if (!empty($signup->mail)) {
+    if(strpos($signup->mail, 'intel.com') || strpos($signup->mail, 'nokia.com')) {
+      $signup->status = 3;
+    }
+  }
+}
