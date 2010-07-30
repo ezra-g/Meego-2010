@@ -42,7 +42,7 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
     $status = meego_site_get_signup_status($user, $form['nid']['#value']);
     $form['meego_status'] = array(
       '#type' => 'value',
-       '#value' => $status,
+      '#value' => $status,
      );
     dpm("got status $status");
     switch ($status) {
@@ -83,9 +83,9 @@ function meego_site_get_signup_status($account, $nid) {
   // Do they have an Intel or Nokia email address?
   $mail = strtolower($account->mail);
   if (empty($acount->profile_company))  {
-    $acount->profile_company = '';
+    $account->profile_company = '';
   }
-  $company = strtolower($acount->profile_company);
+  $company = strtolower($account->profile_company);
 
   if (strpos($mail, 'intel.com') !== FALSE || strpos($mail, 'nokia.com') !== FALSE) {
     $intel_nokia = TRUE;
