@@ -33,14 +33,93 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
   }
 }
 
+/*
+ * Implementation of hook_form_alter().
+ */
+function meego_site_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'signup_form') {
+    global $user;
+    $status = meego_site_get_signup_status($user, $form['nid']['#value']);
+    $form['meego_status'] = array(
+      '#type' => 'value',
+       '#value' => $status,
+     );
+    dpm("got status $status");
+    switch ($status) {
+      case 1:
+        // General attendance
+      case 3:
+        // Nokia/Intel reserved attendance
+        
+        break;
+      case 2:
+        // General waitlist
+      case 4:
+        // Nokia/Intel waitlist
+        $form['collapse']['submit']['#value'] = t('Join Waitlist');
+        $form['collapse']['note'] = array(
+          '#type' => 'markup',
+          '#value' => '<span>' . t('Waitlist warning. Insert copy & styling here.') . '</span>',
+        );
+        break;
+    }
+  }
+}
+
 /**
  * Implement hook_signup_data_alter().
  * Automatically assign attendees the correct status baed on their organization.
  */
 function meego_site_signup_data_alter(&$signup, $form_values) {
-  if (!empty($signup->mail)) {
-    if(strpos($signup->mail, 'intel.com') || strpos($signup->mail, 'nokia.com')) {
-      $signup->status = 3;
+  if (!empty($form_values['meego_status'])) {
+    $signup->status = $form_values['meego_status'];
+  }
+}
+
+/*
+ * Return the appropriate signup status code for the current user.
+ */
+function meego_site_get_signup_status($account, $nid) {
+  // Do they have an Intel or Nokia email address?
+  $mail = strtolower($account->mail);
+  if (empty($acount->profile_company))  {
+    $acount->profile_company = '';
+  }
+  $company = strtolower($acount->profile_company);
+
+  if (strpos($mail, 'intel.com') !== FALSE || strpos($mail, 'nokia.com') !== FALSE) {
+    $intel_nokia = TRUE;
+  }
+  // Did they mention Intel or Nokia in their profile?
+  if (strpos($company, 'intel') !== FALSE || strpos($company, 'nokia.com') !== FALSE) {
+    $intel_nokia = TRUE;
+  }
+  // Note, this assumes that $node->signup_status_limit_type is per status.
+  $node = node_load($nid);
+  if ($intel_nokia) {
+    // Check I/N availability.
+    $available = $node->signup_status_limit[3]['limit'] - $node->signup_status_limit[3]['total'];
+    if ($available >= 1 || $node->signup_status_limit[3]['limit'] == 0) {
+      // Intel/Nokia attendee list.
+      return 3;
+    }
+    else {
+      // Intel/Nokia waitlist.
+      return 4;
     }
   }
+  else {
+    // Check general availability.
+    $available = $node->signup_status_limit[1]['limit'] - $node->signup_status_limit[1]['total'];
+    if ($available >= 1 || $node->signup_status_limit[1]['limit'] == 0) {
+      // General attendee list.
+      return 1;
+    }
+    else {
+      // General waitlist.
+      return 2;
+    }
+  }
+  // We shouldn't ever make it here, but place folks on the general waitlist just in case.
+  return 2;
 }
