@@ -80,6 +80,8 @@ function meego_site_signup_data_alter(&$signup, $form_values) {
 function meego_site_get_signup_status($account, $nid) {
   // Do they have an Intel or Nokia email address?
   $mail = strtolower($account->mail);
+  // Workaround for profile fields being missing from global $user.
+  $account = user_load($account->uid);
   if (empty($account->profile_company))  {
     $account->profile_company = '';
   }
