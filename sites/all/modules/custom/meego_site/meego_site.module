@@ -44,22 +44,20 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'value',
       '#value' => $status,
      );
-    dpm("got status $status");
     switch ($status) {
       case 1:
-        // General attendance
+        // General attendance.
       case 3:
-        // Nokia/Intel reserved attendance
-        
+        // Nokia/Intel reserved attendance.
         break;
       case 2:
-        // General waitlist
+        // General waitlist.
       case 4:
-        // Nokia/Intel waitlist
+        // Nokia/Intel waitlist.
         $form['collapse']['submit']['#value'] = t('Join Waitlist');
         $form['collapse']['note'] = array(
           '#type' => 'markup',
-          '#value' => '<span>' . t('Waitlist warning. Insert copy & styling here.') . '</span>',
+          '#value' => '<span><br/>' . t('Note: You will be placed on a waiting list and notified when a spot becomes available.') . '</span>',
         );
         break;
     }
@@ -125,13 +123,8 @@ function meego_site_get_signup_status($account, $nid) {
 }
 
 function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup, $node) {
-  dpm("alter ran");
-  dpm($signup);
-  /*
   if (!empty($signup->status) && ($signup->status == 4 || $signup->status == 2)) {
-    dpm("pass test");
     $messages = array();
     $messages['initial'] = "Thanks for signing up. You've been placed on the wait list, and we'll let you know if a space opens up.";
   }
-  */
 }
