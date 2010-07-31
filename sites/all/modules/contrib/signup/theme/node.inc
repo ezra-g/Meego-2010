@@ -58,17 +58,3 @@ function theme_signup_anonymous_user_login_text($anon_login_text) {
 function theme_signup_node_output_header($node) {
   return '<a name="signup"></a>';
 }
-
-/*
- * Return HTML desired when displaying a node title along with the signup date.
- */
-function theme_signup_node_title($node) {
-  $date_field = signup_date_field($node->type);
-  if (!empty($date_field)) {
-    $date_field_name = $date_field['field_name'];
-    $this_date_field = $node->$date_field_name;
-    $date_formatted = ' - ' . content_format($date_field, $this_date_field[0]);
-  }
-
-  return l($node->title, 'node/'. $node->nid) . $date_formatted;
-}

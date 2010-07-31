@@ -69,7 +69,7 @@ function signup_save_node($node, $op) {
     $values[] = $node->nid;
     db_query("INSERT INTO {signup} (forwarding_email, send_confirmation, confirmation_email, close_signup_limit, send_reminder, reminder_days_before, reminder_email, nid) VALUES ('%s', %d, '%s', %d, %d, %d, '%s', %d)", $values);
   }
-  db_query("UPDATE {signup} SET user_reg_form = %d WHERE nid = %d", $node->signup_user_reg, $node->nid);
+
   $node = node_load($node->nid);
   if (_signup_node_completed($node) && !empty($node->signup_status)) {
     // If this is an time-based node, and it's already past the close in
@@ -149,11 +149,6 @@ function signup_alter_node_form(&$form, &$form_state, $form_id) {
       '#default_value' => $default_option,
       '#description' => t('If enabled, you can control whether users may sign up by visiting the !signup_admin tab and toggling if signups are %open or %closed for this %node_type. Other signup-related settings can be defined at the !signup_settings tab.', array('!signup_admin' => !empty($node->signup) ? l(t('Signups: Administer'), 'node/'. $node->nid .'/signups/admin') : theme('placeholder', t('Signups: Administer')), '!signup_settings' => !empty($node->signup) ? l(t('Signups: Settings'), 'node/'. $node->nid .'/signups/settings') : theme('placeholder', t('Signups: Settings')), '%open' => t('open'), '%closed' => t('closed'), '%node_type' => node_get_types('name', $node_type))),
     );
-    $form['signup']['signup_user_reg'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Users can sign up for this event from the user registration form.'),
-      '#description' => t('If selected, new users will be able to sign up for this event when they register.'),
-      '#default_value' => $node->signup_user_reg_form,
-    );
   }
 }
+

@@ -47,9 +47,7 @@
 function theme_signup_user_form($node) {
   global $user;
   $form = array();
-  if (variable_get('signup_ignore_default_fields', 0)) {
-    return $form;
-  }
+
   // If this function is providing any extra fields at all, the following
   // line is required for form form to work -- DO NOT EDIT OR REMOVE.
   $form['signup_form_data']['#tree'] = TRUE;
