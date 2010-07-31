@@ -1,0 +1,26 @@
+? 696010-signup-alter-messages.patch
+? 856604-signup-user-reg_0.patch
+? 856810-signup-form-array.patch
+? LICENSE.txt
+? signup-message.patch
+Index: signup.module
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/signup/signup.module,v
+retrieving revision 1.205.2.36
+diff -u -p -r1.205.2.36 signup.module
+--- signup.module	8 Oct 2009 00:01:29 -0000	1.205.2.36
++++ signup.module	31 Jul 2010 01:33:39 -0000
+@@ -1275,7 +1275,12 @@ function signup_sign_up_user($signup_for
+       signup_send_forwarding_mail($signup, $node);
+ 
+       // Message to the screen for the user who signed up.
+-      drupal_set_message(t('Signup to !title confirmed.', array('!title' => l($node->title, "node/$node->nid"))) . $confirmation_email . $reminder_email);
++      // First, allow other modules to alter the messages.
++      $messages['inital'] = 'Signup to !title confirmed.';
++      $messages['confirmation_email'] = $confirmation_email;
++      $messages['reminder_email'] = $reminder_email;
++      drupal_alter('signup_confirm_messages', $messages, $signup, $node);
++      drupal_set_message(t($messages['initial'], array('!title' => l($node->title, "node/$node->nid"))) . $messages['confirmation_email'] . $messages['reminder_email']);
+     }
+ 
+     $node->signup_total++;
