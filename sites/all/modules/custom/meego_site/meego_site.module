@@ -80,7 +80,7 @@ function meego_site_signup_data_alter(&$signup, $form_values) {
 function meego_site_get_signup_status($account, $nid) {
   // Do they have an Intel or Nokia email address?
   $mail = strtolower($account->mail);
-  if (empty($acount->profile_company))  {
+  if (empty($account->profile_company))  {
     $account->profile_company = '';
   }
   $company = strtolower($account->profile_company);
@@ -89,7 +89,7 @@ function meego_site_get_signup_status($account, $nid) {
     $intel_nokia = TRUE;
   }
   // Did they mention Intel or Nokia in their profile?
-  if (strpos($company, 'intel') !== FALSE || strpos($company, 'nokia.com') !== FALSE) {
+  if (strpos($company, 'intel') !== FALSE || strpos($company, 'nokia') !== FALSE) {
     $intel_nokia = TRUE;
   }
   // Note, this assumes that $node->signup_status_limit_type is per status.
