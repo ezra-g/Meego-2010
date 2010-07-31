@@ -1,0 +1,221 @@
+? .svn
+? 856604-signup-user-reg.patch
+? LICENSE.txt
+? userreg.patch
+? includes/.svn
+? js/.svn
+? modules/.svn
+? modules/signup_confirm_email/.svn
+? modules/signup_confirm_email/translations/.svn
+? panels/.svn
+? panels/content_types/.svn
+? theme/.svn
+? translations/.svn
+? views/.svn
+? views/handlers/.svn
+? views/plugins/.svn
+Index: signup.install
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/signup/signup.install,v
+retrieving revision 1.24.2.4
+diff -u -p -r1.24.2.4 signup.install
+--- signup.install	19 Sep 2009 01:42:58 -0000	1.24.2.4
++++ signup.install	16 Jul 2010 23:38:25 -0000
+@@ -74,6 +74,12 @@ function signup_schema() {
+         'not null' => TRUE,
+         'default' => 1,
+       ),
++     'user_reg_form' => array(
++        'description' => t('Boolean indicating if users can sign up for this event from the user registration form.'),
++        'type' => 'int',
++        'not null' => TRUE,
++        'default' => 0,
++      ),
+     ),
+     'primary key' => array('nid'),
+   );
+@@ -182,10 +188,10 @@ function signup_insert_default_signup_in
+   return db_query("INSERT INTO {signup} (nid, forwarding_email,
+     send_confirmation, confirmation_email,
+     send_reminder, reminder_days_before, reminder_email,
+-    close_in_advance_time, close_signup_limit, status) VALUES (0, '',
++    close_in_advance_time, close_signup_limit, status, user_reg_form) VALUES (0, '',
+     1, 'Enter your default confirmation email message here',
+     1, 1, 'Enter your default reminder email message here',
+-    0, 0, 1)");
++    0, 0, 1, 0)");
+ }
+ 
+ function signup_update_3() {
+@@ -482,3 +488,17 @@ function signup_update_6003() {
+   return $ret;
+ }
+ 
++/*
++ * Add the 'user_reg_form' field to the {signup} table.
++ * See http://drupal.org/node/856604 for more information.
++ */
++function signup_update_6004() {
++  $ret = array();
++  $field = array(
++    'type' => 'int',
++    'not null' => TRUE,
++    'default' => 0,
++  );
++  db_add_field($ret, 'signup', 'user_reg_form', $field);
++  return $ret;
++}
+\ No newline at end of file
+Index: signup.module
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/signup/signup.module,v
+retrieving revision 1.205.2.36
+diff -u -p -r1.205.2.36 signup.module
+--- signup.module	8 Oct 2009 00:01:29 -0000	1.205.2.36
++++ signup.module	16 Jul 2010 23:38:26 -0000
+@@ -151,6 +151,13 @@ function signup_theme() {
+         'node' => NULL,
+       ),
+     ),
++    'signup_node_title' => array(
++      'file' => 'node.inc',
++      'path' => $path,
++      'arguments' => array(
++        'node' => NULL,
++      ),
++    ),
+     'signup_user_form' => array(
+       'file' => 'signup_form.inc',
+       'path' => $path,
+@@ -631,6 +638,7 @@ function _signup_initialize_scheduler_ba
+ function signup_perm() {
+   return array(
+     'sign up for content',
++    'sign up for content from the user registration form',
+     'cancel signups',
+     'cancel own signups',
+     'edit own signups',
+@@ -670,6 +678,19 @@ function signup_user($type, &$edit, &$us
+         }
+       }
+       break;
++    case 'insert':
++      // Create signups for new users who signed up via
++      // the user registration form.
++      if (!empty($edit['signup'])) {
++        foreach($edit['signup'] as $nid => $value) {
++          if ($value) {
++            $signup_form = array();
++            $signup_form['nid'] = $nid;
++            $signup_form['uid'] = $user->uid;
++            signup_sign_up_user($signup_form, TRUE);
++          }
++        }
++      }
+   }
+ 
+   // If we're not using views, we need to support additional user
+@@ -695,6 +716,38 @@ function signup_form_alter(&$form, &$for
+   }
+ }
+ 
++/*
++ * Implementation of hook_form_FORM_ID_alter().
++ * Make signup for events visible on the user registration form.
++ */
++function signup_form_user_register_alter(&$form, &$form_state) {
++  if (!user_access('sign up for content from the user registration form')) {
++    return;
++  }
++  // Get a list of nodes that should appear on the user registration form.
++  $query = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n INNER JOIN signup s on n.nid=s.nid WHERE s.user_reg_form = 1 AND s.status = 1 AND n.status = 1"));
++  while ($result = db_fetch_object($query)) {
++    $nids[] = $result->nid;
++  }
++  // If there is at least one node, add the Signup fieldset.
++  if (!empty($nids)) {
++    $form['signup'] = array(
++      '#type' => 'fieldset',
++      '#title' => t('Event registration'),
++      '#tree' => TRUE,
++    );
++    // Each node gets a checkbox.
++    foreach ($nids as $nid) {
++      $node = node_load($nid);
++      $form['signup'][$nid] = array(
++        '#type' => 'checkbox',
++        '#title' => theme('signup_node_title', $node),
++        '#default_value' => 0,
++      );
++    }
++  }
++}
++
+ /**
+  * Alters the form for administrator settings per node type.
+  * (admin/content/types)
+@@ -764,6 +817,7 @@ function signup_nodeapi(&$node, $op, $te
+         $node->signup_reminder_email = $signup->reminder_email;
+         $node->signup_close_signup_limit = $signup->close_signup_limit;
+         $node->signup_status = $signup->status;
++        $node->signup_user_reg_form = $signup->user_reg_form;
+         if ($node->nid) {
+           $node->signup_total = db_result(db_query("SELECT COUNT(*) FROM {signup_log} WHERE nid = %d", $node->nid));
+           $node->signup_effective_total = db_result(db_query("SELECT SUM(count_towards_limit) FROM {signup_log} WHERE nid = %d", $node->nid));
+Index: includes/node_form.inc
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/signup/includes/node_form.inc,v
+retrieving revision 1.4.2.2
+diff -u -p -r1.4.2.2 node_form.inc
+--- includes/node_form.inc	16 Sep 2009 00:42:57 -0000	1.4.2.2
++++ includes/node_form.inc	16 Jul 2010 23:38:27 -0000
+@@ -69,7 +69,7 @@ function signup_save_node($node, $op) {
+     $values[] = $node->nid;
+     db_query("INSERT INTO {signup} (forwarding_email, send_confirmation, confirmation_email, close_signup_limit, send_reminder, reminder_days_before, reminder_email, nid) VALUES ('%s', %d, '%s', %d, %d, %d, '%s', %d)", $values);
+   }
+-
++  db_query("UPDATE {signup} SET user_reg_form = %d WHERE nid = %d", $node->signup_user_reg, $node->nid);
+   $node = node_load($node->nid);
+   if (_signup_node_completed($node) && !empty($node->signup_status)) {
+     // If this is an time-based node, and it's already past the close in
+@@ -149,6 +149,11 @@ function signup_alter_node_form(&$form, 
+       '#default_value' => $default_option,
+       '#description' => t('If enabled, you can control whether users may sign up by visiting the !signup_admin tab and toggling if signups are %open or %closed for this %node_type. Other signup-related settings can be defined at the !signup_settings tab.', array('!signup_admin' => !empty($node->signup) ? l(t('Signups: Administer'), 'node/'. $node->nid .'/signups/admin') : theme('placeholder', t('Signups: Administer')), '!signup_settings' => !empty($node->signup) ? l(t('Signups: Settings'), 'node/'. $node->nid .'/signups/settings') : theme('placeholder', t('Signups: Settings')), '%open' => t('open'), '%closed' => t('closed'), '%node_type' => node_get_types('name', $node_type))),
+     );
++    $form['signup']['signup_user_reg'] = array(
++      '#type' => 'checkbox',
++      '#title' => t('Users can sign up for this event from the user registration form.'),
++      '#description' => t('If selected, new users will be able to sign up for this event when they register.'),
++      '#default_value' => $node->signup_user_reg_form,
++    );
+   }
+-}
+-
++}
+\ No newline at end of file
+Index: theme/node.inc
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/signup/theme/node.inc,v
+retrieving revision 1.1.2.2
+diff -u -p -r1.1.2.2 node.inc
+--- theme/node.inc	22 Jan 2009 19:00:55 -0000	1.1.2.2
++++ theme/node.inc	16 Jul 2010 23:38:28 -0000
+@@ -58,3 +58,17 @@ function theme_signup_anonymous_user_log
+ function theme_signup_node_output_header($node) {
+   return '<a name="signup"></a>';
+ }
++
++/*
++ * Return HTML desired when displaying a node title along with the signup date.
++ */
++function theme_signup_node_title($node) {
++  $date_field = signup_date_field($node->type);
++  if (!empty($date_field)) {
++    $date_field_name = $date_field['field_name'];
++    $this_date_field = $node->$date_field_name;
++    $date_formatted = ' - ' . content_format($date_field, $this_date_field[0]);
++  }
++
++  return l($node->title, 'node/'. $node->nid) . $date_formatted;
++}
+\ No newline at end of file
