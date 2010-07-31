@@ -151,6 +151,13 @@ function signup_theme() {
         'node' => NULL,
       ),
     ),
+    'signup_node_title' => array(
+      'file' => 'node.inc',
+      'path' => $path,
+      'arguments' => array(
+        'node' => NULL,
+      ),
+    ),
     'signup_user_form' => array(
       'file' => 'signup_form.inc',
       'path' => $path,
@@ -631,6 +638,7 @@ function _signup_initialize_scheduler_backend() {
 function signup_perm() {
   return array(
     'sign up for content',
+    'sign up for content from the user registration form',
     'cancel signups',
     'cancel own signups',
     'edit own signups',
@@ -670,6 +678,19 @@ function signup_user($type, &$edit, &$user, $category = NULL) {
         }
       }
       break;
+    case 'insert':
+      // Create signups for new users who signed up via
+      // the user registration form.
+      if (!empty($edit['signup'])) {
+        foreach($edit['signup'] as $nid => $value) {
+          if ($value) {
+            $signup_form = array();
+            $signup_form['nid'] = $nid;
+            $signup_form['uid'] = $user->uid;
+            signup_sign_up_user($signup_form, TRUE);
+          }
+        }
+      }
   }
 
   // If we're not using views, we need to support additional user
@@ -691,6 +712,38 @@ function signup_form_alter(&$form, &$form_state, $form_id) {
     if ($form_id == $form['type']['#value'] .'_node_form') {
       module_load_include('inc', 'signup', 'includes/node_form');
       signup_alter_node_form($form, $form_state, $form_id);
+    }
+  }
+}
+
+/*
+ * Implementation of hook_form_FORM_ID_alter().
+ * Make signup for events visible on the user registration form.
+ */
+function signup_form_user_register_alter(&$form, &$form_state) {
+  if (!user_access('sign up for content from the user registration form')) {
+    return;
+  }
+  // Get a list of nodes that should appear on the user registration form.
+  $query = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n INNER JOIN signup s on n.nid=s.nid WHERE s.user_reg_form = 1 AND s.status = 1 AND n.status = 1"));
+  while ($result = db_fetch_object($query)) {
+    $nids[] = $result->nid;
+  }
+  // If there is at least one node, add the Signup fieldset.
+  if (!empty($nids)) {
+    $form['signup'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Event registration'),
+      '#tree' => TRUE,
+    );
+    // Each node gets a checkbox.
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      $form['signup'][$nid] = array(
+        '#type' => 'checkbox',
+        '#title' => theme('signup_node_title', $node),
+        '#default_value' => 0,
+      );
     }
   }
 }
@@ -764,6 +817,7 @@ function signup_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
         $node->signup_reminder_email = $signup->reminder_email;
         $node->signup_close_signup_limit = $signup->close_signup_limit;
         $node->signup_status = $signup->status;
+        $node->signup_user_reg_form = $signup->user_reg_form;
         if ($node->nid) {
           $node->signup_total = db_result(db_query("SELECT COUNT(*) FROM {signup_log} WHERE nid = %d", $node->nid));
           $node->signup_effective_total = db_result(db_query("SELECT SUM(count_towards_limit) FROM {signup_log} WHERE nid = %d", $node->nid));
@@ -1275,7 +1329,12 @@ function signup_sign_up_user($signup_form, $notify_user = TRUE) {
       signup_send_forwarding_mail($signup, $node);
 
       // Message to the screen for the user who signed up.
-      drupal_set_message(t('Signup to !title confirmed.', array('!title' => l($node->title, "node/$node->nid"))) . $confirmation_email . $reminder_email);
+      // First, allow other modules to alter the messages.
+      $messages['inital'] = 'Signup to !title confirmed.';
+      $messages['confirmation_email'] = $confirmation_email;
+      $messages['reminder_email'] = $reminder_email;
+      drupal_alter('signup_confirm_messages', $messages, $signup, $node);
+      drupal_set_message(t($messages['initial'], array('!title' => l($node->title, "node/$node->nid"))) . $messages['confirmation_email'] . $messages['reminder_email']);
     }
 
     $node->signup_total++;

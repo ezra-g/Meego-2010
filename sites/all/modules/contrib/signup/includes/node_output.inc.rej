@@ -1,0 +1,17 @@
+***************
+*** 40,46 ****
+  function _signup_current_user_signup($node, $type = 'node') {
+    global $user;
+    $output = '';
+-   $fieldset = $type == 'node' ? TRUE : FALSE;
+    // The node has been closed for signups, and the user has
+    // signup permissions.  Let them know it's closed.
+    if (!$node->signup_status) {
+--- 40,46 ----
+  function _signup_current_user_signup($node, $type = 'node') {
+    global $user;
+    $output = '';
++   $fieldset = $type == 'node' && !variable_get('signup_ignore_default_fields', 0) ? TRUE : FALSE;
+    // The node has been closed for signups, and the user has
+    // signup permissions.  Let them know it's closed.
+    if (!$node->signup_status) {

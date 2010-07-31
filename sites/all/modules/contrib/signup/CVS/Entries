@@ -7,4 +7,10 @@
 /signup.info/1.5.2.1/Sat Sep 19 09:18:32 2009//TDRUPAL-6--1
 /signup.install/1.24.2.4/Sat Sep 19 01:42:58 2009//TDRUPAL-6--1
 /signup.module/1.205.2.36/Thu Oct  8 00:01:29 2009//TDRUPAL-6--1
-D
+D/includes////
+D/js////
+D/modules////
+D/panels////
+D/theme////
+D/translations////
+D/views////
