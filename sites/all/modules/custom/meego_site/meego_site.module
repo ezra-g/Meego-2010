@@ -123,3 +123,15 @@ function meego_site_get_signup_status($account, $nid) {
   // We shouldn't ever make it here, but place folks on the general waitlist just in case.
   return 2;
 }
+
+function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup, $node) {
+  dpm("alter ran");
+  dpm($signup);
+  /*
+  if (!empty($signup->status) && ($signup->status == 4 || $signup->status == 2)) {
+    dpm("pass test");
+    $messages = array();
+    $messages['initial'] = "Thanks for signing up. You've been placed on the wait list, and we'll let you know if a space opens up.";
+  }
+  */
+}
