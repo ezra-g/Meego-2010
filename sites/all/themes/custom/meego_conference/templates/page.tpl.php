@@ -191,7 +191,7 @@
           <?php //print $navigation; ?>
           
           <?php if ($breadcrumb): ?>
-						<?php print $breadcrumb; ?>
+            <?php print $breadcrumb; ?>
           <?php endif; ?>
 
         </div></div> <!-- /.section, /#navigation -->
@@ -203,23 +203,23 @@
 
     </div></div> <!-- /#main, /#main-wrapper -->
 
-    <?php if ($footer || $footer_message || $secondary_links): ?>
-      <div id="footer"><div class="section clearfix">
-
-			<div class="footer-top clearfix">
-				<?php print $footer; ?>
-        
-        <div class="sponsor clearfix">
+    <?php if ($footer || $footer_message): ?>
+      <div id="footer"><div id="footer-inner"><div class="section">
+      <div class="footer-top clearfix">
+        <?php print $footer; ?>
+        <div class="sponsor">
           <?php print $linux_foundation; ?>
         </div>
       </div>
-      		
-			<div id="footer-message" class="footer-message clearfix">
-				<?php print $footer_message; ?>
-			</div>
-
-      </div></div> <!-- /.section, /#footer -->
+      <?php if ($footer_message): ?>
+        <div id="footer-message" class="footer-message"><div id="footer-message-inner">
+          <?php print $footer_message; ?>
+        </div></div>
+      <?php endif ?>
+      </div></div></div> <!-- /.section, /#footer -->
     <?php endif; ?>
+    
+
 
   </div></div> <!-- /#page, /#page-wrapper -->
 

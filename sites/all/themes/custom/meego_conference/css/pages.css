@@ -267,18 +267,18 @@ ul.pager li.pager-current {
   font-size: .9em;
 }
 
-#footer .section {
-  padding-top: 10px;
-  -moz-box-shadow: inset 0 1px 1px 0 gray;
-	-webkit-box-shadow: inset 0 1px 1px 0 gray;
-
+#footer-inner {
+  padding: 10px;
 }
 
 #footer-message /* Wrapper for the footer message from Drupal's "Site information"
                    and for any blocks placed in the footer region */ {
-  color: #666;
-  padding: 0 0 10px 10px;
-  margin-top: 10px;
+  color: #999;
+  text-align: center;
+}
+
+#footer-message-inner {
+  margin: 10px;
 }
 
 .region-footer {
@@ -286,8 +286,7 @@ ul.pager li.pager-current {
 
 #footer .block {
   float: left;
-  width: 186px;
-  margin-right: 5px;
+  width: 25%;
 }
 
 /* Sponsor: Linux Foundation */
