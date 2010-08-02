@@ -137,13 +137,15 @@ function meego_conference_preprocess_comment_wrapper(&$vars, $hook) {
  */
 function _meego_conference_sort_node_taxonomy($node) {
   $taxonomy = array();
-  foreach($node->taxonomy as $key => $term) {
-    if (!empty($term->vid)) {
-      $taxonomy[$term->vid][] = $term;
-    }
-    // handle tags
-    elseif (!empty($term)) {
-      $taxonomy[$key][] = $term;
+  if (!empty($node->taxonomy)) {
+    foreach($node->taxonomy as $key => $term) {
+      if (!empty($term->vid)) {
+        $taxonomy[$term->vid][] = $term;
+      }
+      // handle tags
+      elseif (!empty($term)) {
+        $taxonomy[$key][] = $term;
+      }
     }
   }
   return $taxonomy;
