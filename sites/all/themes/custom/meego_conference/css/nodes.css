@@ -1,0 +1,185 @@
+/* $Id: nodes.css,v 1.6 2009/11/02 15:37:29 johnalbin Exp $ */
+
+/**
+ * @file
+ * Node Styling
+ *
+ * Style anything that isn't in the $content variable.
+ */
+
+
+.node /* Node wrapper */ {
+}
+
+.node-sticky /* A sticky node (displayed before others in a list) */ {
+}
+
+.node-unpublished /* Unpublished nodes */ {
+  background-color: #ffffff; /* Drupal core uses a #fff4f4 background */
+}
+
+.node-unpublished div.unpublished,
+.comment-unpublished div.unpublished /* The word "Unpublished" displayed underneath the content. */ {
+
+}
+
+.node-by-viewer /* A node created by the current user */ {
+}
+
+.node-teaser /* A node displayed as teaser */ {
+}
+
+/* All nodes are given a node-type-FOO class that describes the type of
+ * content that it is. If you create a new content type called
+ * "my-custom-type", it will receive a "node-type-my-custom-type" class.
+ */
+.node-type-page /* Page content node */ {
+}
+
+.node-type-story /* Story content node */ {
+}
+
+.node h2.title /* Node title */ {
+}
+
+.marker /* "New" or "Updated" marker for content that is new or updated for the current user */ {
+  color: #c00;
+}
+
+.node .picture /* The picture of the node author */ {
+}
+
+.node.node-unpublished .picture,
+.comment.comment-unpublished .picture {
+  position: relative; /* Otherwise floated pictures will appear below the "Unpublished" text. */
+}
+
+.node .meta /* Wrapper for submitted and terms data */ {
+  margin-bottom: 1em;
+}
+
+.node .submitted /* The "posted by" information */ {
+}
+
+.node .terms /* Node terms (taxonomy) */ {
+}
+
+.node .content /* Node's content wrapper */ {
+}
+
+.node-links ul.links /* Node links. See also the ul.links declaration in the pages.css. */ {
+  
+}
+
+.node-links {
+  float: right;
+}
+
+.print-link {
+  padding-bottom: 0;
+}
+
+.preview .node /* Preview of the content before submitting new or updated content */ {
+  /* background-color: #ffffea; */ /* Drupal core uses a #ffffea background */
+}
+
+/* 
+ * Special List Styles
+ */
+
+dl.stepprocess dt strong, /* Style Q or # different in list */
+dl.faq dt strong {
+  background-color: #5DBA7C;
+  color: #fff;
+  font-size: .9em;
+  margin-right: 10px;
+  padding: 2px 5px;
+}
+
+/* 
+ * Image Styles
+ */
+
+/* Lightbox Magnifier */
+a.lightbox-processed {
+  background: url(../icons/magnifier_small.png) right center no-repeat;
+  padding-right: 12px;
+  border: none;
+}
+
+/* Image Position */
+.align-bottom {
+  vertical-align: bottom;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.floatright {
+  float: right;
+  margin: 0 0 20px 20px;
+}
+
+.floatleft {
+  float: left;
+  margin: 0 20px 20px 0;
+}
+
+.center {
+  text-align: center;
+}
+
+/* 
+ * Videos 
+ */
+.content object {
+  display:block;
+  margin:0 auto;
+}
+
+.caption /* Caption under images and videos */ {
+  font-size: .9em;
+  color: #666;
+  width: 550px;
+  display: block;
+  margin:0 auto 20px;
+  padding:4px;
+}
+
+/* 
+ * Screenshots Gallery 
+ */
+.screenshot-handset {
+  float:left;
+  width: 275px;
+  text-align: center;
+}
+
+.screenshot-handset .caption {
+  width: 275px;
+}
+
+
+/*
+ * PDF Icon Large
+ */
+.pdf-large {
+  background: transparent  url(../icons/gnome-mime-application-pdf.png) no-repeat scroll top left;
+  height: 48px;
+  line-height: 48px;
+  vertical-align: middle;
+}
+
+.pdf-large a {
+  font-size: 1.3em;
+  margin-left: 60px;
+}
+
+/* 
+ * Event Nodes
+ */
+.view-event-presentations .view-title {
+  font-weight: bold;
+  border-bottom: 1px solid #EAEAEA;
+}

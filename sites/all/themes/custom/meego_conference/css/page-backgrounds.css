@@ -1,0 +1,82 @@
+/* $Id: page-backgrounds.css,v 1.8 2009/11/04 20:57:49 johnalbin Exp $ */
+
+/**
+ * @file
+ * Page Background Styling
+ *
+ * The default layout method of Zen doesn't give themers equal-height columns.
+ * However, equal-height columns are difficult to achieve and totally
+ * unnecessary. Instead, use the Faux Columns method described in the following
+ * ALA article:
+ *   http://www.alistapart.com/articles/fauxcolumns/
+ */
+
+
+body {
+  background-image: url(../images/hill2.jpg);
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-color: #a0dff2;
+}
+
+#page-wrapper {
+}
+
+#page {
+}
+
+#header {
+}
+
+#header .section {
+}
+
+#main-wrapper {
+}
+
+#main {
+}
+
+#footer {
+}
+
+#footer .section {
+}
+
+/*
+ * Splash Graphics for device pages
+ */
+.page-devices-netbook .splash,
+.page-devices-handheld .splash,
+.page-devices-in-vehicle .splash,
+.page-devices-connected-tv .splash,
+.page-devices-media-phone .splash {
+  width: 560px;
+  height: 269px;
+}
+
+.page-devices-netbook .splash {background: transparent url(../images/splash-netbooks.png) no-repeat scroll top left;}
+.page-devices-handheld .splash {background: transparent url(../images/splash-handheld.png) no-repeat scroll top left;}
+.page-devices-in-vehicle .splash {background: transparent url(../images/splash-in-vehicle.png) no-repeat scroll top left;}
+.page-devices-connected-tv .splash {background: transparent url(../images/splash-connected-tv.png) no-repeat scroll top left;}
+.page-devices-media-phone .splash {background: transparent url(../images/splash-media-phone.png) no-repeat scroll top left;}
+
+/*
+ * Splash Graphics for landing pages
+ */
+.page-downloads .splash,
+.page-developers .splash,
+.page-projects .splash,
+.page-garage .splash,
+.page-community .splash,
+.page-about .splash {
+  width: 560px;
+  height: 200px;
+}
+
+.page-downloads .splash {background: transparent url(../images/splash-downloads.png) no-repeat scroll bottom right;}
+.page-developers .splash {background: transparent url(../images/splash-developers.png) no-repeat scroll bottom right;}
+.page-projects .splash {background: transparent url(../images/splash-projects.png) no-repeat scroll bottom right;}
+.page-garage .splash {background: transparent url(../images/splash-garage.png) no-repeat scroll bottom right;}
+.page-community .splash {background: transparent url(../images/splash-community.png) no-repeat scroll bottom right;}
+.page-about .splash {background: transparent url(../images/splash-about.png) no-repeat scroll bottom right;}

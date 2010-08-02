@@ -1,0 +1,366 @@
+/* $Id: panels-styles.css,v 1.1.2.1 2009/12/12 15:31:54 johnalbin Exp $ */
+
+/**
+ * @file
+ * Panels Styling
+ */
+
+/*
+ * Home Page Styles
+ */
+.meego-landing-stacked .top .panel-col-first ul li {
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Home Page Highlight Left
+ */
+.field_hl_image_fid a,
+.field_hl_image_fid a:visited,
+.field_hl_image_fid a:hover,
+.field_hl_image_fid a:focus {
+  border: none;
+}
+
+.grouped {
+  position: relative;
+}
+
+/* Grouped Conent */
+.top .panel-col-first  .grouped-content {
+  background: transparent url(../images/gray20.png) repeat scroll top left;
+  bottom: 0;
+  display: block;
+  left: 0;
+  padding: 5px 10px;
+  position: absolute;
+  width: 440px;
+	}
+
+  .grouped-content .field_hl_link_url {
+    background: transparent url(../images/arrow.png) no-repeat scroll top left;
+    float: right;
+    display: block;
+    width: 17px;
+    height: 33px;
+    margin-top: 15px;
+  	}
+		
+      .grouped-content .field_hl_link_url:hover {background: transparent url(../images/arrow-hover.png) no-repeat scroll top left;}
+
+  .grouped-content .field_hl_link_url a,
+  .grouped-content .field_hl_link_url a:visited {
+    display: block;
+    width: 17px;
+    height: 33px;
+    border: none;
+    text-indent: -999px;
+  }
+
+  .top .panel-col-first .grouped-content .title,
+  .top .panel-col-last h2 {
+    font-weight: normal;
+    font-size: 1.3em;
+    line-height: 1.3em;
+    margin: 0;
+    }
+    
+    .top .panel-col-last h2 {font-size: 2.2em;}
+
+  .grouped-content .field_hl_tagline_value p,
+  .view-Devices .view-footer p {
+    margin: 5px 0 0 0;
+  }
+  
+  .top .panel-col-first .grouped-content .title,
+  .top .panel-col-first .grouped-content .field_hl_tagline_value {
+    width: 335px;
+  }
+
+
+/*
+ * Home Page Devices Right
+ */
+.meego-landing-stacked .top .panel-col-last .inside {padding: 10px;}
+
+.meego-landing-stacked .top .panel-col-last table {
+	margin: 0;
+	}
+  
+  .meego-landing-stacked .top .panel-col-last table td {padding: 5px;}
+
+.meego-landing-stacked .top .panel-col-last p {
+  margin: .2em 0;
+}
+
+.meego-landing-stacked .top .panel-col-last a {color: #FFFFFF;}
+
+.meego-landing-stacked .top .panel-col-last a:hover {border-bottom: 1px dotted #FFF;}
+
+.meego-landing-stacked .top .panel-col-last a.imagecache,
+.view-display-id-block_4 a.imagefield {border: none;}
+
+.meego-landing-stacked .top .panel-col-last .view-content,
+.view-display-id-block_4 .view-content {text-align: center;}
+
+/* Alternative Layout:  */
+.meego-landing-stacked .top .panel-col-last .view-display-id-block_2 .title a {
+  color: #FFFFFF;
+}
+
+.meego-landing-stacked .top .panel-col-last .view-display-id-block_2 .title {
+  padding-left: 8px;
+}
+
+.meego-landing-stacked .top .panel-col-last .view-display-id-block_2 td {
+  border-bottom: 1px solid #666666;
+}
+
+.meego-landing-stacked .top .panel-col-last .view-display-id-block_2 .field_device_image_fid,
+.meego-landing-stacked .top .panel-col-last .view-display-id-block_2 .title {
+	float: left;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+}
+
+
+/*
+ * Home Page Mid Section and grouped lists for other pages
+ */
+ .mid {
+   margin-bottom: 1em;
+ }
+ 
+ /* View Header and Title */
+.mid .view-header h2.title,
+.grouped-list .view-header h2-title {
+  font-weight: normal;
+  font-size: 2em;
+  margin: 0;
+	}
+
+	.mid .view-header p,
+	.grouped-list .view-header p {
+  	margin: 0 0 10px 0;
+  	font-size: 1.1em;
+	}
+	
+  .mid .view-header {
+    margin: 30px 0 0;
+    min-height: 64px;
+  }
+
+  .grouped-list .view-header {
+    margin: 1em 0 0;
+    min-height: 64px;	
+  }
+  
+  /* Left Sidebar Header */
+  .mid .panel-col-first .view-nodequeue-3 .view-header {
+    background: transparent url(../images/peep_netbook.png) no-repeat scroll bottom right;
+    border-bottom: 4px solid #E3038D;
+    }
+
+  .mid .panel-col-first .view-nodequeue-3 .attachment .view-header {
+    background: none;
+    border-bottom: 2px solid #EEEEEE;
+    min-height: 0;
+    margin: 0;
+    }
+    
+  .mid .panel-col-first .view-planet-feeds .view-header {
+    border-bottom: 4px solid #E3038D;
+    }  
+  
+    .mid .panel-col-first .view-header h2.title span {color: #E3038D;}
+
+	/* Right Sidebar Headers */
+  .mid .panel-col-last .pane-whats-new .view-header /* What's new */ {
+    background: transparent url(../images/peep_skate.png) no-repeat scroll bottom right;
+    border-bottom: 4px solid #5dba7c;
+    }
+
+  .mid .panel-col-last .view-nodequeue-2 .view-header /* New releases */ {
+    background: transparent url(../images/peep_skate.png) no-repeat scroll bottom right;
+    border-bottom: 4px solid #5dba7c;
+    }
+    
+  .mid .panel-col-last .no-character .view-header, /* No charactor image */
+  .grouped-list .view-header {    
+    border-bottom: 4px solid #5dba7c;
+    }
+
+    .mid .panel-col-last .view-header h2.title span,
+    .grouped-list .view-header h2.title span {color: #5dba7c;}
+
+
+/* List of items */
+.mid .item-list ul li,
+.grouped-list ul li {
+  border-bottom: 1px solid #eeeeee;
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 0;
+  }
+  
+  .mid .item-list ul li.views-row-last,
+  .grouped-list ul li.view-row-last {
+	border: none;
+	}
+  
+  #content .mid .node h2,
+  .grouped-list .node h2 {margin-top: 0;}
+
+.mid .condensed-list .item-list ul li {
+  border-bottom: none;
+  padding: 2px 0;
+}
+
+/* Right Sidebar Block */
+.mid .panel-col-last .item-list ul li .views_view_fields,
+.grouped-list ul li .views_view_fields {
+  background-color: #f1f4eb;
+  padding: 10px 10px 10px 0;
+  }
+
+  /* Download Link/Graphic */
+  .mid .grouped-meta,
+  .grouped-list ul li .views_view_fields .grouped-meta {
+    float: left;
+    width: 35%;
+    text-align: center;
+    }
+    
+    .mid .panel-col-last .grouped-meta a:link,
+    .mid .panel-col-last .grouped-meta a:visited,
+	.grouped-list .grouped-meta a:link,
+	.grouped-list .grouped-meta a:visited {
+      border: none;
+      color: #5dba7c;
+      font-weight: bold;
+    }
+    
+    .mid .panel-col-last .grouped-meta a:hover,
+	.grouped-list .grouped-meta a:hover {
+	  color: #E3038D;
+	  }  
+
+  /* Title, summary, date */
+  .mid .grouped-content,
+  .grouped-list ul li .views_view_fields .grouped-content {
+    float: right;
+    width: 65%;
+    }
+  
+    .mid .grouped-content p,
+ 	.grouped-list .grouped-content p {margin: .5em 0;}
+  
+	.mid .panel-col-last .condensed-list .item-list ul li .views_view_fields {padding: 10px;}
+
+    .mid .panel-col-last .date {
+      font-size: .8em;
+    }
+    
+    .mid .panel-col-last .title {
+      font-size: 1.1em;
+    }
+    
+/* Mid Footer */
+.mid .view-footer a,
+.grouped-list .view-footer a {
+  font-weight: bold;
+  border: none;  
+}
+
+.mid .panel-col-first .view-footer {border-top:1px solid #E3038D;}
+
+  .mid .panel-col-first .view-footer a:link,
+  .mid .panel-col-first .view-footer a:visited,
+  .mid .panel-col-first .feed-icon a:link,
+  .mid .panel-col-first .feed-icon a:visited {color: #E3038D;}
+
+.mid .panel-col-last .view-footer,
+.grouped-list .view-footer {border-top:1px solid #5dba7c;}
+
+  .mid .panel-col-last .view-footer a:link,
+  .mid .panel-col-last .view-footer a:visited,
+  .grouped-list .view-footer a:link,
+  .grouped-list .view-footer a:visited,
+  .mid .panel-col-last .feed-icon a:link,
+  .mid .panel-col-last .feed-icon a:visited {color: #5dba7c;}
+  
+  .mid .panel-col-last .view-footer a:hover,
+  .grouped-list .view-footer a:hover {color: #E3038D;}
+
+.mid .panel-pane,
+.grouped-list {
+  position: relative;
+}
+
+.mid div.feed-icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+	}
+
+/*
+ * Home Page Bottom Sections
+ */
+.meego-landing-stacked .panel-col-bottom {
+  border-top: 4px solid #333333;
+  padding-top: 5px;
+  font-size: .9em;
+}
+ 
+.meego-landing-stacked .panel-col-bottom .panel-pane {
+  float: left;
+  width: 166px;
+  background-color: #f6f6f6;
+  padding: 10px;
+}
+
+.meego-landing-stacked .panel-col-bottom .pane-2,
+.meego-landing-stacked .panel-col-bottom .pane-3 {
+	margin-right: 5px;
+}
+
+.meego-landing-stacked .panel-col-bottom .pane-1 {
+	margin-right: 6px;
+}
+
+.meego-landing-stacked .panel-col-bottom h2 {
+  color: #999999;
+  margin-top: 0;
+}
+
+
+/*
+ * Landing Pages
+ */
+.panel-2col-stacked .panel-col-top {
+  border-bottom: 4px solid #EAEAEA;
+}
+
+.panel-2col-stacked .center-wrapper .panel-col-first .inside {
+  margin: 0 1em 1em 0;
+  padding-right: 1em;
+  border-right: 1px solid #EAEAEA;
+}
+
+.panel-2col-stacked .center-wrapper .panel-col-first .inside {
+  margin: 0 1em 1em 0;
+  border-right: 1px solid #EAEAEA;
+}
+
+.panel-2col-stacked .panel-separator {
+  border-bottom: 1px solid #EAEAEA;
+  margin: 1em 0;
+}
+
+.grouped-list h2.pane-title {
+  border-bottom: 4px solid #5dba7c;
+  padding-bottom: 10px;
+}

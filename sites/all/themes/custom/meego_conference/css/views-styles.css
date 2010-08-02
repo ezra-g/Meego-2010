@@ -1,0 +1,82 @@
+/* $Id: views-styles.css,v 1.1 2009/08/12 04:25:15 johnalbin Exp $ */
+
+/**
+ * @file
+ * Views Styling
+ */
+
+.views-row-even,
+.views-row-odd,
+#aggregator .feed-item {
+  border-bottom: 1px solid #EAEAEA;
+  clear: both;
+  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+.views-row-last {
+  border: none;
+  padding-bottom: 0;
+}
+
+/* 
+ * Members View
+ */
+.view-members td {
+  text-align: center;
+  padding: 1.5em 10px;
+}
+ 
+.view-members .username {
+  display: block;
+}
+
+/* 
+ * /downloads/releases
+ */
+.view-Releases .item-list ul li {
+  border-bottom: 1px solid #eeeeee;
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 0;
+  }
+
+  .view-Releases .item-list ul li.views-row-last {border: none;}
+
+  #content .view-Releases .node h2 {margin-top: 0;}
+
+/* Right Sidebar Block */
+.view-Releases .item-list ul li .views_view_fields {
+  background-color: #f1f4eb;
+  padding: 10px 10px 10px 0;
+  }
+
+  /* Download Link/Graphic */
+  .view-Releases .grouped-meta {
+    float: left;
+    width: 35%;
+    text-align: center;
+    }
+
+    .view-Releases .grouped-meta a:link,
+    .view-Releases .grouped-meta a:visited {
+      border: none;
+      color: #5dba7c;
+      font-weight: bold;
+    }
+
+    .view-Releases .grouped-meta a:hover {color: #E3038D;}  
+
+  /* Title, summary, date */
+  .view-Releases .grouped-content {
+    float: right;
+    width: 65%;
+    }
+
+    .view-Releases .grouped-content p {margin: .5em 0;}
+
+    .view-Releases .title {
+      font-size: 1.3em;
+	  line-height: 1.2em;
+    }
