@@ -54,6 +54,8 @@
   background-color: #eb5f54;
 }
 
+.region-content-top .block .block-title,
+.region-content-bottom .block .block-title,
 .region-sidebar-first .block .block-title,
 .region-sidebar-second .block .block-title {
   margin: 0;

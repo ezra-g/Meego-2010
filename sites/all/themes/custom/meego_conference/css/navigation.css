@@ -56,6 +56,7 @@ li a.active-trail {
 }
  
 #main-menu {
+  opacity: .9;
   background-color: #EAEAEA;
   height: 41px;
   line-height: 40px;

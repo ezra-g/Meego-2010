@@ -24,6 +24,27 @@ body {
 #page {
 }
 
+.front #page {
+  background-image: url(../images/balloon.gif);
+  background-repeat: no-repeat;
+  background-position: 260px 0px;
+}
+
+.front #content h1.title {
+  display: none;
+}
+
+.front .region-content-top,
+.front #content-area {
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+
+.front .region-content-bottom {
+  margin-top: 450px;
+}
+
 /*
  * The skip-to-nav link will be completely hidden until a user tabs to the link.
  * See http://www.webaim.org/techniques/skipnav/
@@ -144,7 +165,7 @@ h3.title /* Comment title */ {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: Helvetica, Arial, "Nimbus Sans L", sans-serif;
+  font-family: "trebuchet ms", Helvetica, Arial, "Nimbus Sans L", sans-serif;
 }
 
 
