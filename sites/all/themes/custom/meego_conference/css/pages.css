@@ -55,6 +55,7 @@ body {
  * Header
  */
 #header {
+  margin-bottom: 20px;
 }
 
 #header .section {
@@ -71,6 +72,7 @@ body {
 }
 
 #name-and-slogan /* Wrapper for website name and slogan */ {
+  float: left;
 }
 
 h1#site-name,
@@ -113,7 +115,15 @@ div#site-name /* The name of the website */ {
 #content {
 }
 
-#content .section {
+.not-front #content {
+  background-color: #fff;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.not-front #content .section {
+  margin: 20px;
 }
 
 #mission /* The mission statement of the site (displayed on homepage) */ {
@@ -126,7 +136,17 @@ h1.title, /* The title of the page */
 h2.title, /* Block title or the title of a piece of content when it is given in a list of content */
 h3.title /* Comment title */ {
   margin: 0;
+  text-transform: uppercase;
 }
+
+.block-title {
+  text-transform: uppercase;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Helvetica, Arial, "Nimbus Sans L", sans-serif;
+}
+
 
 tr.even /* Some tables have rows marked even or odd. */ {
   background-color: #fff; /* Drupal core uses a #eee background */

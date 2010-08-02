@@ -91,26 +91,26 @@ body {
   float: left; /* LTR */
   width: 760px;
   margin-left: 0; /* LTR */
-  margin-right: -960px; /* LTR */ /* Negative value of #content's width + left margin. */
+  margin-right: -760px; /* LTR */ /* Negative value of #content's width + left margin. */
   padding: 0; /* DO NOT CHANGE. Add padding or margin to #content .section. */
 }
 
 .sidebar-first #content {
-  width: 560px;
-  margin-left: 200px; /* LTR */ /* The width of .region-sidebar-first. */
+  width: 500px;
+  margin-left: 260px; /* LTR */ /* The width of .region-sidebar-first. */
   margin-right: -760px; /* LTR */ /* Negative value of #content's width + left margin. */
 }
 
 .sidebar-second #content {
-  width: 560px;
+  width: 500px;
   margin-left: 0; /* LTR */
-  margin-right: -560px; /* LTR */ /* Negative value of #content's width + left margin. */
+  margin-right: -500px; /* LTR */ /* Negative value of #content's width + left margin. */
 }
 
 .two-sidebars #content {
-  width: 360px;
-  margin-left: 200px; /* LTR */ /* The width of .region-sidebar-first */
-  margin-right: -560px; /* LTR */ /* Negative value of #content's width + left margin. */
+  width: 240px;
+  margin-left: 260px; /* LTR */ /* The width of .region-sidebar-first */
+  margin-right: -500px; /* LTR */ /* Negative value of #content's width + left margin. */
 }
 
 #content .section {
@@ -170,9 +170,9 @@ body {
  */
 .region-sidebar-first {
   float: left; /* LTR */
-  width: 200px;
+  width: 260px;
   margin-left: 0; /* LTR */
-  margin-right: -200px; /* LTR */ /* Negative value of .region-sidebar-first's width + left margin. */
+  margin-right: -260px; /* LTR */ /* Negative value of .region-sidebar-first's width + left margin. */
   padding: 0; /* DO NOT CHANGE. Add padding or margin to .region-sidebar-first .section. */
 }
 
@@ -186,8 +186,8 @@ body {
  */
 .region-sidebar-second {
   float: left; /* LTR */
-  width: 200px;
-  margin-left: 560px; /* LTR */ /* Width of content + sidebar-first. */
+  width: 260px;
+  margin-left: 500px; /* LTR */ /* Width of content + sidebar-first. */
   margin-right: -760px; /* LTR */ /* Negative value of .region-sidebar-second's width + left margin. */
   padding: 0; /* DO NOT CHANGE. Add padding or margin to .region-sidebar-second .section. */
 }

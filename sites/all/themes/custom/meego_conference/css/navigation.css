@@ -143,14 +143,14 @@ li a.active-trail {
 .sidebar .block-developers .content,
 .sidebar .block-book .content,
 .sidebar .block-og .content {
-  border-top: 2px solid #EAEAEA;
-  padding: 4px 0;
-  margin-top: 4px;
+/*  border-top: 2px solid #EAEAEA;*/
+/*  padding: 4px 0;*/
+/*  margin-top: 4px;*/
 }
 
 .sidebar .block-menu_block .menu-level-2,
 .sidebar .block-og .item-list {
-  background-color: #EAEAEA;
+/*  background-color: #EAEAEA;*/
 }
 
 .sidebar .block-menu_block ul.menu,

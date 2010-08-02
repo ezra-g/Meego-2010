@@ -10,6 +10,69 @@
   margin-bottom: 1em;
 }
 
+.region-sidebar-first .block-inner,
+.region-sidebar-second .block-inner {
+  padding: 18px;
+}
+
+.region-sidebar-first .block,
+.region-sidebar-second .block {
+  background-color: #eb2a8a;
+  color: #fff;
+}
+
+.region-sidebar-first .block .block-title,
+.region-sidebar-second .block .block-title {
+  color: #fff;
+}
+
+.region-sidebar-first .block,
+.region-sidebar-second .block {
+  background-color: #ddd;
+}
+
+.region-sidebar-second .block,
+.region-sidebar-first .block {
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.region-sidebar-second .region-odd {
+  background-color: #eb2a8a;
+}
+
+.region-sidebar-second .region-even {
+  background-color: #ffc501;
+}
+
+.region-sidebar-first .region-odd {
+  background-color: #54b87b;
+}
+
+.region-sidebar-first .region-even {
+  background-color: #eb5f54;
+}
+
+.region-sidebar-first .block .block-title,
+.region-sidebar-second .block .block-title {
+  margin: 0;
+  text-align: center;
+  font-size: 2em;
+}
+
+.region-sidebar-first .block a,
+.region-sidebar-second .block a {
+/*  color: #552987;*/
+  border-bottom: none;
+  text-decoration: underline;
+}
+
+.region-sidebar-second .block a:hover {
+  text-decoration: none;
+}
+
+
 .block.region-odd /* Zebra striping for each block in the region */ {
 }
 
