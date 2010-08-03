@@ -5,13 +5,10 @@
  */
 function meego_master_profile_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
-     $form['Conference 2010']['#access'] = FALSE;
+    foreach (element_children($form) as $key => $element) {
+      if (substr(0, 10, $element) == 'conference') {
+        $form[$element]['#access'] = FALSE;
+      }
+    }
   }
-}
-
-/*
- * Implementation of hook_menu_alter().
- */
-function meego_master_profile_menu_alter(&$items) {
-   $items['user/%user/edit/Conference 2010']['access callback'] = FALSE;
 }

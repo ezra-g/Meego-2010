@@ -37,41 +37,6 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
  * Implementation of hook_form_alter().
  */
 function meego_site_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
-    // Place the 'days attending' checkboxes in a fieldset.
-    $form['Conference 2010']['attending'] = array(
-      '#title' => t('Days attending'),
-      '#type' => 'fieldset',
-      '#collapsible' => FALSE,
-      '#weight' => -1,
-    );
-    foreach (element_children($form['Conference 2010']) as $key => $element) {
-      if (substr($element, 0, 34) == 'profile_2010_conference_attending_') {
-        $form['Conference 2010']['attending'][$element] = $form['Conference 2010'][$element];
-        unset($form['Conference 2010'][$element]);
-      }
-    }
-    // We don't need 3 descriptions that say the field is private.
-    unset($form['Conference 2010']['attending']['profile_2010_conference_attending_nov15']['#description']);
-    unset($form['Conference 2010']['attending']['profile_2010_conference_attending_nov16']['#description']);
-  
-    // Place the "I'm planning on staying at" fields in a fieldset.
-    $form['Conference 2010']['staying_at'] = array(
-      '#title' => t("I plan to stay at"),
-      '#type' => 'fieldset',
-      '#collapsible' => FALSE,
-      '#weight' => -1,
-    );
-    foreach (element_children($form['Conference 2010']) as $key => $element) {
-      if (substr($element, 0, 35) == 'profile_2010_conference_staying_at_') {
-        if ($element != 'profile_2010_conference_staying_at_dk') {
-          unset($form['Conference 2010'][$element]['#description']);
-        } 
-        $form['Conference 2010']['staying_at'][$element] = $form['Conference 2010'][$element];
-        unset($form['Conference 2010'][$element]);
-      }
-    }
-  }
   if ($form_id == 'signup_form') {
     global $user;
     $status = meego_site_get_signup_status($user, $form['nid']['#value']);
