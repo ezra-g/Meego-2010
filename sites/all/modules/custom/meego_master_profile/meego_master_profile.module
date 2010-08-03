@@ -1,12 +1,38 @@
 <?php
 
+/**
+ * @file
+ * Modifications to meego.com required because of shared resources with the conference site.
+ *
+ * Implements hooks and alters to hide conference specific profile information.
+ */
+
+// For ease, define the field category string to use to hide conference specific
+// information.
+define('MEEGO_CONFERENCE_FIELD_CATEGORY', 'Conference Information');
+
+/**
+ * Implementation of hook_form_alter().
+ */
 function meego_master_profile_form_alter(&$form, &$form_state, $form_id) {
-  $form['Conference Information']['#access'] = FALSE;
+  $form[MEEGO_CONFERENCE_FIELD_CATEGORY]['#access'] = FALSE;
 }
 
-/*
+/**
  * Implementation of hook_menu_alter().
  */
 function meego_master_profile_menu_alter(&$items) {
   $items['user/%user/edit/Conference Information']['access callback'] = FALSE;
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function meego_master_profile_user($op, &$edit, &$account, $category = NULL) {
+  if ($op == 'view') {
+    // Remove the conference fields from account view.
+    if (isset($account->content[MEEGO_CONFERENCE_FIELD_CATEGORY])) {
+      unset($account->content[MEEGO_CONFERENCE_FIELD_CATEGORY]);
+    }
+  }
 }
