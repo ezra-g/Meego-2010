@@ -339,6 +339,13 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
+  $prefixed_table = db_prefix_tables('{'.$table.'}');
+  $pattern = '/^([_a-z0-9]+)\\.([-_a-z0-9]+)$/i';
+  $match = array();
+  if (preg_match($pattern, $prefixed_table, $match)) {
+    global $active_db;
+    return (bool) db_fetch_object(mysql_query("SHOW TABLES FROM " . $match[1] . " LIKE '" . $match[2] . "'", $active_db));
+  }
   return (bool) db_fetch_object(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
 }
 
