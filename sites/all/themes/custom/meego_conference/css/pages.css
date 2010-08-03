@@ -410,3 +410,18 @@ ul.pager li.pager-current {
   overflow: hidden;
   position: absolute;
 }
+
+
+/* ==================== */
+/* = Sessions section = */
+/* ==================== */
+
+.node-type-session .field {
+  margin: 2em 0;
+}
+
+.node-type-session .field .field-label {
+  font-size: 1.167em;
+  font-weight: bold;
+  margin: 0 0 0.857em 0;
+}
