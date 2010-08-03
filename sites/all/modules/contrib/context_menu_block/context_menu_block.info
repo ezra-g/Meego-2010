@@ -1,0 +1,13 @@
+; $Id: context_menu_block.info,v 1.1 2010/06/20 03:09:47 itafroma Exp $
+name = "Context: Menu Block"
+description = "Provides support for Context within the Menu Block module."
+core = "6.x"
+package = Context
+dependencies[] = context
+dependencies[] = menu_block
+; Information added by drupal.org packaging script on 2010-07-11
+version = "6.x-3.0-beta2"
+core = "6.x"
+project = "context_menu_block"
+datestamp = "1278816905"
+

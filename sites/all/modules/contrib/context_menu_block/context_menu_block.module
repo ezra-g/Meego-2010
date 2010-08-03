@@ -1,0 +1,133 @@
+<?php
+// $Id: context_menu_block.module,v 1.2.2.1 2010/07/11 02:41:41 itafroma Exp $
+
+/**
+ * @file
+ * Provides support for Context within the Menu Block module.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function context_menu_block_help($section) {
+  switch ($section) {
+    case 'admin/help#context_menu_block':
+      // Return a line-break version of the module README
+      $readme = file_get_contents(dirname(__FILE__) . '/README.txt');
+      $readme = filter_filter('process', 2, NULL, $readme);
+      $readme = filter_filter('process', 1, NULL, $readme);
+
+      return $readme;
+  }
+}
+
+/**
+ * Implementation of hook_menu_block_tree_alter().
+ */
+function context_menu_block_menu_block_tree_alter(&$tree, $config) {
+  // Check to see if the active trail is already set.
+  if (!_context_menu_block_has_active_trail($tree)) {
+
+    // If this is Context 2, we need to use context_active values. Otherwise,
+    // We need to use Context 3's API to get the same information.
+    if (function_exists('context_active_values')) {
+      $active_paths = context_active_values('menu');
+    }
+    else {
+      $active_paths = _context_menu_block_active_values('menu');
+    }
+
+    context_menu_tree_add_active_path($tree, $active_paths);
+  }
+}
+
+/**
+ * Check to see if a menu tree already has an active trail.
+ *
+ * @param $tree
+ *   array The unrendered menu tree.
+ * @return
+ *   bool True if the menu tree has an active trail, false if otherwise.
+ */
+function _context_menu_block_has_active_trail($tree) {
+  foreach ($tree as $item) {
+    if ($item['link']['in_active_trail']) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Return the active values for a given context. Needed for Context 3.
+ *
+ * @param $context_name
+ *   string The name of the context.
+ * @return
+ *   array The active values for the context.
+ */
+function _context_menu_block_active_values($context_name) {
+  $contexts = context_get();
+  $active_values = array();
+  
+  // If there aren't any contexts available, then there aren't any active values.
+  if (empty($contexts['context'])) {
+    return $active_values;
+  }
+  
+  foreach ($contexts['context'] as $context) {
+    if ($context->reactions && array_key_exists($context_name, $context->reactions)) {
+      $reaction = $context->reactions[$context_name];
+      $active_values[$reaction] = $context->reactions[$context_name];
+    }
+  }
+  
+  return $active_values;
+}
+
+/**
+ * Add the active trail indicators into the tree based on context.
+ *
+ * @param $tree
+ *   array The menu tree.
+ * @param $active_paths
+ *   array The active paths defined by Context.
+ * @return
+ *   bool True if an active trail match has been found, false if otherwise.
+ */
+function context_menu_tree_add_active_path(&$tree, $active_paths) {
+
+  foreach (array_keys($tree) as $key) {
+    if (!empty($tree[$key]['link']['href']) && in_array($tree[$key]['link']['href'], $active_paths)) {
+      // Set the active trail.
+      $tree[$key]['link']['in_active_trail'] = TRUE;
+      
+      // The Drupal Way is to only set the active menu when the page is actually
+      // the active page. However, the context reaction is supposed to set the
+      // active menu. So, we need to "fake" the active menu by styling the link
+      // as active.
+      if (isset($tree[$key]['link']['localized_options']['attributes']['class'])) {
+        $tree[$key]['link']['localized_options']['attributes']['class'] .= " active";
+      }
+      else {
+        $tree[$key]['link']['localized_options']['attributes']['class'] = "active";
+      }
+      
+      // Found a match, so break the recursion.
+      return TRUE;
+    }
+    else if (!empty($tree[$key]['below'])) {
+      // Check the child menu to see if the active path can be matched.
+      $tree[$key]['link']['in_active_trail'] = context_menu_tree_add_active_path($tree[$key]['below'], $active_paths);
+      
+      // If a match has been found, break the recursion.
+      if ($tree[$key]['link']['in_active_trail']) {
+        return TRUE;
+      }
+    }
+  }
+  
+  // If we didn't find an active item, return FALSE.
+  return FALSE;
+}
