@@ -1,14 +1,19 @@
 <?php
 
-/*
- * Implementation of hook_form_alter().
- */
 function meego_master_profile_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
     foreach (element_children($form) as $key => $element) {
+      drupal_set_message(substr(0, 10, $element));
       if (substr(0, 10, $element) == 'conference') {
         $form[$element]['#access'] = FALSE;
       }
     }
   }
+}
+
+/*
+ * Implementation of hook_menu_alter().
+ */
+function meego_master_profile_menu_alter(&$items) {
+  $items['user/%user/edit/Conference Information']['access callback'] = FALSE;
 }
