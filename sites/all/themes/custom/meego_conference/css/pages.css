@@ -303,8 +303,7 @@ ul.pager li.pager-current {
  * Footer
  */
 #footer {
-  background-color: #DDDDDD;
-  margin-top: 425px;
+  margin-top: 275px;
   font-size: .9em;
 }
 
@@ -314,7 +313,6 @@ ul.pager li.pager-current {
 
 #footer-message /* Wrapper for the footer message from Drupal's "Site information"
                    and for any blocks placed in the footer region */ {
-  color: #999;
   text-align: center;
 }
 
