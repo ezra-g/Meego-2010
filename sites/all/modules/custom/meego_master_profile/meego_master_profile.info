@@ -1,0 +1,4 @@
+name = Meego Master Site Tweaks
+description = Removes profile fields used on slave sites from the master site's registration form.
+core = 6.x
+package = Meego

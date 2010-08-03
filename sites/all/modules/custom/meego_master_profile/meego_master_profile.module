@@ -1,0 +1,9 @@
+<?php
+
+function meego_master_profile_form_alter(&$form, &$form_state, $form_id) {
+  dpm("ASDASD");
+  if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
+     $form['Conference 2010']['#access'] = FALSE;
+     dpm($form['Conference 2010']);
+  }
+}
