@@ -26,11 +26,13 @@
   color: #fff;
 }
 
+#suffix .block,
 .region-sidebar-first .block,
 .region-sidebar-second .block {
   background-color: #ddd;
 }
 
+#suffix .block,
 .region-sidebar-second .block,
 .region-sidebar-first .block {
   -moz-border-radius: 4px;
@@ -75,6 +77,27 @@
   text-decoration: none;
 }
 
+#suffix .block {
+  width: 240px;
+  margin-right: 20px;
+  float: left;
+}
+
+#suffix .region-count-3 {
+  margin-right: 0;
+}
+
+#suffix .region-count-1 {
+  background-color: #eb5f54;
+}
+
+#suffix .region-count-2 {
+  background-color: #4fc3e6;
+}
+
+#suffix .region-count-3 {
+  background-color: #ffc501;
+}
 
 .block.region-odd /* Zebra striping for each block in the region */ {
 }
