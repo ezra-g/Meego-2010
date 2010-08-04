@@ -135,6 +135,10 @@
 #block-block-1 /* First administrator-defined block */ {
 }
 
+#block-block-7 .content {
+  text-align: center;
+}
+
 #block-blog-0 /* "Recent blog posts" block */ {
 }
 
