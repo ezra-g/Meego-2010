@@ -38,6 +38,12 @@ body {
 
 #sign-up-banner {
   display: block;
+  height: 55px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: -99em;
+  top: 489px;
+  width: 240px;
 }
 
 /*
