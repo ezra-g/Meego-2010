@@ -202,6 +202,12 @@
       <?php print $sidebar_second; ?>
 
     </div></div> <!-- /#main, /#main-wrapper -->
+    
+    <?php if ($suffix): ?>
+      <div id="suffix"><div id="suffix-inner" class="section clearfix">
+        <?php print $suffix; ?>
+      </div></div>
+    <?php endif ?>
 
     <?php if ($footer || $footer_message): ?>
       <div id="footer"><div id="footer-inner"><div class="section">

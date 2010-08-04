@@ -69,6 +69,7 @@ regions[content_top]    = Content top
 regions[content_bottom] = Content bottom
 regions[account_links]	= Account links
 regions[footer]         = Footer
+regions[suffix]         = Suffix
 regions[page_closure]   = Page closure
 
   ; Panels 3 layouts
