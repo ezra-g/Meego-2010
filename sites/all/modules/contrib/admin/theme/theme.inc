@@ -51,7 +51,8 @@ function template_preprocess_admin_panes(&$vars) {
 function theme_admin_tab($tab, $class = '') {
   $attr = isset($tab['attributes']) ? drupal_attributes($tab['attributes']) : '';
   $class .= !empty($tab['active']) ? ' admin-tab-active': '';
-  return "<div class='admin-tab {$class}'><span $attr>{$tab['title']}</span></div>";
+  $title = filter_xss_admin($tab['title']);
+  return "<div class='admin-tab {$class}'><span {$attr}>{$title}</span></div>";
 }
 
 /**
@@ -105,7 +106,9 @@ function theme_admin_menu_tree($tree) {
 function theme_admin_menu_item_link($link) {
   $link['localized_options'] = empty($link['localized_options']) ? array() : $link['localized_options'];
   $link['localized_options']['html'] = TRUE;
+  $link['localized_options']['purl'] = array('disabled' => TRUE);
   $link['description'] = check_plain(truncate_utf8(strip_tags($link['description']), 150, TRUE, TRUE));
   $link['title'] .= !empty($link['description']) ? "<span class='menu-description'>{$link['description']}</span>" : '';
+  $link['title'] = filter_xss_admin($link['title']);
   return l($link['title'], $link['href'], $link['localized_options']);
 }
