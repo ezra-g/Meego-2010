@@ -25,24 +25,19 @@ body {
 }
 
 .front #page {
-  background-image: url(../images/balloon.gif);
+  background-image: url(../images/balloon-register.gif);
   background-repeat: no-repeat;
   background-position: 260px 0px;
 }
 
 .front #content h1.title {
-  display: none;
-}
-
-.front .region-content-top,
-.front #content-area {
-  height: 1px;
-  width: 1px;
+  height: 0;
   overflow: hidden;
+  position: absolute;
 }
 
-.front .region-content-bottom {
-  margin-top: 450px;
+#sign-up-banner {
+  display: block;
 }
 
 /*
