@@ -49,6 +49,29 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
         // General attendance.
       case 3:
         // Nokia/Intel reserved attendance.
+        // Add in the 'days attending' profile fields.
+        $edit = array();
+        //$attending_form = profile_user('form', $edit, $user, 'Conference Information');
+        $result = _profile_get_fields('Conference Information');
+        while ($field = db_fetch_object($result)) {
+          $fields[$field->name] = $field;
+        }
+        $attending_form = profile_form_profile(array(), $user, 'Conference Information');
+        $attending_form = array_shift($attending_form);
+        $form['attending'] = array(
+          '#type' => 'fieldset',
+          '#collapsible' => FALSE,
+          '#title' => t('Days attending'),
+          '#weight' => -1,
+        );
+        foreach (element_children($attending_form) as $key => $name) {
+          if (substr($name, 0, 32) == 'profile_conference2010_attending') {
+            $attending_form[$name]['#default_value'] = db_result(db_query('SELECT value FROM {profile_values} WHERE fid = %d AND uid = %d', $fields[$name]->fid, $user->uid));
+            $form['attending'][$name] = $attending_form[$name];
+          }
+        }
+        $form['#validate'][] = 'meego_site_signup_form_validate';
+        $form['#submit'][] = 'meego_site_signup_form_submit';
         break;
       case 2:
         // General waitlist.
@@ -64,6 +87,34 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+function meego_site_signup_form_validate(&$form, &$form_state) {
+  if (empty($form_state['values']['profile_conference2010_attending15']) && empty($form_state['values']['profile_conference2010_attending16']) && empty($form_state['values']['profile_conference2010_attending17'])) {
+    form_set_error('', t('Please specify one day when you plan to attend sessions.'));
+  }
+}
+
+function meego_site_signup_form_submit(&$form, &$form_state) {
+  global $user;
+  $result = _profile_get_fields('Conference Information');
+  while ($field = db_fetch_object($result)) {
+    $fields[$field->name] = $field;
+  }
+  foreach ($form_state['values'] as $key => $value) {
+    if (substr($key, 0, 32) == 'profile_conference2010_attending' && !empty($fields[$key])) {
+      db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $fields[$key]->fid, $user->uid);
+      db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $fields[$key]->fid, $user->uid, $value);
+    }
+  }
+}
+
+/*
+ * Implementation of hook_signup_cancel().
+ * Cancel values entered for days attending profile fields.
+ */
+function meego_site_signup_cancel($signup) {
+  global $user;
+  db_query("DELETE FROM {profile_values} WHERE fid IN(14, 15, 16) AND uid = %d", $user->uid);
+}
 /**
  * Implement hook_signup_data_alter().
  * Automatically assign attendees the correct status baed on their organization.
