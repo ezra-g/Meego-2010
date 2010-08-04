@@ -10,9 +10,10 @@
   margin-bottom: 1em;
 }
 
+#suffix .block-inner,
 .region-sidebar-first .block-inner,
 .region-sidebar-second .block-inner {
-  padding: 18px;
+  padding: 20px;
 }
 
 .region-sidebar-first .block,
@@ -21,6 +22,7 @@
   color: #fff;
 }
 
+#suffix .block .block-title,
 .region-sidebar-first .block .block-title,
 .region-sidebar-second .block .block-title {
   color: #fff;
@@ -56,6 +58,7 @@
   background-color: #eb5f54;
 }
 
+#suffix .block .block-title,
 .region-content-top .block .block-title,
 .region-content-bottom .block .block-title,
 .region-sidebar-first .block .block-title,
