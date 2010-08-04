@@ -127,6 +127,6 @@ function meego_site_get_signup_status($account, $nid) {
 function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup, $node) {
   if (!empty($signup->status) && ($signup->status == 4 || $signup->status == 2)) {
     $messages = array();
-    $messages['initial'] = "Thanks for signing up. You've been placed on the wait list, and we'll let you know if a space opens up.";
+    $messages['initial'] = "Thank you for your interest in attending MeeGo Conference 2010! We have received your request to attend the conference, but at this time we have limited space held for Intel and Nokia attendees, so attendees from both companies will be approved manually. You will receive an email confirmation when you have been approved to attend.";
   }
 }
