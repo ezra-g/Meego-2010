@@ -44,44 +44,34 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'value',
       '#value' => $status,
      );
-    switch ($status) {
-      case 1:
-        // General attendance.
-      case 3:
-        // Nokia/Intel reserved attendance.
-        // Add in the 'days attending' profile fields.
-        $edit = array();
-        //$attending_form = profile_user('form', $edit, $user, 'Conference Information');
-        $result = _profile_get_fields('Conference Information');
-        while ($field = db_fetch_object($result)) {
-          $fields[$field->name] = $field;
-        }
-        $attending_form = profile_form_profile(array(), $user, 'Conference Information');
-        $attending_form = array_shift($attending_form);
-        $form['attending'] = array(
-          '#type' => 'fieldset',
-          '#collapsible' => FALSE,
-          '#title' => t('Conference information'),
-          '#weight' => -1,
-        );
-        foreach (element_children($attending_form) as $key => $name) {
-          $attending_form[$name]['#default_value'] = db_result(db_query('SELECT value FROM {profile_values} WHERE fid = %d AND uid = %d', $fields[$name]->fid, $user->uid));
-          $form['attending'][$name] = $attending_form[$name];
-        }
-        $form['#validate'][] = 'meego_site_signup_form_validate';
-        $form['#submit'][] = 'meego_site_signup_form_submit';
-        break;
-      case 2:
-        // General waitlist.
-      case 4:
-        // Nokia/Intel waitlist.
-        $form['collapse']['submit']['#value'] = t('Join Waitlist');
-        $form['collapse']['note'] = array(
-          '#type' => 'markup',
-          '#value' => '<span><br/>' . t('Note: You will be placed on a waiting list and notified when a spot becomes available.') . '</span>',
-        );
-        break;
+   // If a waitlisted status, indicate this on the form.
+    if ($status == 2 || $status == 4) {
+      $form['collapse']['submit']['#value'] = t('Join Waitlist');
+      $form['collapse']['note'] = array(
+        '#type' => 'markup',
+        '#value' => '<span><br/>' . t('Note: You will be placed on a waiting list and notified when a spot becomes available.') . '</span>',
+      );
     }
+    // Add the Conference Information profile fields.
+    $edit = array();
+    $result = _profile_get_fields('Conference Information');
+    while ($field = db_fetch_object($result)) {
+      $fields[$field->name] = $field;
+    }
+    $attending_form = profile_form_profile(array(), $user, 'Conference Information');
+    $attending_form = array_shift($attending_form);
+    $form['attending'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => FALSE,
+      '#title' => t('Conference information'),
+      '#weight' => -1,
+    );
+    foreach (element_children($attending_form) as $key => $name) {
+      $attending_form[$name]['#default_value'] = db_result(db_query('SELECT value FROM {profile_values} WHERE fid = %d AND uid = %d', $fields[$name]->fid, $user->uid));
+      $form['attending'][$name] = $attending_form[$name];
+    }
+    $form['#validate'][] = 'meego_site_signup_form_validate';
+    $form['#submit'][] = 'meego_site_signup_form_submit';
   }
 }
 
