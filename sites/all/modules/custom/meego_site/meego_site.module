@@ -65,10 +65,8 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
           '#weight' => -1,
         );
         foreach (element_children($attending_form) as $key => $name) {
-          if (substr($name, 0, 32) == 'profile_conference2010_attending') {
-            $attending_form[$name]['#default_value'] = db_result(db_query('SELECT value FROM {profile_values} WHERE fid = %d AND uid = %d', $fields[$name]->fid, $user->uid));
-            $form['attending'][$name] = $attending_form[$name];
-          }
+          $attending_form[$name]['#default_value'] = db_result(db_query('SELECT value FROM {profile_values} WHERE fid = %d AND uid = %d', $fields[$name]->fid, $user->uid));
+          $form['attending'][$name] = $attending_form[$name];
         }
         $form['#validate'][] = 'meego_site_signup_form_validate';
         $form['#submit'][] = 'meego_site_signup_form_submit';
@@ -100,10 +98,8 @@ function meego_site_signup_form_submit(&$form, &$form_state) {
     $fields[$field->name] = $field;
   }
   foreach ($form_state['values'] as $key => $value) {
-    if (substr($key, 0, 32) == 'profile_conference2010_attending' && !empty($fields[$key])) {
-      db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $fields[$key]->fid, $user->uid);
-      db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $fields[$key]->fid, $user->uid, $value);
-    }
+    db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $fields[$key]->fid, $user->uid);
+    db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $fields[$key]->fid, $user->uid, $value);
   }
 }
 
