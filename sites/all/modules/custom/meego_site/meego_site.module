@@ -38,6 +38,7 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function meego_site_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'signup_form') {
+    dpm($form);
     global $user;
     $status = meego_site_get_signup_status($user, $form['nid']['#value']);
     $form['meego_status'] = array(
@@ -61,7 +62,7 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
         $form['attending'] = array(
           '#type' => 'fieldset',
           '#collapsible' => FALSE,
-          '#title' => t('Days attending'),
+          '#title' => t('Conference information'),
           '#weight' => -1,
         );
         foreach (element_children($attending_form) as $key => $name) {
