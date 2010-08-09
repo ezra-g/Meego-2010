@@ -1,5 +1,5 @@
 <?php
-// $Id: devel.module,v 1.258.2.70 2010/04/21 20:03:10 salvis Exp $
+// $Id: devel.module,v 1.258.2.75 2010/08/02 15:04:55 weitzman Exp $
 
 // This module holds functions useful for Drupal development.
 // Please contribute!
@@ -676,7 +676,7 @@ function devel_doc_function_form_submit($form, &$form_state) {
   $version = $form_state['values']['version'];
   $function = $form_state['values']['function'];
   $api = variable_get('devel_api_url', 'api.drupal.org');
-  $form_state['redirect'] =   "http://$api/api/$version/function/$function";
+  $form_state['redirect'] =   "http://$api/api/function/$function/$version";
 }
 
 function devel_switch_user_form_validate($form, &$form_state) {
@@ -817,7 +817,7 @@ function devel_store_queries() {
         $qids[$hash] = db_result(devel_db_query("SELECT qid FROM {devel_queries} WHERE hash = '%s'", $hash));
         if (!$qids[$hash]) {
           devel_db_query("INSERT INTO {devel_queries} (query, function, hash) VALUES ('%s', '%s', '%s')", $query, $function, $hash);
-          db_last_insert_id('devel_queries', 'qid');
+          $qids[$hash] = db_last_insert_id('devel_queries', 'qid');
         }
       }
       $fields[] = "(%d, '%f')";
@@ -865,7 +865,7 @@ function devel_function_reference() {
   sort($ufunctions);
   $api = variable_get('devel_api_url', 'api.drupal.org');
   foreach ($ufunctions as $function) {
-    $links[] = l($function, "http://$api/api/$version/function/$function");
+    $links[] = l($function, "http://$api/api/function/$function/$version");
   }
   return theme('item_list', $links);
 }
@@ -1000,7 +1000,7 @@ function devel_admin_settings() {
     $form['devel_error_handler']['#options'][DEVEL_ERROR_HANDLER_BACKTRACE] = t('Backtrace');
   }
 
-  $options = drupal_map_assoc(array('default', 'blue', 'green', 'orange', 'schablon.com', 'disabled'));
+  $options = drupal_map_assoc(array('default', 'blue', 'green', 'orange', 'white', 'disabled'));
   $form['devel_krumo_skin'] = array(
    '#type' => 'radios',
    '#title' => t('Krumo display'),
@@ -1226,7 +1226,9 @@ function theme_devel_variable_form($form) {
 function devel_variable_form_submit($form, &$form_state) {
   $deletes = array_filter($form_state['values']['variables']);
   array_walk($deletes, 'variable_del');
-  drupal_set_message(format_plural(count($deletes), 'One variable deleted.', '@count variables deleted.'));
+  if (count($deletes)) {
+    drupal_set_message(format_plural(count($deletes), 'One variable deleted.', '@count variables deleted.'));
+  }
 }
 
 function devel_variable_edit($form_state, $name) {
