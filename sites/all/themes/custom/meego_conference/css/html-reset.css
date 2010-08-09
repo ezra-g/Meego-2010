@@ -228,22 +228,22 @@ dd {
  * http://meyerweb.com/eric/thoughts/2007/06/11/who-ordered-the-link-states
  */
 a:link {
-/*  border-bottom: 1px dotted #333333;*/
-  color: #338;
-/*  text-decoration: none;*/
+  border-bottom: 1px dotted #333333;
+  color: #333333;
+  text-decoration: none;
 }
 
 a:visited {
-/*  border-bottom: 1px dotted #333333;*/
-  color: #338;
-/*  text-decoration: none;*/
+  border-bottom: 1px dotted #333333;
+  color: #333333;
+  text-decoration: none;
 }
 
 a:hover,
 a:focus,
 a:active {
-/*  border-bottom: 1px dotted #E3038D;*/
-  color: #338;
+  border-bottom: 1px dotted #E3038D;
+  color: #E3038D;
   text-decoration: none;
 }
 
