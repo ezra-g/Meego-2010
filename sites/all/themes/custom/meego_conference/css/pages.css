@@ -77,7 +77,6 @@ body {
  * Header
  */
 #header {
-  margin-bottom: 20px;
 }
 
 #header .section {
@@ -94,7 +93,6 @@ body {
 }
 
 #name-and-slogan /* Wrapper for website name and slogan */ {
-  float: left;
 }
 
 h1#site-name,
