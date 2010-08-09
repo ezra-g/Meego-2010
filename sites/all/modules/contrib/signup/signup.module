@@ -1330,7 +1330,7 @@ function signup_sign_up_user($signup_form, $notify_user = TRUE) {
 
       // Message to the screen for the user who signed up.
       // First, allow other modules to alter the messages.
-      $messages['inital'] = 'Signup to !title confirmed.';
+      $messages['initial'] = 'Signup to !title confirmed.';
       $messages['confirmation_email'] = $confirmation_email;
       $messages['reminder_email'] = $reminder_email;
       drupal_alter('signup_confirm_messages', $messages, $signup, $node);
