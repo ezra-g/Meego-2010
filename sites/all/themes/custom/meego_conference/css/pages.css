@@ -46,6 +46,11 @@ body {
   width: 240px;
 }
 
+a#sign-up-banner:link,
+a#sign-up-banner:visited {
+  border-bottom: none;
+}
+
 /*
  * The skip-to-nav link will be completely hidden until a user tabs to the link.
  * See http://www.webaim.org/techniques/skipnav/
