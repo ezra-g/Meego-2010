@@ -146,8 +146,21 @@ function meego_site_get_signup_status($account, $nid) {
 }
 
 function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup, $node) {
-  if (!empty($signup->status) && ($signup->status == 4 || $signup->status == 2)) {
-    $messages = array();
-    $messages['initial'] = "Thanks for signing up for the MeeGo Conference 2010 as an Intel or Nokia employee! We have limited space held for Intel and Nokia attendees, so attendees from both companies will be approved manually. Conference committee members will contact you directly and you will receive a separate email confirmation when you have been approved to attend.";
+  if (empty($signup->status)) {
+    return;
+  }
+  $messages = array();
+  switch ($signup->status) {
+    case 4:
+      // Intel/Nokia waitlist
+      $messages['initial'] = "Thanks for signing up for the MeeGo Conference 2010 as an Intel or Nokia employee! We have limited space held for Intel and Nokia attendees, so attendees from both companies will be approved manually. Conference committee members will contact you directly and you will receive a separate email confirmation when you have been approved to attend.";
+      break;
+    case 2:
+      // General waitlist
+      $messages['initial'] = "Thanks for signing up for the MeeGo Conference 2010! We have limited space available, so we've placed you on the waiting list. We'll let you know when a space becomes available.";
+      break;
+    default:
+      // Attending
+      $messages['initial'] = t('Thanks for signing up for the MeeGo Conference 2010! Please update your profile and <a href="user/@uid/edit/Conference Information">let us know where you plan to stay.</a>', array('@uid' => $signup->uid));
   }
 }
