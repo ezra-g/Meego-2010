@@ -91,7 +91,7 @@ function meego_site_signup_form_submit(&$form, &$form_state) {
  */
 function meego_site_signup_cancel($signup) {
   global $user;
-  db_query("DELETE FROM {profile_values} WHERE fid IN(14, 15, 16) AND uid = %d", $user->uid);
+  db_query("DELETE FROM {profile_values} WHERE fid IN(13, 14, 15) AND uid = %d", $user->uid);
 }
 /**
  * Implement hook_signup_data_alter().
