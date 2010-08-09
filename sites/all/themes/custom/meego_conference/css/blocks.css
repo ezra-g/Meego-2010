@@ -56,7 +56,7 @@
 .region-content-bottom .block .block-title,
 .region-sidebar-first .block .block-title,
 .region-sidebar-second .block .block-title {
-  margin: 0;
+  margin-top: 0;
   text-align: center;
   font-size: 2em;
   line-height: 1em;
@@ -198,10 +198,61 @@
    -webkit-border-radius: 4px;
    border-radius: 4px;
 }
+
+.front .region-sidebar-first .block {
+  margin-bottom: 0;
+}  
  
 .front .region-sidebar-first .region-count-1 .block-inner,
 .front .region-sidebar-first .region-count-2 .block-inner {
    border-bottom: 2px solid #7ec99c;
+}
+ 
+.block-logistics ul.menu a {
+  font-size: 1.1em;
+  font-weight: bold;
+} 
+
+.block-logistics ul.menu {
+  margin: 0;
+  padding: 0;
+}
+
+.block-logistics ul.menu li {
+  background-repeat: no-repeat;
+  background-position: 0 .5em;
+  padding: .2em .2em 1em 50px;
+  margin: 0;
+  list-style-type: none;
+  list-style-image: none;
+}  
+
+.block-logistics ul.menu li.logistics-air {
+  background-image: url(../images/logistics-icons-air.png);
+}
+
+.block-logistics ul.menu li.logistics-transit {
+  background-image: url(../images/logistics-icons-transit.png);
+}
+
+.block-logistics ul.menu li.logistics-passport {
+  background-image: url(../images/logistics-icons-passport.png);
+}
+
+.block-logistics ul.menu li.logistics-attractions {
+  background-image: url(../images/logistics-icons-attractions.png);
+}
+
+.block-logistics ul.menu li.logistics-food {
+  background-image: url(../images/logistics-icons-food.png);
+}
+
+.block-logistics ul.menu li.logistics-hotels {
+  background-image: url(../images/logistics-icons-hotels.png);
+}
+
+.block-logistics ul.menu li.logistics-weather {
+  background-image: url(../images/logistics-icons-weather.png);
 }
  
  /**
