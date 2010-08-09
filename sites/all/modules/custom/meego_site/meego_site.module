@@ -44,14 +44,6 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'value',
       '#value' => $status,
      );
-   // If a waitlisted status, indicate this on the form.
-    if ($status == 2 || $status == 4) {
-      $form['collapse']['submit']['#value'] = t('Join Waitlist');
-      $form['collapse']['note'] = array(
-        '#type' => 'markup',
-        '#value' => '<span><br/>' . t('Note: You will be placed on a waiting list and notified when a spot becomes available.') . '</span>',
-      );
-    }
     // Add the Conference Information profile fields.
     $edit = array();
     $result = _profile_get_fields('Conference Information');
@@ -134,16 +126,8 @@ function meego_site_get_signup_status($account, $nid) {
   // Note, this assumes that $node->signup_status_limit_type is per status.
   $node = node_load($nid);
   if ($intel_nokia) {
-    // Check I/N availability.
-    $available = $node->signup_status_limit[3]['limit'] - $node->signup_status_limit[3]['total'];
-    if ($available >= 1 || $node->signup_status_limit[3]['limit'] == 0) {
-      // Intel/Nokia attendee list.
-      return 3;
-    }
-    else {
-      // Intel/Nokia waitlist.
-      return 4;
-    }
+    // Intel/Nokia people go to the wait list automatically.
+    return 4;
   }
   else {
     // Check general availability.
@@ -164,6 +148,6 @@ function meego_site_get_signup_status($account, $nid) {
 function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup, $node) {
   if (!empty($signup->status) && ($signup->status == 4 || $signup->status == 2)) {
     $messages = array();
-    $messages['initial'] = "Thank you for your interest in attending MeeGo Conference 2010! We have received your request to attend the conference, but at this time we have limited space held for Intel and Nokia attendees, so attendees from both companies will be approved manually. You will receive an email confirmation when you have been approved to attend.";
+    $messages['initial'] = "Thanks for signing up for the MeeGo Conference 2010 as an Intel or Nokia employee! We have limited space held for Intel and Nokia attendees, so attendees from both companies will be approved manually. Conference committee members will contact you directly and you will receive a separate email confirmation when you have been approved to attend.";
   }
 }
