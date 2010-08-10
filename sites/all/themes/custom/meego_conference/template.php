@@ -41,6 +41,10 @@ function meego_conference_preprocess_page(&$vars, $hook) {
 	// Linux Foundation logo in footer
 	$vars['linux_foundation'] = '<a href="http://linuxfoundation.org" title="Linux Foundation">'.theme('image', path_to_theme() .'/images/linux_foundation_color.png', t('Linux Foundation')).'</a><br />';
 
+  // Facebook Like Button
+  if ($vars['is_front']) {  
+    $vars['facebook_like'] = '<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fconference2010.meego.com&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;colorscheme=light&amp;height=20" scrolling="no" frameborder="0" style="position:absolute; right: 0; top: 160px; padding: 3px; border-width: 1px 0 1px 1px; border-style: solid; border-color: #fff; overflow:hidden; width:100px; height:20px;" allowTransparency="true"></iframe>';
+  }
 }
 
 /**
@@ -118,6 +122,11 @@ function meego_conference_preprocess_node(&$vars, $hook) {
 	if ($node->type == 'device' || $node->type == 'landing' || $node->type == 'sdk_group') {
 		$vars['splash'] = '<div class="splash"></div>';
 	}
+	
+	// Facebook Like Button
+  if ($node->type == 'news') {  
+    $vars['facebook_like'] = '<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fconference2010.meego.com&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;colorscheme=light&amp;height=20" scrolling="no" frameborder="0" style="overflow:hidden; width:100px; height:20px;" allowTransparency="true"></iframe>';
+  }
 	
 }
 // */
