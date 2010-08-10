@@ -60,8 +60,13 @@ div#admin-toolbar.horizontal a.menu-hover span.menu-description {
   padding:0px;
   margin:0px;
   border:0px;
-  overflow:hidden /* IE7 */;
   }
+
+/* IE7 */
+*:first-child+html #admin-toolbar ul.menu,
+*:first-child+html #admin-toolbar ul.menu ul,
+*:first-child+html #admin-toolbar ul.menu li,
+*:first-child+html #admin-toolbar ul.menu li a { overflow:hidden; }
 
 #admin-toolbar.horizontal ul.drilldown-active-menu {
   float:left;
@@ -100,6 +105,7 @@ div#admin-toolbar.horizontal a.menu-hover span.menu-description {
   #admin-toolbar ul.menu li a span.menu-description { white-space:normal; }
 
   /* IE7 requires height to be explicitly set. */
+  #admin-toolbar ul.menu li.leaf,
   #admin-toolbar ul.drilldown-active-menu li { height:25px; }
 
   #admin-toolbar ul.menu li a.active { background:#222; }

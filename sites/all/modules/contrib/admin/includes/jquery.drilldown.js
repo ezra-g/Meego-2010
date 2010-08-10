@@ -1,4 +1,4 @@
-// $Id: jquery.drilldown.js,v 1.1.2.9 2010/08/01 05:07:31 yhahn Exp $
+// $Id: jquery.drilldown.js,v 1.1.2.10 2010/08/06 15:31:44 yhahn Exp $
 
 /**
  * Generic menu drilldown plugin for standard Drupal menu tree markup.
@@ -42,6 +42,8 @@
                 breadcrumb.unshift($(this));
               });
             }
+            // If this is a root menu with no root link to accompany it,
+            // generate one such that the breadcrumb may reference it.
             else if ($(this).children('li').size() > 1) {
               var root;
               if ($(this).siblings('a.drilldown-root').size() > 0) {
@@ -63,13 +65,14 @@
             breadcrumb.push($(this));
           }
           else {
-            activeMenu = $(this).parents('ul.menu');
+            activeMenu = $(this).parents('ul.menu').eq(0);
           }
           if (activeMenu) {
             $('.drilldown-active-trail', menu).removeClass('drilldown-active-trail');
             $('ul.menu', menu).removeClass('drilldown-active-menu').removeClass('clear-block');
-            $(activeMenu[0]).parents('li').addClass('drilldown-active-trail');
-            $(activeMenu[0]).addClass('drilldown-active-menu').addClass('clear-block').parents('li').show();
+            $(activeMenu)
+              .addClass('drilldown-active-menu').addClass('clear-block')
+              .parents('li').addClass('drilldown-active-trail').show();
           }
         });
 
@@ -82,9 +85,9 @@
               // We don't use the $().clone() method here because of an
               // IE & jQuery 1.2 bug.
               var clone = $('<a></a>')
-                .attr('href', $(breadcrumb[key]).eq(0).attr('href'))
-                .attr('class', $(breadcrumb[key]).eq(0).attr('class'))
-                .html($(breadcrumb[key]).eq(0).html())
+                .attr('href', $(breadcrumb[key]).attr('href'))
+                .attr('class', $(breadcrumb[key]).attr('class'))
+                .html($(breadcrumb[key]).html())
                 .addClass('depth-'+key)
                 .appendTo(trail);
 

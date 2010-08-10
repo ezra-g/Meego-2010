@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.1.2.23.2.22 2010/08/02 14:33:04 yhahn Exp $
+// $Id: admin.module,v 1.1.2.23.2.24 2010/08/09 15:30:46 yhahn Exp $
 
 /**
  * Implementation of hook_init().
@@ -260,6 +260,17 @@ function admin_theme($cache, $type, $theme, $path) {
     'path' => $path . '/theme',
     'file' => 'theme.inc',
   );
+  $items['admin_menu_item'] = array(
+    'arguments' => array(
+      'link' => NULL,
+      'has_children' => NULL,
+      'menu' => '',
+      'in_active_trail' => FALSE,
+      'extra_class' => NULL
+    ),
+    'path' => $path . '/theme',
+    'file' => 'theme.inc',
+  );
   $items['admin_menu_item_link'] = array(
     'arguments' => array('item' => array()),
     'path' => $path . '/theme',
@@ -374,6 +385,7 @@ function admin_set_admin_blocks($reset = FALSE) {
           $block->module = $module;
           $block->delta = $delta;
           $block->cache = is_numeric($cache) ? $cache : BLOCK_NO_CACHE;
+          $block->region = 'admin_toolbar'; // Fake the block region.
         }
         if (!empty($block)) {
           if ($_SERVER['REQUEST_METHOD'] == 'GET' && $cid = admin_block_get_cache_id($block)) {
