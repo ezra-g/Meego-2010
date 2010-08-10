@@ -22,19 +22,23 @@
 /* 
  * Members View
  */
-.view-members td {
+.view-attendees td {
   text-align: center;
   padding: 1.5em 10px;
 }
  
-.view-members .username {
+.view-attendees .username {
   display: block;
 }
 
 /* 
- * /downloads/releases
+ * /program/sessions
  */
-.view-Releases .item-list ul li {
+.view-grouped-list .item-list ul {
+   padding: 0;
+} 
+ 
+.view-grouped-list .item-list ul li {
   border-bottom: 1px solid #eeeeee;
   list-style-image: none;
   list-style-type: none;
@@ -42,41 +46,44 @@
   padding: 10px 0;
   }
 
-  .view-Releases .item-list ul li.views-row-last {border: none;}
+  .view-grouped-list .item-list ul li.views-row-last {border: none;}
 
-  #content .view-Releases .node h2 {margin-top: 0;}
+  #content .view-grouped-list .node h2 {margin-top: 0;}
 
-/* Right Sidebar Block */
-.view-Releases .item-list ul li .views_view_fields {
+.view-grouped-list .item-list ul li .views_view_fields {
   background-color: #f1f4eb;
   padding: 10px 10px 10px 0;
   }
 
-  /* Download Link/Graphic */
-  .view-Releases .grouped-meta {
+  /* User picture, name */
+  .view-grouped-list .grouped-meta {
     float: left;
-    width: 35%;
+    width: 25%;
     text-align: center;
     }
+    
+    .view-grouped-list .grouped-meta .username {
+      padding-right: 5px;
+      }
 
-    .view-Releases .grouped-meta a:link,
-    .view-Releases .grouped-meta a:visited {
+    .view-grouped-list .grouped-meta a:link,
+    .view-grouped-list .grouped-meta a:visited {
       border: none;
       color: #5dba7c;
       font-weight: bold;
     }
 
-    .view-Releases .grouped-meta a:hover {color: #E3038D;}  
+    .view-grouped-list .grouped-meta a:hover {color: #E3038D;}  
 
-  /* Title, summary, date */
-  .view-Releases .grouped-content {
+  /* Title, summary, presenters */
+  .view-grouped-list .grouped-content {
     float: right;
-    width: 65%;
+    width: 75%;
     }
 
-    .view-Releases .grouped-content p {margin: .5em 0;}
+    .view-grouped-list .grouped-content p {margin: .5em 0;}
 
-    .view-Releases .title {
+    .view-grouped-list .title {
       font-size: 1.3em;
-	  line-height: 1.2em;
+	    line-height: 1.2em;
     }

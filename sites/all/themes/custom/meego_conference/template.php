@@ -425,33 +425,9 @@ function meego_conference_preprocess_views_view_fields(&$vars) {
     // Override arrays for grouping
     $view_id = "{$vars['view']->name}:{$vars['view']->current_display}";
     $overrides = array(
-      "nodequeue_1:block" => array(
-				'image' => array('field_hl_image_fid'),
-	  ),
-	  "nodequeue_2:block" => array(
-				'meta' => array('tid', 'field_download_link_url'),
-	  ),
-      "nodequeue_3:attachment_1" => array(
-				'meta' => array(''),
-	  ),	
-      "Releases:page_1" => array(
-				'meta' => array('tid', 'field_download_link_url'),
-	  ),
-	  "Releases:page_2" => array(
-				'meta' => array('tid', 'field_download_link_url'),
-	  ),
-	  "Releases:page_3" => array(
-				'meta' => array('tid', ''),
-	  ),	
-      "projects:page_1" => array(
-        'meta' => array('date', 'user-picture', 'username', 'author', 'title', 'tid'),
-      ),
-	  "Devices:block_3" => array(
-        'meta' => array('tid'),
-      ),
-	  "planet_feeds:block_1" => array(
-        'meta' => array(''),
-      ),			
+      "news:page_1" => array(
+				'meta' => array('user-picture'),
+	    ),			
     );
     if (isset($overrides[$view_id])) {
       $groups = $overrides[$view_id];
