@@ -20,15 +20,19 @@
 }
 
 /* 
- * Members View
+ * Attendees View
  */
-.view-attendees td {
+.not-front .view-attendees td {
   text-align: center;
   padding: 1.5em 10px;
 }
  
 .view-attendees .username {
   display: block;
+}
+
+.front .view-attendees table {
+  margin: 0;
 }
 
 /* 
