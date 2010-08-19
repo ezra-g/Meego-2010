@@ -1,0 +1,234 @@
+<?php
+
+/**
+ * hook_block()
+ */
+function site_tweaks_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      return site_tweaks_block_list();
+      break;
+
+    case 'view':
+      return site_tweaks_block_view($delta);
+      break;
+  }
+}
+
+/**
+ * Block List
+ */
+function site_tweaks_block_list() {
+  $blocks = array(
+    '0' => array(
+      'info' => t('RSS Feeds Block'),
+			'cache' => BLOCK_NO_CACHE,
+    ),
+		'1' => array(
+      'info' => t('My Account Block'),
+			'cache' => BLOCK_NO_CACHE,
+    ),
+  );
+  
+  return $blocks;
+}
+
+/**
+ * Block View
+ */
+function site_tweaks_block_view($delta) {
+  $block = FALSE;
+  switch ($delta) {
+    case 0:
+      $block = site_tweaks_block_rss_feeds();
+      break;
+		case 1:
+      $block = site_tweaks_block_my_account();
+      break;		
+  }
+  return $block;
+}
+
+/**
+ * Block: RSS feeds across meego.com site
+ * Add a feed from menu administration
+ */
+function site_tweaks_block_rss_feeds() {
+	$items = menu_navigation_links('menu-rss-feeds');
+
+	if (count($items)) {
+		$block['subject'] = '';
+		$block['content'] = theme('links', menu_navigation_links('menu-rss-feeds'), array('class' => 'rss'));
+		return $block;
+	}
+}
+
+/**
+ * Block: My Account
+ */
+function site_tweaks_block_my_account() {
+	global $user;
+	
+	if (!$user->uid) {
+		return;
+	}
+	else {
+		$links = array();
+		$links['myaccount'] = l(t('Edit Account Info'), 'user/'.$user->uid.'/edit');
+		$links['notifications'] = l(t('Edit Notifications'), 'user/'.$user->uid.'/notifications');
+	}
+	if (count($links)) {
+    $block['subject'] = t('My Account');
+    $block['content'] = theme('item_list', $links);
+		return $block;
+	}	
+}
+
+/**
+ * RSS feeds across meego.com site
+ * Add a feed from menu administration
+ * Will automatically add the <link> to the page head
+ */
+function site_tweaks_init() {
+	$items = menu_navigation_links('menu-rss-feeds');
+
+	foreach ($items as $item) {
+		//dsm($item);
+		drupal_add_link(
+			array(
+					'rel' => 'alternate',
+					'type' => 'application/rss+xml',
+					'title' => $item['title'],
+					'href' => '/'.$item['href']
+			));
+	}
+
+	if (count($items)) {
+		return $items;
+	}
+}
+
+/**
+ * Modify the views exposed filter form to add a reset link
+ */
+//function site_tweaks_preprocess(&$vars) {
+function site_tweaks_preprocess_views_exposed_form(&$vars) {
+  $form = $vars['form'];
+  $action = $form['#action'];
+
+  // trim any leading or trailing slashes
+  $action = preg_replace('/^\/|\/+$/', '', $action);
+
+  $vars['reset'] = '<div class="reset-link">'. l(t('Reset'), $action) .'</div>';
+}
+
+/**
+ * hook_user().
+ */
+function site_tweaks_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+    //case 'validate':
+    case 'submit':
+      if ($account->picture) {
+        imagecache_image_flush($account->picture);
+      }
+      if ($edit['picture']) {
+        imagecache_image_flush($edit['picture']);
+      }
+      break;
+  }
+}
+
+/**
+ * hook_form_alter()
+ */
+function site_tweaks_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'user_register' && $_GET['q'] == 'openid/authenticate') {
+    if (module_exists('captcha')) {
+      unset($form['captcha']);
+    }
+    if (module_exists('logintoboggan')) {
+      foreach($form['#validate'] as $key => $function) {
+        if ($function == 'logintoboggan_user_register_validate') {
+          unset($form['#validate'][$key]);
+        }
+      }
+    }
+    
+  }
+	
+	// Views exposed form alters
+	if($form_id == 'views_exposed_form') {
+		// Unset description for exposed filter by username field
+		if ($form['username']) {
+			unset($form['username']['#description']);
+		}
+	}
+	
+	// Alter Search form submit button
+	if ($form_id == 'search_theme_form') {
+		 $form['submit']['#value'] = t('Go');	 
+	}
+
+}
+
+
+/**
+ * hook_link_alter()
+ */
+function site_tweaks_link_alter(&$links, $node) {
+  
+}
+
+/**
+ * Helper function for suppressing messages: 
+ *
+ * Maintain an array of messages we want to keep from popping up. Check them w/strpos
+ *
+ * TODO: Could have an admin screen, use preg for more speed, etc.
+ */
+function _site_tweaks_suppress_message($msg) {
+  static $no = array('No public posts in this group', 'No posts in this group');
+  foreach($no as $string) {
+    if (strpos($msg, $string) !== FALSE) {
+      return TRUE; // FAILMESSAHGE - DO NOT WANT ;)
+    }
+  }
+}
+
+/**
+ * Override for status messages
+ *
+ * Nixes some unwanted group messages
+ */
+function phptemplate_status_messages($display = NULL) {
+  $output = '';
+  $approved = drupal_get_messages($display);
+  foreach ($approved as $type => $messages) {
+    if (count($messages) > 1) {
+      foreach($messages as $index => $msg) {
+        if (_site_tweaks_suppress_message($msg)) {
+          unset($approved[$type][$index]);
+        }
+      }
+    }
+    elseif (_site_tweaks_suppress_message($approved[$type][0])) {
+      unset($approved[$type]);
+    }
+  }
+  foreach ($approved as $type => $messages) {
+    $output .= "<div class=\"messages $type\">\n";
+    if (count($messages) > 1) {
+      $output .= " <ul>\n";
+      foreach ($messages as $message) {
+        $output .= '  <li>'. $message ."</li>\n";
+      }
+      $output .= " </ul>\n";
+    }
+    else {
+      $output .= $messages[0];
+    }
+    $output .= "</div>\n";
+  }
+  return $output;
+}
