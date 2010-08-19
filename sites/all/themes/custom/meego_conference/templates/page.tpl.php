@@ -117,6 +117,8 @@
     <div id="skip-to-nav"><a href="#main-menu"><?php print t('Jump to Navigation'); ?></a></div>
   <?php endif; ?>
 
+  <?php print $facebook_like; ?>
+
   <div id="page-wrapper"><div id="page">
 
     <div id="header"><div class="section clearfix">

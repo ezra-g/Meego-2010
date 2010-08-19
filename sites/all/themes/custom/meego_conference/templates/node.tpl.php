@@ -108,6 +108,8 @@
     <?php print $content; ?>
   </div>
   
+  <?php print $facebook_like; ?>
+  
 	<?php if (!empty($links)): ?>
     <div class='node-links clearfix'><?php print $links ?></div>
   <?php endif; ?>

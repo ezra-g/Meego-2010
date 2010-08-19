@@ -1,5 +1,5 @@
 <?php
-// $Id: context_export_ui.class.php,v 1.1.2.4 2010/08/06 18:17:26 yhahn Exp $
+// $Id: context_export_ui.class.php,v 1.1.2.5 2010/08/11 15:57:28 yhahn Exp $
 
 /**
  * CTools export UI extending class. Slightly customized for Context.
@@ -39,7 +39,7 @@ class context_export_ui extends ctools_export_ui {
     $this->rows["{$tag}:{$name}"]['data'] = array();
     $this->rows["{$tag}:{$name}"]['class'] = !empty($item->disabled) ? 'ctools-export-ui-disabled' : 'ctools-export-ui-enabled';
     $this->rows["{$tag}:{$name}"]['data'][] = array(
-      'data' => check_plain($name) . "<div class='description'>{$item->description}</div>",
+      'data' => check_plain($name) . "<div class='description'>" . check_plain($item->description) . "</div>",
       'class' => 'ctools-export-ui-name'
     );
     $this->rows["{$tag}:{$name}"]['data'][] = array(

@@ -197,6 +197,7 @@
    -moz-border-radius: 4px;
    -webkit-border-radius: 4px;
    border-radius: 4px;
+   margin-bottom: 1em;
 }
 
 .front .region-sidebar-first .block {
@@ -256,9 +257,8 @@
 }
  
  /**
-  * Twitter Block Widget
+  * News block
   */
-.twtr-widget .twtr-hd,
-.twtr-widget .twtr-ft {
-  display: none;
+#block-views-news-block_1 .feed-icon {
+  margin-top: -16px;
 }

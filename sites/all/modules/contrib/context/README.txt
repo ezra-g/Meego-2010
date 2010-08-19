@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.1.4.2.2.5 2010/04/26 15:07:26 yhahn Exp $
+$Id: README.txt,v 1.1.4.2.2.6 2010/08/11 16:00:25 yhahn Exp $
 
 Context 3.x for Drupal 6.x
 --------------------------
@@ -64,6 +64,7 @@ Maintainers
 
 - yhahn (Young Hahn)
 - jmiccolis (Jeff Miccolis)
+- Steven Jones
 
 
 Contributors

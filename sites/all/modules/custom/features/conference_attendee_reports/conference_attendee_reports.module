@@ -1,0 +1,3 @@
+<?php
+
+include_once('conference_attendee_reports.features.inc');

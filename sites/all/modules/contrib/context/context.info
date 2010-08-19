@@ -5,9 +5,9 @@ description = "Provide modules with a cache that lasts for a single page request
 package = "Context"
 core = "6.x"
 
-; Information added by drupal.org packaging script on 2010-08-09
-version = "6.x-3.0-beta8"
+; Information added by drupal.org packaging script on 2010-08-11
+version = "6.x-3.0-rc1"
 core = "6.x"
 project = "context"
-datestamp = "1281369373"
+datestamp = "1281543091"
 

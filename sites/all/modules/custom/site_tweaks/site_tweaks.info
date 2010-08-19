@@ -1,0 +1,4 @@
+name = Site Tweaks
+description = Provides functionality specific to this site.
+package = Custom
+core = 6.x

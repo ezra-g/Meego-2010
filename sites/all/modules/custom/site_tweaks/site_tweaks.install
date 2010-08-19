@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * An implementation of hook_install().
+ */
+function site_tweaks_install() {
+  // Put this module after book, OG, etc so it can form_alter as needed.
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'site_tweaks'");
+}
