@@ -21,7 +21,7 @@ function signup_status_limit_alter_signup_node_settings_form(&$form) {
   // Call our shared helper to actually alter the form elements. In this case,
   // everything lives in the root of the $form array, so we can pass the whole
   // thing.
-  signup_status_limit_alter_signup_node_settings(&$form, $form['#node']);
+  signup_status_limit_alter_signup_node_settings($form, $form['#node']);
 }
 
 /**
