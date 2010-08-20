@@ -1,4 +1,4 @@
-﻿# $Id: nl.po,v 1.1.2.6 2009/08/13 14:24:44 sutharsan Exp $
+﻿# $Id: nl.po,v 1.3 2009/08/13 14:24:07 sutharsan Exp $
 
 #
 # DUTCH translation of Drupal (sites/all/modules/pathauto/pathauto.module)

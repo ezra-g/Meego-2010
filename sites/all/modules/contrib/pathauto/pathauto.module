@@ -1,5 +1,5 @@
 <?php
-// $Id: pathauto.module,v 1.118.2.29 2010/08/11 19:38:26 davereid Exp $
+// $Id: pathauto.module,v 1.126.2.36 2010/08/09 18:03:06 davereid Exp $
 
 /**
  * @defgroup pathauto Pathauto: Automatically generates aliases for content
@@ -19,25 +19,26 @@
  */
 
 /**
+ * The default ignore word list.
+ */
+define('PATHAUTO_IGNORE_WORDS', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');
+
+/**
  * Implements hook_help().
  */
 function pathauto_help($path, $arg) {
   switch ($path) {
     case 'admin/help#pathauto':
-      $output = t('<p>Provides a mechanism for modules to automatically generate aliases for the content they manage.</p>
-                  <h2>Settings</h2>
-                  <p>The <strong>Maximum Alias Length</strong> and <strong>Maximum component length</strong> values
-                  default to 100 and have a limit of 128 from pathauto. This length is limited by the length of the dst
-                  column of the url_alias database table. The default database schema for this column is 128. If you
-                  set a length that is equal to that of the one set in the dst column it will cause problems in situations
-                  where the system needs to append additional words to the aliased URL. For example... URLs generated
-                  for feeds will have "/feed" added to the end. You should enter a value that is the length of the dst
-                  column minus the length of any strings that might get added to the end of the URL. The length of
-                  strings that might get added to the end of your URLs depends on which modules you have enabled and
-                  on your Pathauto settings. The recommended and default value is 100.</p>
-                  <p><strong>Raw Tokens</strong> In Pathauto it is appropriate to use the -raw form of tokens. Paths are
-                  sent through a filtering system which ensures that raw user content is filtered. Failure to use -raw
-                  tokens can cause problems with the Pathauto punctuation filtering system.</p>');
+      module_load_include('inc', 'pathauto');
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a mechanism for modules to automatically generate aliases for the content they manage.') . '</p>';
+      $output .= '<h3>' . t('Settings') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Maximum alias and component length') . '</dt>';
+      $output .= '<dd>' . t('The <strong>maximum alias length</strong> and <strong>maximum component length</strong> values default to 100 and have a limit of @max from Pathauto. This length is limited by the length of the "alias" column of the url_alias database table. The default database schema for this column is @max. If you set a length that is equal to that of the one set in the "alias" column it will cause problems in situations where the system needs to append additional words to the aliased URL. For example, URLs generated for feeds will have "/feed" added to the end. You should enter a value that is the length of the "alias" column minus the length of any strings that might get added to the end of the URL. The length of strings that might get added to the end of your URLs depends on which modules you have enabled and on your Pathauto settings. The recommended and default value is 100.', array('@max' => _pathauto_get_schema_alias_maxlength())) . '</dd>';
+      $output .= '<dt>' . t('Raw tokens') . '</dt>';
+      $output .= '<dd>' . t('In Pathauto it is appropriate to use the -raw form of tokens. Paths are sent through a filtering system which ensures that raw user content is filtered. Failure to use -raw tokens can cause problems with the Pathauto punctuation filtering system.') . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
@@ -56,23 +57,40 @@ function pathauto_perm() {
  * Implements hook_menu().
  */
 function pathauto_menu() {
-  $items['admin/build/path/pathauto'] = array(
-    'title' => 'Automated alias settings',
+  $items['admin/build/path/patterns'] = array(
+    'title' => 'Patterns',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('pathauto_admin_settings'),
+    'page arguments' => array('pathauto_patterns_form'),
     'access arguments' => array('administer pathauto'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'file' => 'pathauto.admin.inc',
   );
-
+  $items['admin/build/path/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('pathauto_settings_form'),
+    'access arguments' => array('administer pathauto'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'file' => 'pathauto.admin.inc',
+  );
+  $items['admin/build/path/update_bulk'] = array(
+    'title' => 'Bulk update',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('pathauto_bulk_update_form'),
+    'access arguments' => array('administer url aliases'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 30,
+    'file' => 'pathauto.admin.inc',
+  );
   $items['admin/build/path/delete_bulk'] = array(
     'title' => 'Delete aliases',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('pathauto_admin_delete'),
     'access arguments' => array('administer url aliases'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 30,
+    'weight' => 40,
     'file' => 'pathauto.admin.inc',
   );
 
@@ -80,111 +98,23 @@ function pathauto_menu() {
 }
 
 /**
- * Include all Pathauto include files.
- */
-function _pathauto_include() {
-  module_load_include('inc', 'pathauto');
-  module_load_include('inc', 'pathauto', 'pathauto_node');
-  module_load_include('inc', 'pathauto', 'pathauto_taxonomy');
-  module_load_include('inc', 'pathauto', 'pathauto_user');
-}
-
-/**
  * Implements hook_token_list().
  */
 function pathauto_token_list($type = 'all') {
-  $tokens = array();
-  if (module_exists('taxonomy')) {
-    if ($type == 'taxonomy' || $type == 'all') {
-      $tokens['taxonomy']['catpath'] = t('As [cat], but including its supercategories separated by /.');
-      $tokens['taxonomy']['catpath-raw'] = t('As [cat-raw], but including its supercategories separated by /.');
-      $tokens['taxonomy']['catalias'] = t('The URL alias of the taxonomy term.');
-      $tokens['taxonomy']['catalias-raw'] = t('The URL alias of the taxonomy term.');
-    }
-    if ($type == 'node' || $type == 'all') {
-      $tokens['node']['termpath'] = t('As [term], but including its supercategories separated by /.');
-      $tokens['node']['termpath-raw'] = t('As [term-raw], but including its supercategories separated by /.');
-      $tokens['node']['termalias'] = t('The URL alias of the taxonomy term.');
-      $tokens['node']['termalias-raw'] = t('The URL alias of the taxonomy term.');
-    }
-  }
-  if (module_exists('book')) {
-    if ($type == 'node' || $type == 'all') {
-      $tokens['node']['bookpathalias'] = t('The URL alias of the parent book of the node.');
-      $tokens['node']['bookpathalias-raw'] = t('The URL alias of the parent book of the node.');
-    }
-  }
-  return $tokens;
+  module_load_include('inc', 'pathauto', 'pathauto.tokens');
+  return _pathauto_token_list($type);
 }
 
 /**
  * Implements hook_token_values().
  */
-function pathauto_token_values($type, $object = NULL, $options = array(), $label = NULL) {
-  $values = array();
-
-  switch ($type) {
-    case 'node':
-      // Token [bookpathalias].
-      if (module_exists('book')) {
-        $values['bookpathalias'] = '';
-        $values['bookpathalias-raw'] = '';
-        if (!empty($object->book['plid']) && $parent = book_link_load($object->book['plid'])) {
-          $values['bookpathalias-raw'] = drupal_get_path_alias($parent['href']);
-          $values['bookpathalias']     = check_plain($values['bookpathalias-raw']);
-        }
-      }
-
-      // Tokens [termpath], [termpath-raw], and [termalias].
-      if (module_exists('taxonomy')) {
-        // Get the lowest-weighted term from the lowest-weighted vocabulary.
-        // This query is copied from @taxonomy_node_get_terms()
-        $term = db_fetch_object(db_query_range('SELECT t.* FROM {term_node} r INNER JOIN {term_data} t ON r.tid = t.tid INNER JOIN {vocabulary} v ON t.vid = v.vid WHERE r.vid = %d ORDER BY v.weight, t.weight, t.name', $object->vid, 0, 1));
-        if ($term) {
-          $values = array_merge($values, pathauto_token_values('taxonomy', $term, $options, 'term'));
-        }
-        else {
-          $values['termpath'] = $values['termpath-raw'] = $values['termalias'] = '';
-        }
-      }
-      break;
-
-    case 'taxonomy':
-      // In the realm of nodes these are 'terms', in the realm of taxonomy, 'cats'.
-      if (!isset($label)) {
-        $label = 'cat';
-      }
-
-      $values[$label . 'path'] = '';
-      $values[$label . 'path-raw'] = '';
-      $values[$label . 'alias'] = '';
-      $values[$label . 'alias-raw'] = '';
-
-      // Tokens [catpath] and [catpath-raw].
-      if (isset($object->tid)) {
-        module_load_include('inc', 'pathauto');
-        $parents = taxonomy_get_parents_all($object->tid);
-        $catpath = $catpath_raw = array();
-        foreach ($parents as $parent) {
-          $term_name_cleaned = pathauto_cleanstring($parent->name);
-          array_unshift($catpath, check_plain($term_name_cleaned));
-          array_unshift($catpath_raw, $term_name_cleaned);
-        }
-        $values[$label . 'path'] = implode('/', $catpath);
-        $values[$label . 'path-raw'] = implode('/', $catpath_raw);
-
-        // Token [catalias-raw] and [catalias].
-        $values[$label . 'alias-raw'] = drupal_get_path_alias(taxonomy_term_path($object));
-        $values[$label . 'alias']     = check_plain($values[$label . 'alias-raw']);
-      }
-      break;
-  }
-
-  return $values;
+function pathauto_token_values($type, $object = NULL) {
+  module_load_include('inc', 'pathauto', 'pathauto.tokens');
+  return _pathauto_token_values($type, $object);
 }
 
 /**
- * Implementation of hook_path_alias_types().
+ * Implements hook_path_alias_types().
  *
  * Used primarily by the bulk delete form.
  */
@@ -200,17 +130,82 @@ function pathauto_path_alias_types() {
   if (module_exists('forum')) {
     $objects['forum/'] = t('Forums');
   }
-  if (module_exists('contact')) {
-    $objects['user/%/contact'] = t('User contact forms');
-  }
-  if (module_exists('tracker')) {
-    $objects['user/%/track'] = t('User trackers');
-  }
   return $objects;
+}
+
+/**
+ * Load an URL alias pattern by entity, bundle, and language.
+ *
+ * @param $entity
+ *   An entity (e.g. node, taxonomy, user, etc.)
+ * @param $bundle
+ *   A bundle (e.g. node type, vocabulary ID, etc.)
+ * @param $language
+ *   A language code, defaults to the language-neutral empty string.
+ * @param $clear
+ *   An optional boolean to clear the function's internal cache if TRUE.
+ */
+function pathauto_pattern_load_by_entity($entity, $bundle = '', $language = '', $clear = FALSE) {
+  static $patterns = array();
+
+  if ($clear) {
+    $patterns = array();
+    return;
+  }
+
+  $pattern_id = "$entity:$bundle:$language";
+  if (!isset($patterns[$pattern_id])) {
+    $variables = array();
+    if ($language) {
+      $variables[] = "pathauto_{$entity}_{$bundle}_{$language}_pattern";
+    }
+    if ($bundle) {
+      $variables[] = "pathauto_{$entity}_{$bundle}_pattern";
+    }
+    $variables[] = "pathauto_{$entity}_pattern";
+
+    foreach ($variables as $variable) {
+      if ($pattern = trim(variable_get($variable, ''))) {
+        break;
+      }
+    }
+
+    $patterns[$pattern_id] = $pattern;
+  }
+
+  return $patterns[$pattern_id];
+}
+
+/**
+ * Delete an URL alias and any sub-paths.
+ *
+ * Given a source like 'node/1' this function will delete any alias that have
+ * that specific source or any sources that match 'node/1/%'.
+ *
+ * @param $source
+ *   An string with a source URL path.
+ *
+ * @see path_set_alias()
+ */
+function pathauto_path_delete_all($source) {
+  $source = urldecode($source);
+  // Delete the source path.
+  db_query("DELETE FROM {url_alias} WHERE src = '%s'", $source);
+  // Delete any sub-paths.
+  db_query("DELETE FROM {url_alias} WHERE src LIKE '%s'", $source . '/%%');
+  drupal_clear_path_cache();
 }
 
 //==============================================================================
 // Some node related functions.
+
+/**
+ * Implements hook_pathauto().
+ */
+function node_pathauto($op) {
+  module_load_include('inc', 'pathauto', 'pathauto.pathauto');
+  return _node_pathauto($op);
+}
 
 /**
  * Implements hook_nodeapi().
@@ -232,30 +227,12 @@ function pathauto_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
       break;
     case 'insert':
     case 'update':
-      _pathauto_include();
-      // Get the specific pattern or the default
-      if (variable_get('language_content_type_'. $node->type, 0)) {
-        $pattern = trim(variable_get('pathauto_node_'. $node->type .'_'. $node->language .'_pattern', FALSE));
-      }
-      if (empty($pattern)) {
-        $pattern = trim(variable_get('pathauto_node_'. $node->type .'_pattern', FALSE));
-        if (empty($pattern)) {
-          $pattern = trim(variable_get('pathauto_node_pattern', FALSE));
-        }
-      }
-      // Only do work if there's a pattern
-      if ($pattern) {
-        // Only create an alias if the checkbox was not provided or if the checkbox was provided and is checked
-        if (!isset($node->pathauto_perform_alias) || $node->pathauto_perform_alias) {
-          $placeholders = pathauto_get_placeholders('node', $node);
-          $src = "node/$node->nid";
-          $node->path = pathauto_create_alias('node', $op, $placeholders, $src, $node->nid, $node->type, $node->language);
-        }
+      if (!isset($node->pathauto_perform_alias) || !empty($node->pathauto_perform_alias)) {
+        pathauto_node_update_alias($node, $op);
       }
       break;
     case 'delete':
-      path_set_alias('node/'. $node->nid);
-      path_set_alias('node/'. $node->nid .'/feed');
+      pathauto_path_delete_all("node/{$node->nid}");
       break;
   }
 }
@@ -271,19 +248,10 @@ function pathauto_form_alter(&$form, $form_state, $form_id) {
   // Process only node forms.
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $node = $form['#node'];
-    $pattern = FALSE;
 
     // Find if there is an automatic alias pattern for this node type.
-    if (isset($form['language'])) {
-      $language = isset($form['language']['#value']) ? $form['language']['#value'] : $form['language']['#default_value'];
-      $pattern = trim(variable_get('pathauto_node_'. $form['type']['#value'] .'_'. $language .'_pattern', ''));
-    }
-    if (!$pattern) {
-      $pattern = trim(variable_get('pathauto_node_'. $form['type']['#value'] .'_pattern', ''));
-      if (!$pattern) {
-        $pattern = trim(variable_get('pathauto_node_pattern', ''));
-      }
-    }
+    $language = isset($node->language) ? $node->language : '';
+    $pattern = pathauto_pattern_load_by_entity('node', $node->type, $language);
 
     // If there is a pattern, show the automatic alias checkbox.
     if ($pattern) {
@@ -292,9 +260,8 @@ function pathauto_form_alter(&$form, $form_state, $form_id) {
           // If this is not a new node, compare it's current alias to the
           // alias that would be genereted by pathauto. If they are the same,
           // then keep the automatic alias enabled.
-          _pathauto_include();
-          $placeholders = pathauto_get_placeholders('node', $node);
-          $pathauto_alias = pathauto_create_alias('node', 'return', $placeholders, "node/{$node->nid}", $node->nid, $node->type, $node->language);
+          module_load_include('inc', 'pathauto');
+          $pathauto_alias = pathauto_create_alias('node', 'return', "node/{$node->nid}", array('node' => $node), $node->nid, $node->type, $node->language);
           $node->pathauto_perform_alias = isset($node->path) && $node->path == $pathauto_alias;
         }
         else {
@@ -319,7 +286,7 @@ function pathauto_form_alter(&$form, $form_state, $form_id) {
       );
 
       if (user_access('administer pathauto')) {
-        $form['path']['pathauto_perform_alias']['#description'] .= ' '. t('To control the format of the generated aliases, see the <a href="@pathauto">automated alias settings</a>.', array('@pathauto' => url('admin/build/path/pathauto')));
+        $form['path']['pathauto_perform_alias']['#description'] .= ' ' . t('To control the format of the generated aliases, see the <a href="@url-patterns">URL alias patterns</a>.', array('@url-patterns' => url('admin/build/path/patterns')));
       }
 
       if ($node->pathauto_perform_alias && !empty($node->old_alias) && empty($node->path)) {
@@ -345,7 +312,7 @@ function pathauto_node_operations() {
   $operations['pathauto_update_alias'] = array(
     'label' => t('Update URL alias'),
     'callback' => 'pathauto_node_update_alias_multiple',
-    'callback arguments' => array('bulkupdate', TRUE),
+    'callback arguments' => array('bulkupdate', array('message' => TRUE)),
   );
   return $operations;
 }
@@ -357,11 +324,18 @@ function pathauto_node_operations() {
  *   A node object.
  * @param $op
  *   Operation being performed on the node ('insert', 'update' or 'bulkupdate').
+ * @param $options
+ *   An optional array of additional options.
  */
-function pathauto_node_update_alias($node, $op) {
+function pathauto_node_update_alias($node, $op, $options = array()) {
+  // Skip processing if the term has no pattern.
+  $language = isset($node->language) ? $node->language : '';
+  if (!pathauto_pattern_load_by_entity('node', $node->type, $language)) {
+    return;
+  }
+
   module_load_include('inc', 'pathauto');
-  $placeholders = pathauto_get_placeholders('node', $node);
-  pathauto_create_alias('node', $op, $placeholders, "node/{$node->nid}", $node->nid, $node->type, $node->language);
+  pathauto_create_alias('node', $op, "node/{$node->nid}", array('node' => $node), $node->nid, $node->type, $language);
 }
 
 /**
@@ -372,35 +346,41 @@ function pathauto_node_update_alias($node, $op) {
  * @param $op
  *   Operation being performed on the nodes ('insert', 'update' or
  *   'bulkupdate').
- * @param $message
- *   A boolean if TRUE will display a message about how many nodes were
- *   updated.
+ * @param $options
+ *   An optional array of additional options.
  */
-function pathauto_node_update_alias_multiple($nids, $op, $message = FALSE) {
+function pathauto_node_update_alias_multiple($nids, $op, $options = array()) {
+  $options += array('message' => FALSE);
+
   foreach ($nids as $nid) {
     if ($node = node_load($nid, NULL, TRUE)) {
-      pathauto_node_update_alias($node, $op);
+      pathauto_node_update_alias($node, $op, $options);
     }
   }
-  if ($message) {
+
+  if (!empty($options['message'])) {
     drupal_set_message(format_plural(count($nids), 'Updated URL alias for 1 node.', 'Updated URL aliases for @count nodes.'));
   }
 }
 
-/**
- * Wrapper function backwards compatibility. Should be avoided.
- *
- * @param $nodes
- *   An array of node IDs.
- *
- * @see pathauto_node_update_alias_multiple().
- */
-function pathauto_node_operations_update($nodes) {
-  return pathauto_node_update_alias_multiple($nodes, 'bulkupdate');
-}
-
 //==============================================================================
 // Taxonomy related functions.
+
+/**
+ * Implements hook_pathauto() on behalf of taxonomy.module.
+ */
+function taxonomy_pathauto($op) {
+  module_load_include('inc', 'pathauto', 'pathauto.pathauto');
+  return _taxonomy_pathauto($op);
+}
+
+/**
+ * Implements hook_pathauto() on behalf of forum.module.
+ */
+function forum_pathauto($op) {
+  module_load_include('inc', 'pathauto', 'pathauto.pathauto');
+  return _forum_pathauto($op);
+}
 
 /**
  * Implements hook_taxonomy().
@@ -411,8 +391,6 @@ function pathauto_taxonomy($op, $type, $object = NULL) {
       switch ($op) {
         case 'insert':
         case 'update':
-          _pathauto_include();
-          // Use the category info to automatically create an alias
           $term = (object) $object;
 
           // Clear the taxonomy term's static cache.
@@ -420,26 +398,80 @@ function pathauto_taxonomy($op, $type, $object = NULL) {
             taxonomy_get_term($term->tid, TRUE);
           }
 
-          if ($term->name) {
-            $count = _taxonomy_pathauto_alias($term, $op);
-          }
-
-          // For all children generate new alias (important if [catpath] used)
-          foreach (taxonomy_get_tree($term->vid, $term->tid) as $subcategory) {
-            $count = _taxonomy_pathauto_alias($subcategory, $op);
-          }
-
+          pathauto_taxonomy_term_update_alias($term, $op);
           break;
         case 'delete':
           // If the category is deleted, remove the path aliases
           $term = (object) $object;
-          path_set_alias('taxonomy/term/'. $term->tid);
-          path_set_alias(taxonomy_term_path($term));
-          path_set_alias('forum/'. $term->tid);
-          path_set_alias('taxonomy/term/'. $term->tid .'/0/feed');
+          $term_path = taxonomy_term_path($term);
+          pathauto_path_delete_all($term_path);
+          if ($term_path != "taxonomy/term/{$term->tid}") {
+            pathauto_path_delete_all("taxonomy/term/{$term->tid}");
+          }
           break;
       }
       break;
+  }
+}
+
+/**
+ * Update the URL aliases for an individual taxonomy term.
+ *
+ * @param $term
+ *   A taxonomy term object.
+ * @param $op
+ *   Operation being performed on the term ('insert', 'update' or 'bulkupdate').
+ * @param $options
+ *   An optional array of additional options.
+ */
+function pathauto_taxonomy_term_update_alias($term, $op, $options = array()) {
+  $options += array('alias children' => FALSE);
+
+  $module = 'taxonomy';
+  if (module_exists('forum') && $term->vid == variable_get('forum_nav_vocabulary', '')) {
+    $module = 'forum';
+  }
+
+  // Skip processing if the term has no pattern.
+  if (!pathauto_pattern_load_by_entity($module, $term->vid)) {
+    return;
+  }
+
+  module_load_include('inc', 'pathauto');
+  $source = taxonomy_term_path($term);
+  pathauto_create_alias($module, $op, $source, array('taxonomy' => $term), $term->tid, $term->vid);
+
+  if (!empty($options['alias children'])) {
+    // For all children generate new alias.
+    $options['alias children'] = FALSE;
+    foreach (taxonomy_get_tree($term->vid, $term->tid) as $subterm) {
+      pathauto_taxonomy_term_update_alias($subterm, $op, $options);
+    }
+  }
+}
+
+/**
+ * Update the URL aliases for multiple taxonomy terms.
+ *
+ * @param $tids
+ *   An array of term IDs.
+ * @param $op
+ *   Operation being performed on the nodes ('insert', 'update' or
+ *   'bulkupdate').
+ * @param $options
+ *   An optional array of additional options.
+ */
+function pathauto_taxonomy_term_update_alias_multiple(array $tids, $op, array $options = array()) {
+  $options += array('message' => FALSE);
+
+  foreach ($tids as $tid) {
+    if ($term = taxonomy_get_term($tid, TRUE)) {
+      pathauto_taxonomy_term_update_alias($term, $op, $options);
+    }
+  }
+
+  if (!empty($options['message'])) {
+    drupal_set_message(format_plural(count($tids), 'Updated URL alias for 1 term.', 'Updated URL aliases for @count terms.'));
   }
 }
 
@@ -447,58 +479,63 @@ function pathauto_taxonomy($op, $type, $object = NULL) {
 // User related functions.
 
 /**
+ * Implements hook_pathauto() on behalf of user.module.
+ */
+function user_pathauto($op) {
+  module_load_include('inc', 'pathauto', 'pathauto.pathauto');
+  return _user_pathauto($op);
+}
+
+/**
+ * Implements hook_pathauto() on behalf of blog.module.
+ */
+function blog_pathauto($op) {
+  module_load_include('inc', 'pathauto', 'pathauto.pathauto');
+  return _blog_pathauto($op);
+}
+
+/**
  * Implements hook_user().
  */
-function pathauto_user($op, &$edit, &$user, $category = NULL) {
+function pathauto_user($op, &$edit, &$account, $category = NULL) {
   switch ($op) {
     case 'insert':
-    case 'update':
-      _pathauto_include();
-      // Use the username to automatically create an alias
-      $pathauto_user = (object) array_merge((array) $user, $edit);
-      if ($user->name) {
-        $placeholders = pathauto_get_placeholders('user', $pathauto_user);
-        $src = 'user/'. $user->uid;
-        $alias = pathauto_create_alias('user', $op, $placeholders, $src, $user->uid);
+      // When hook_user('insert') is run, most of the account object has been
+      // saved into $account, except for $account->data and $account->roles.
+      // Since tokens may depend on the user's data or permissions, we need to
+      // ensure we have a 'full' user object.
+      $merged_account = drupal_clone($account);
 
-        if (module_exists('blog')) {
-          $new_user = drupal_clone($user);
-          if ($category == 'account') {
-            $new_user->roles = isset($edit['roles']) ? $edit['roles'] : array();
-            $new_user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user'; // Add this back
-          }
-          if (node_access('create', 'blog', $new_user)) {
-            $src = 'blog/'. $user->uid;
-            $alias = pathauto_create_alias('blog', $op, $placeholders, $src, $user->uid);
-          }
-          else {
-            path_set_alias('blog/'. $user->uid);
-            path_set_alias('blog/'. $user->uid .'/feed');
-          }
-        }
-        if (module_exists('tracker')) {
-          $src = 'user/'. $user->uid .'/track';
-          $alias = pathauto_create_alias('tracker', $op, $placeholders, $src, $user->uid);
-        }
-        if (module_exists('contact')) {
-          $src = 'user/'. $user->uid .'/contact';
-          $alias = pathauto_create_alias('contact', $op, $placeholders, $src, $user->uid);
+      // Merge in account data.
+      $merged_account->data = array();
+      $user_fields = user_fields();
+      foreach ($edit as $key => $value) {
+        if ((substr($key, 0, 4) !== 'auth') && ($key != 'roles') && (!in_array($key, $user_fields)) && ($value !== NULL)) {
+          $merged_account->data[$key] = $value;
         }
       }
+
+      // Merge in user roles.
+      if (isset($edit['roles']) && is_array($edit['roles'])) {
+        $roles = user_roles();
+        foreach (array_keys($edit['roles']) as $rid) {
+          if (!isset($merged_account->roles[$rid])) {
+            $merged_account->roles[$rid] = $roles[$rid];
+          }
+        }
+      }
+
+      pathauto_user_update_alias($merged_account, 'insert');
       break;
+
+    case 'after_update':
+      pathauto_user_update_alias($account, 'update');
+      break;
+
     case 'delete':
       // If the user is deleted, remove the path aliases
-      $user = (object) $user;
-      path_set_alias('user/'. $user->uid);
-
-      // They may have enabled these modules and/or feeds when the user was created, so let's try to delete all of them
-      path_set_alias('blog/'. $user->uid);
-      path_set_alias('blog/'. $user->uid .'/feed');
-      path_set_alias('user/'. $user->uid .'/track');
-      path_set_alias('user/'. $user->uid .'/track/feed');
-      path_set_alias('user/'. $user->uid .'/contact');
-      break;
-    default:
+      pathauto_path_delete_all("user/{$account->uid}");
+      pathauto_path_delete_all("blog/{$account->uid}");
       break;
   }
 }
@@ -510,7 +547,7 @@ function pathauto_user_operations() {
   $operations['pathauto_update_alias'] = array(
     'label' => t('Update URL alias'),
     'callback' => 'pathauto_user_update_alias_multiple',
-    'callback arguments' => array('bulkupdate', TRUE),
+    'callback arguments' => array('bulkupdate', array('message' => TRUE)),
   );
   return $operations;
 }
@@ -523,28 +560,23 @@ function pathauto_user_operations() {
  * @param $op
  *   Operation being performed on the account ('insert', 'update' or
  *   'bulkupdate').
- *
- * @todo Remove support for any sub-path aliases.
+ * @param $options
+ *   An optional array of additional options.
  */
-function pathauto_user_update_alias($account, $op) {
-  module_load_include('inc', 'pathauto');
-  $placeholders = pathauto_get_placeholders('user', $account);
-  pathauto_create_alias('user', $op, $placeholders, "user/{$account->uid}", $account->uid);
+function pathauto_user_update_alias($account, $op, $options = array()) {
+  $options += array('alias blog' => module_exists('blog'));
 
-  if (module_exists('blog')) {
-    if (node_access('create', 'blog', $account)) {
-      pathauto_create_alias('blog', $op, $placeholders, "blog/{$account->uid}", $account->uid);
-    }
-    else {
-      path_set_alias('blog/'. $user->uid);
-      path_set_alias('blog/'. $user->uid .'/feed');
-    }
+  // Skip processing if the account has no pattern.
+  if (!pathauto_pattern_load_by_entity('user')) {
+    return;
   }
-  if (module_exists('tracker')) {
-    $alias = pathauto_create_alias('tracker', $op, $placeholders, "user/{$account->uid}/track", $user->uid);
-  }
-  if (module_exists('contact')) {
-    $alias = pathauto_create_alias('contact', $op, $placeholders, "user/{$account->uid}/contact", $user->uid);
+
+  module_load_include('inc', 'pathauto');
+  pathauto_create_alias('user', $op, "user/{$account->uid}", array('user' => $account), $account->uid);
+
+  // Because blogs are also associated with users, also generate the blog paths.
+  if (!empty($options['alias blog'])) {
+    pathauto_blog_update_alias($account, $op);
   }
 }
 
@@ -556,17 +588,45 @@ function pathauto_user_update_alias($account, $op) {
  * @param $op
  *   Operation being performed on the accounts ('insert', 'update' or
  *   'bulkupdate').
- * @param $message
- *   A boolean if TRUE will display a message about how many accounts were
- *   updated.
+ * @param $options
+ *   An optional array of additional options.
  */
-function pathauto_user_update_alias_multiple($uids, $op, $message = FALSE) {
+function pathauto_user_update_alias_multiple($uids, $op, $options = array()) {
+  $options += array('message' => FALSE);
+
   foreach ($uids as $uid) {
     if ($account = user_load($uid)) {
-      pathauto_user_update_alias($account, $op);
+      pathauto_user_update_alias($account, $op, $options);
     }
   }
-  if ($message) {
+
+  if (!empty($options['message'])) {
     drupal_set_message(format_plural(count($uids), 'Updated URL alias for 1 user account.', 'Updated URL aliases for @count user accounts.'));
+  }
+}
+
+/**
+ * Update the blog URL aliases for an individual user account.
+ *
+ * @param $account
+ *   A user account object.
+ * @param $op
+ *   Operation being performed on the blog ('insert', 'update' or
+ *   'bulkupdate').
+ * @param $options
+ *   An optional array of additional options.
+ */
+function pathauto_blog_update_alias($account, $op, $options = array()) {
+  // Skip processing if the blog has no pattern.
+  if (!pathauto_pattern_load_by_entity('blog')) {
+    return;
+  }
+
+  module_load_include('inc', 'pathauto');
+  if (node_access('create', 'blog', $account)) {
+    pathauto_create_alias('blog', $op, "blog/{$account->uid}", array('user' => $account), $account->uid);
+  }
+  else {
+    pathauto_path_delete_all("blog/{$account->uid}");
   }
 }
