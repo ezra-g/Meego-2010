@@ -102,7 +102,7 @@ a#sign-up-banner:visited {
 
 h1#site-name,
 div#site-name /* The name of the website */ {
-  background: transparent url(../images/site_name.png) no-repeat scroll top left;
+  background: transparent url(../images/logo.gif) no-repeat scroll top left;
   display: block;
 	height: 62px;
   width: 205px;
