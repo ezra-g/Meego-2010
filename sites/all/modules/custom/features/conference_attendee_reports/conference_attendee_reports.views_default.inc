@@ -746,7 +746,7 @@ function conference_attendee_reports_views_default_views() {
   $handler->override_option('title', 'MeeGo Conference Attendee Reports');
   $handler->override_option('empty', 'No attendees exist for the filters you\'ve selected. Please reset the form or select another filter combination.');
   $handler->override_option('empty_format', '1');
-  $handler->override_option('items_per_page', 100);
+  $handler->override_option('items_per_page', 50);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
@@ -866,6 +866,7 @@ function conference_attendee_reports_views_default_views() {
     'name' => 'menu-conference',
   ));
   $handler = $view->new_display('feed', 'Export: XLS', 'feed_2');
+  $handler->override_option('items_per_page', 0);
   $handler->override_option('style_plugin', 'views_xls');
   $handler->override_option('style_options', array(
     'mission_description' => FALSE,
