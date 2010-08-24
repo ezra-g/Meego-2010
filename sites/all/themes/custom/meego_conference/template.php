@@ -75,52 +75,14 @@ function meego_conference_preprocess_node(&$vars, $hook) {
 		$vars['comments_new'] = l($comments_new.t(' new'), "node/$node->nid", array('attributes' => array('title' => t('Jump to first new comment')), 'fragment' => 'new'));
 	}
 	
-	// Device -- linked to landing page
-	$device = $taxonomy[1];
-	if ($device) {
-		foreach ($device as $key => $term) {
-			// special link for device types; maybe others
-		  $href = 'devices/'. strtolower(str_replace(' ', '-', $term->name));
-			$items1[] = array('title' => $term->name, 'href' => $href);
-		}
-		$vars['device'] = '<label>'.t('Device').':</label> '. theme('links', $items1, array('class' => 'links inline'));
-	}
-	
-	// Tags -- only show on full page
-	$tags = $taxonomy[2];
-	if ($tags && $vars['page']) {
-		foreach ($tags as $key => $term) {
-			$items1[] = array('title' => $term->name, 'href' => taxonomy_term_path($term));
-		}
-		$vars['tags'] = '<label>'.t('Tags').':</label> '. theme('links', $items1, array('class' => 'links inline'));
-	}
-	
-	// Stick with node.tpl.php, not node-og-group-post
-	$key = array_search('node-og-group-post', $vars['template_files']);
-	if ($key !== FALSE) {
-	  $vars['template_files'][$key] = NULL;
-	}
-	
 	// Unpublished warning message to permissioned users
 	if ($node->status == 0) {
 		$vars['unpublished'] = t('Content unpublished for non-permissioned users. To publish, select the "edit" link, open the "Publishing Options" section, and select the "Publish" check box.');
 	}
 	
-	// OG Private Posts Warning
-	if (module_exists('og_access')) {
-		if (og_is_group_post_type($node->type) && $node->og_public == FALSE) {
-			$vars['private'] = t('Content is Private; only visible to members or admins of this group. To make public, select the "edit" link, open the "Groups" section, and select the "Public" check box.');
-		}
-	}
-	
 	// New, updated mark
 	if ($node->changed) {
 		$vars['mark'] = '<em>'.theme('mark', node_mark($node->nid, $node->changed)).'</em>';
-	}
-	
-	// Splash Images
-	if ($node->type == 'device' || $node->type == 'landing' || $node->type == 'sdk_group') {
-		$vars['splash'] = '<div class="splash"></div>';
 	}
 	
 	// Facebook Like Button

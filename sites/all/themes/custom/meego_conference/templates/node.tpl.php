@@ -74,9 +74,10 @@
  */
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix">
-  <?php print $user_picture; ?>
   
-  <?php if ($splash) { print $splash; } ?>
+  <?php if ($user_picture && in_array($node->type, array('news', 'session'))): ?>
+        <?php print $user_picture; ?>
+  <?php endif; ?>
 
   <?php if (!$page): ?>
     <h2 class="title"><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
@@ -94,10 +95,6 @@
       <?php endif; ?>
 
     </div>
-  <?php endif; ?>
-
-  <?php if ($private): ?>
-    <div class="unpublished clearfix"><?php print $private; ?></div>
   <?php endif; ?>
   
   <?php if ($unpublished): ?>
