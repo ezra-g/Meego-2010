@@ -86,8 +86,8 @@ function meego_conference_preprocess_node(&$vars, $hook) {
 	}
 	
 	// Facebook Like Button
-  if ($node->type == 'news') {  
-    $vars['facebook_like'] = '<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fconference2010.meego.com&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;colorscheme=light&amp;height=20" scrolling="no" frameborder="0" style="overflow:hidden; width:100px; height:20px;" allowTransparency="true"></iframe>';
+  if ($node->type == 'news') {
+    $vars['facebook_like'] = '<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fconference2010.meego.com/'.$node->path.'&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;colorscheme=light&amp;height=20" scrolling="no" frameborder="0" style="overflow:hidden; width:100px; height:20px;" allowTransparency="true"></iframe>';
   }
 	
 }
