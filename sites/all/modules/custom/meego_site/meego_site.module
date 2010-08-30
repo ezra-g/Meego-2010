@@ -1,5 +1,10 @@
 <?php
 
+// For ease, define the field category string to use to hide conference specific
+// information.
+define('MEEGO_CONFERENCE_FIELD_CATEGORY', 'Conference Information');
+// The main event node is nid 1.
+define('MEEGO_CONFERENCE_EVENT_NID', 1);
 /*
  * Implementation of hook_block().
  */
@@ -8,7 +13,6 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
     $blocks[0]['info'] = t('Call to action: Sign up for the conference');
     return $blocks;
   }
-  
   if ($op == 'view') {
     switch ($delta) {
       case 0:
@@ -18,9 +22,9 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
         if (empty($user->uid)) {
           return $block;
         }
-        $sid = db_result(db_query("SELECT sid FROM {signup_log} WHERE nid = 1 AND uid = %d", $user->uid));
+        
         // They've already signed up. Don't remind them again.
-        if (!empty($sid)) {
+        if (meego_site_signed_up_to_primary_event($user->uid)) {
           return $block;
         }
         $node = node_load(1);
@@ -29,6 +33,18 @@ function meego_site_block($op = 'list', $delta = 0, $edit = array()) {
         module_load_include('inc', 'signup', 'includes/node_output');
         $block['content'] .= _signup_node_output($node);
         return $block;
+    }
+  }
+}
+
+/*
+ * Implementation of hook_user().
+ */
+function meego_site_user($op, &$edit, &$account, $category = NULL) {
+   // Remove the conference fields from account view if the user hasn't signed up to the main event.
+  if ($op == 'view') {
+    if (!meego_site_signed_up_to_primary_event($account->uid)) {
+      unset($account->content[MEEGO_CONFERENCE_FIELD_CATEGORY]);
     }
   }
 }
@@ -46,16 +62,16 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
      );
     // Add the Conference Information profile fields.
     $edit = array();
-    $result = _profile_get_fields('Conference Information');
+    $result = _profile_get_fields(MEEGO_CONFERENCE_FIELD_CATEGORY);
     while ($field = db_fetch_object($result)) {
       $fields[$field->name] = $field;
     }
-    $attending_form = profile_form_profile(array(), $user, 'Conference Information');
+    $attending_form = profile_form_profile(array(), $user, MEEGO_CONFERENCE_FIELD_CATEGORY);
     $attending_form = array_shift($attending_form);
     $form['attending'] = array(
       '#type' => 'fieldset',
       '#collapsible' => FALSE,
-      '#title' => t('Conference information'),
+      '#title' => t(MEEGO_CONFERENCE_FIELD_CATEGORY),
       '#weight' => -1,
     );
     foreach (element_children($attending_form) as $key => $name) {
@@ -64,6 +80,12 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
     }
     $form['#validate'][] = 'meego_site_signup_form_validate';
     $form['#submit'][] = 'meego_site_signup_form_submit';
+  }
+  // Don't show the conference information profile fields if the user has not signed up for the main event.
+  if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
+    if (!meego_site_signed_up_to_primary_event($form['#uid'])) {
+      $form[MEEGO_CONFERENCE_FIELD_CATEGORY]['#access'] = FALSE;
+    }
   }
 }
 
@@ -75,7 +97,7 @@ function meego_site_signup_form_validate(&$form, &$form_state) {
 
 function meego_site_signup_form_submit(&$form, &$form_state) {
   global $user;
-  $result = _profile_get_fields('Conference Information');
+  $result = _profile_get_fields(MEEGO_CONFERENCE_FIELD_CATEGORY);
   while ($field = db_fetch_object($result)) {
     $fields[$field->name] = $field;
   }
@@ -103,6 +125,18 @@ function meego_site_signup_data_alter(&$signup, $form_values) {
   }
 }
 
+/*
+ * Helper function to determine if a particular user has signed up for the main conference event.
+ */
+function meego_site_signed_up_to_primary_event($uid) {
+  $sid = db_result(db_query("SELECT sid FROM {signup_log} WHERE uid = %d and nid = %d", $uid, MEEGO_CONFERENCE_EVENT_NID));
+  if (!$sid) {
+    return FALSE;
+  }
+  else {
+    return TRUE;
+  }
+}
 /*
  * Return the appropriate signup status code for the current user.
  */
