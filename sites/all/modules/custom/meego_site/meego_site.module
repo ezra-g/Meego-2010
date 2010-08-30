@@ -83,14 +83,17 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
   }
   // Don't show the conference information profile fields if the user has not signed up for the main event.
   if ($form_id == 'user_profile_form' || $form_id == 'user_register') {
-    if (!meego_site_signed_up_to_primary_event($form['#uid'])) {
+    if (!meego_site_signed_up_to_primary_event($form['_account']['#value']->uid) && !empty($form[MEEGO_CONFERENCE_FIELD_CATEGORY])) {
       $form[MEEGO_CONFERENCE_FIELD_CATEGORY]['#access'] = FALSE;
       $form['submit']['#access'] = FALSE;
       $form['delete']['#access'] = FALSE;
-      $form['message'] = array(
-        '#type' => 'markup',
-        '#value' => t('You can provide this information as part of <a href="@signup">signing up for the conference</a>.', array('@signup' => url('node/' . MEEGO_CONFERENCE_EVENT_NID))),
-      );
+      // We want to exclude this link from the user registration form.
+      if ($form_id != 'user_register') {
+        $form['message'] = array(
+          '#type' => 'markup',
+          '#value' => t('You can provide this information as part of <a href="@signup">signing up for the conference</a>.', array('@signup' => url('node/' . MEEGO_CONFERENCE_EVENT_NID))),
+        );
+      }
     }
   }
 }
