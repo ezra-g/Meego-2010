@@ -183,3 +183,12 @@ a.lightbox-processed {
   font-weight: bold;
   border-bottom: 1px solid #EAEAEA;
 }
+
+/**
+ * T-Shirt Flag Votes
+ */
+.flag-tshirt-vote {
+  -moz-border-radius:4px 4px 4px 4px;
+  background-color:#eee;
+  padding: 10px;
+}

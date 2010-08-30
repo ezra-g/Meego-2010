@@ -1,0 +1,3 @@
+<?php
+
+include_once('conference_t_shirt_design_contest.features.inc');

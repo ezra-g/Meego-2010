@@ -113,8 +113,6 @@
 </head>
 <body class="<?php print $classes; ?>">
 
-  <div id="background-footer">
-
   <?php if ($primary_links): ?>
     <div id="skip-to-nav"><a href="#main-menu"><?php print t('Jump to Navigation'); ?></a></div>
   <?php endif; ?>
@@ -233,8 +231,6 @@
 
   </div></div> <!-- /#page, /#page-wrapper -->
 
-  </div> <!-- /#background-footer -->
-  
   <?php print $page_closure; ?>
 
   <?php print $scripts; ?>

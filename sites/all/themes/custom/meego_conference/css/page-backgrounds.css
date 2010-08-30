@@ -13,15 +13,10 @@
 
 
 body {
-  background-color:#FFFFFF;
-  color:#333333;
-  background:url('../images/backgroundGradient.jpg') bottom center repeat-x #50C2E6;
-}
-
-#background-footer {
-  background-image:url('../images/hill6.jpg');
-  background-position:center bottom;
-  background-repeat:no-repeat;
+  background-image: url(../images/hill7.jpg);
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-color: #a0dff2;
 }
 
 #page-wrapper {
