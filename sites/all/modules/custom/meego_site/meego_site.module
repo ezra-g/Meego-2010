@@ -5,6 +5,28 @@
 define('MEEGO_CONFERENCE_FIELD_CATEGORY', 'Conference Information');
 // The main event node is nid 1.
 define('MEEGO_CONFERENCE_EVENT_NID', 1);
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function meego_site_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  if ($op == 'insert') {
+    // Setup context for actions_do.
+    $context = array(
+      'hook' => 'nodeapi',
+      'op' => 'insert',
+      'node' => $node,
+    );
+    if ($node->type == 'session') {
+      $session_action_id = variable_get('meego_site_session_action_id', NULL);
+      // Make sure the variable is set so the action doesn't fail.
+      if (!is_null($session_action_id)) {
+        actions_do($session_action_id, $node, $context);
+      }
+    }
+  }
+}
+
 /*
  * Implementation of hook_block().
  */
