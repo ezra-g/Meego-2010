@@ -211,6 +211,12 @@
       </div></div>
     <?php endif ?>
 
+    <?php if ($sponsors): ?>
+      <div id="sponsors"><div id="sponsors-inner" class="section clearfix">
+        <?php print $sponsors; ?>
+      </div></div><!-- /#sponsors -->
+    <?php endif ?>
+
     <?php if ($footer || $footer_message): ?>
       <div id="footer"><div id="footer-inner"><div class="section">
       <div class="footer-top clearfix">

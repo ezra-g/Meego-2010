@@ -98,3 +98,13 @@
 .view-tshirt-designs td {
   border: 1px solid #eee;
 }
+
+/**
+ * Sponsors View
+ */
+.view-display-id-page_1 .view-header h2 {
+  margin-top: 2em;
+  border-bottom: 2px solid #eee;
+}
+
+.view-display-id-block_4 table td {padding: 0;}

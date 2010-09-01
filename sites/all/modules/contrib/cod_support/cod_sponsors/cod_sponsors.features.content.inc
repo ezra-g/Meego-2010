@@ -1,26 +1,27 @@
 <?php
 
 /**
- * Helper to implementation of hook_content_default_fields().
+ * Implementation of hook_content_default_fields().
  */
-function _cod_sponsors_content_default_fields() {
+function cod_sponsors_content_default_fields() {
   $fields = array();
 
   // Exported field: field_logo
-  $fields[] = array(
+  $fields['sponsor-field_logo'] = array(
     'field_name' => 'field_logo',
     'type_name' => 'sponsor',
     'display_settings' => array(
+      'weight' => '-3',
+      'parent' => '',
       'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
+        'format' => 'hidden',
       ),
       'teaser' => array(
-        'format' => 'image_plain',
+        'format' => 'sponsor_logo_callout_linked',
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'image_plain',
+        'format' => 'sponsor_logo_page_default',
         'exclude' => 0,
       ),
       '4' => array(
@@ -43,7 +44,7 @@ function _cod_sponsors_content_default_fields() {
     'description_field' => '0',
     'widget' => array(
       'file_extensions' => 'png gif jpg jpeg',
-      'file_path' => '',
+      'file_path' => 'sponsor_logos',
       'progress_indicator' => 'bar',
       'max_filesize_per_file' => '',
       'max_filesize_per_node' => '',
@@ -57,7 +58,7 @@ function _cod_sponsors_content_default_fields() {
       'default_image' => NULL,
       'use_default_image' => 0,
       'label' => 'Logo',
-      'weight' => '32',
+      'weight' => '-4',
       'description' => '',
       'type' => 'imagefield_widget',
       'module' => 'imagefield',
@@ -65,13 +66,14 @@ function _cod_sponsors_content_default_fields() {
   );
 
   // Exported field: field_related_attendees
-  $fields[] = array(
+  $fields['sponsor-field_related_attendees'] = array(
     'field_name' => 'field_related_attendees',
     'type_name' => 'sponsor',
     'display_settings' => array(
+      'weight' => '-1',
+      'parent' => '',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
@@ -114,7 +116,7 @@ function _cod_sponsors_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Related Attendees',
-      'weight' => '31',
+      'weight' => '-1',
       'description' => '',
       'type' => 'userreference_autocomplete',
       'module' => 'userreference',
@@ -122,13 +124,14 @@ function _cod_sponsors_content_default_fields() {
   );
 
   // Exported field: field_sponsorship_level
-  $fields[] = array(
+  $fields['sponsor-field_sponsorship_level'] = array(
     'field_name' => 'field_sponsorship_level',
     'type_name' => 'sponsor',
     'display_settings' => array(
+      'weight' => '-4',
+      'parent' => '',
       'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
+        'format' => 'inline',
       ),
       'teaser' => array(
         'format' => 'default',
@@ -158,7 +161,7 @@ function _cod_sponsors_content_default_fields() {
     'allowed_values' => 'Platinum
 Gold
 Silver
-Bronze',
+Media',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(
@@ -168,7 +171,7 @@ Bronze',
       ),
       'default_value_php' => NULL,
       'label' => 'Sponsorship Level',
-      'weight' => '33',
+      'weight' => '-2',
       'description' => '',
       'type' => 'optionwidgets_select',
       'module' => 'optionwidgets',
@@ -176,137 +179,10 @@ Bronze',
   );
 
   // Translatables
-  array(
-    t('Logo'),
-    t('Related Attendees'),
-    t('Sponsorship Level'),
-  );
+  // Included for use with string extractors like potx.
+  t('Logo');
+  t('Related Attendees');
+  t('Sponsorship Level');
 
   return $fields;
-}
-
-/**
- * Helper to implementation of hook_context_default_contexts().
- */
-function _cod_sponsors_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'context_ui',
-    'attribute' => 'section',
-    'value' => 'sponsors',
-    'description' => 'Sponsors page',
-    'views' => array(
-      '0' => 'Sponsors',
-    ),
-    'block' => array(
-      'views_Sponsors-block_1' => array(
-        'module' => 'views',
-        'delta' => 'Sponsors-block_1',
-        'weight' => 10,
-        'region' => 'content',
-        'status' => '0',
-        'label' => 'Sponsors: Gold Sponsor Block',
-        'type' => 'context_ui',
-      ),
-      'views_Sponsors-block_2' => array(
-        'module' => 'views',
-        'delta' => 'Sponsors-block_2',
-        'weight' => 11,
-        'region' => 'content',
-        'status' => '0',
-        'label' => 'Sponsors: Silver Sponsor Block',
-        'type' => 'context_ui',
-      ),
-      'views_Sponsors-block_3' => array(
-        'module' => 'views',
-        'delta' => 'Sponsors-block_3',
-        'weight' => 12,
-        'region' => 'content',
-        'status' => '0',
-        'label' => 'Sponsors: Bronze Sponsor Block',
-        'type' => 'context_ui',
-      ),
-    ),
-  );
-  return $items;
-}
-
-/**
- * Helper to implementation of hook_imagecache_default_presets().
- */
-function _cod_sponsors_imagecache_default_presets() {
-  $items = array(
-    'sponsor_logo_bronze' => array(
-      'presetname' => 'sponsor_logo_bronze',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
-          'data' => array(
-            'width' => '100',
-            'height' => '',
-          ),
-        ),
-      ),
-    ),
-    'sponsor_logo_callout' => array(
-      'presetname' => 'sponsor_logo_callout',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
-          'data' => array(
-            'width' => '200',
-            'height' => '',
-          ),
-        ),
-      ),
-    ),
-    'sponsor_logo_gold' => array(
-      'presetname' => 'sponsor_logo_gold',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
-          'data' => array(
-            'width' => '150',
-            'height' => '',
-          ),
-        ),
-      ),
-    ),
-    'sponsor_logo_platinum' => array(
-      'presetname' => 'sponsor_logo_platinum',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
-          'data' => array(
-            'width' => '200',
-            'height' => '',
-          ),
-        ),
-      ),
-    ),
-    'sponsor_logo_silver' => array(
-      'presetname' => 'sponsor_logo_silver',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
-          'data' => array(
-            'width' => '125',
-            'height' => '',
-          ),
-        ),
-      ),
-    ),
-  );
-  return $items;
 }

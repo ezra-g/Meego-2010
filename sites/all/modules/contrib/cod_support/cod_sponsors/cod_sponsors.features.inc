@@ -1,46 +1,139 @@
 <?php
 
 /**
- * Implementation of hook_content_default_fields().
+ * Implementation of hook_ctools_plugin_api().
  */
-function cod_sponsors_content_default_fields() {
-  module_load_include('inc', 'cod_sponsors', 'cod_sponsors.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_sponsors_content_default_fields', $args);
-}
-
-/**
- * Implementation of hook_context_default_contexts().
- */
-function cod_sponsors_context_default_contexts() {
-  module_load_include('inc', 'cod_sponsors', 'cod_sponsors.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_sponsors_context_default_contexts', $args);
+function cod_sponsors_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
  * Implementation of hook_imagecache_default_presets().
  */
 function cod_sponsors_imagecache_default_presets() {
-  module_load_include('inc', 'cod_sponsors', 'cod_sponsors.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_sponsors_imagecache_default_presets', $args);
+  $items = array(
+    'sponsor_logo_bronze' => array(
+      'presetname' => 'sponsor_logo_bronze',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '150',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+    'sponsor_logo_callout' => array(
+      'presetname' => 'sponsor_logo_callout',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '200',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+    'sponsor_logo_gold' => array(
+      'presetname' => 'sponsor_logo_gold',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '150',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+    'sponsor_logo_page' => array(
+      'presetname' => 'sponsor_logo_page',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '450',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+    'sponsor_logo_platinum' => array(
+      'presetname' => 'sponsor_logo_platinum',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '400',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+    'sponsor_logo_silver' => array(
+      'presetname' => 'sponsor_logo_silver',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '125',
+            'height' => '',
+            'upscale' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  return $items;
 }
 
 /**
  * Implementation of hook_node_info().
  */
 function cod_sponsors_node_info() {
-  module_load_include('inc', 'cod_sponsors', 'cod_sponsors.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_cod_sponsors_node_info', $args);
+  $items = array(
+    'sponsor' => array(
+      'name' => t('Sponsor'),
+      'module' => 'features',
+      'description' => t('An event sponsor'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Summary'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_views_default_views().
+ * Implementation of hook_views_api().
  */
-function cod_sponsors_views_default_views() {
-  module_load_include('inc', 'cod_sponsors', 'cod_sponsors.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_cod_sponsors_views_default_views', $args);
+function cod_sponsors_views_api() {
+  return array(
+    'api' => '2',
+  );
 }

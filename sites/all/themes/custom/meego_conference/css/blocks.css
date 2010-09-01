@@ -11,6 +11,7 @@
 }
 
 #suffix .block-inner,
+#sponsors .block-inner,
 .region-sidebar-first .block-inner,
 .region-sidebar-second .block-inner {
   padding: 20px;
@@ -52,6 +53,7 @@
 }
 
 #suffix .block .block-title,
+#sponsors .block .block-title,
 .region-content-top .block .block-title,
 .region-content-bottom .block .block-title,
 .region-sidebar-first .block .block-title,
@@ -60,6 +62,10 @@
   text-align: center;
   font-size: 2em;
   line-height: 1em;
+}
+
+#sponsors .block .block-title {
+  margin-bottom: 0;
 }
 
 /* Block specific link colors */
@@ -81,7 +87,9 @@
   color: #fff;
 }
 
-/* Suffix block region */
+/**
+ * Suffix block region 
+ */
 #suffix .block {
   width: 240px;
   margin-right: 20px;
@@ -104,100 +112,27 @@
   background-color: #ffc501;
 }
 
-.block.region-odd /* Zebra striping for each block in the region */ {
-}
-
-.block.region-even /* Zebra striping for each block in the region */ {
-}
-
-.block.odd /* Zebra striping independent of each region */ {
-}
-
-.block.even /* Zebra striping independent of each region */ {
-}
-
-.region-count-1 /* Incremental count for each block in the region */ {
-}
-
-.count-1 /* Incremental count independent of each region */ {
-}
-
-.block h2.title /* Block title */ {
-}
-
-.block .content /* Block's content wrapper */ {
-}
-
-#block-aggregator-category-1 /* Block for the latest news items in the first category */ {
-}
-
-#block-aggregator-feed-1 /* Block for the latest news items in the first feed */ {
-}
-
-#block-block-1 /* First administrator-defined block */ {
-}
-
+/*
+ * Misc block region 
+ */
 #block-block-7 .content {
   text-align: center;
-}
-
-#block-blog-0 /* "Recent blog posts" block */ {
-}
-
-#block-book-0 /* "Book navigation" block for the current book's table of contents */ {
-}
-
-#block-comment-0 /* "Recent comments" block */ {
-}
-
-#block-forum-0 /* "Active forum topics" block */ {
-}
-
-#block-forum-1 /* "New forum topics" block */ {
-}
-
-#block-menu-primary-links /* "Primary links" block */ {
-}
-
-#block-menu-secondary-links /* "Secondary links" block */ {
-}
-
-#block-node-0 /* "Syndicate" block for primary RSS feed */ {
-}
-
-#block-poll-0 /* "Most recent poll" block */ {
-}
-
-#block-profile-0 /* "Author information" block for the profile of the page's author */ {
-}
-
-#block-search-0 /* "Search form" block */ {
-}
-
-#block-statistics-0 /* "Popular content" block */ {
-}
-
-#block-user-0 /* "User login form" block */ {
-}
-
-#block-user-1 /* "Navigation" block for Drupal navigation menu */ {
-}
-
-#block-user-2 /* "Who's new" block for a list of the newest users */ {
-}
-
-#block-user-3 /* "Who's online" block for a list of the online users */ {
 }
 
 /**
  * Front page block treatments
  */
-.front .region-sidebar-first .section {
+.front .region-sidebar-first .section,
+.front #sponsors .section {
    background-color: #54b87b;
    -moz-border-radius: 4px;
    -webkit-border-radius: 4px;
    border-radius: 4px;
    margin-bottom: 1em;
+}
+
+.front #sponsors .section {
+   background-color: #fff;
 }
 
 .front .region-sidebar-first .block {
@@ -228,33 +163,13 @@
   list-style-image: none;
 }  
 
-.block-logistics ul.menu li.logistics-air {
-  background-image: url(../images/logistics-icons-air.png);
-}
-
-.block-logistics ul.menu li.logistics-transit {
-  background-image: url(../images/logistics-icons-transit.png);
-}
-
-.block-logistics ul.menu li.logistics-passport {
-  background-image: url(../images/logistics-icons-passport.png);
-}
-
-.block-logistics ul.menu li.logistics-attractions {
-  background-image: url(../images/logistics-icons-attractions.png);
-}
-
-.block-logistics ul.menu li.logistics-food {
-  background-image: url(../images/logistics-icons-food.png);
-}
-
-.block-logistics ul.menu li.logistics-hotels {
-  background-image: url(../images/logistics-icons-hotels.png);
-}
-
-.block-logistics ul.menu li.logistics-weather {
-  background-image: url(../images/logistics-icons-weather.png);
-}
+.block-logistics ul.menu li.logistics-air { background-image: url(../images/logistics-icons-air.png);}
+.block-logistics ul.menu li.logistics-transit { background-image: url(../images/logistics-icons-transit.png);}
+.block-logistics ul.menu li.logistics-passport { background-image: url(../images/logistics-icons-passport.png);}
+.block-logistics ul.menu li.logistics-attractions { background-image: url(../images/logistics-icons-attractions.png);}
+.block-logistics ul.menu li.logistics-food { background-image: url(../images/logistics-icons-food.png);}
+.block-logistics ul.menu li.logistics-hotels { background-image: url(../images/logistics-icons-hotels.png);}
+.block-logistics ul.menu li.logistics-weather { background-image: url(../images/logistics-icons-weather.png);}
  
  /**
   * News block
