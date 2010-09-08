@@ -35,6 +35,12 @@ function conference_t_shirt_design_contest_context_default_contexts() {
           'region' => 'sidebar_first',
           'weight' => 0,
         ),
+        'block-13' => array(
+          'module' => 'block',
+          'delta' => 13,
+          'region' => 'sidebar_first',
+          'weight' => 1,
+        ),
       ),
     ),
     'breadcrumb' => 'tshirt-designs',

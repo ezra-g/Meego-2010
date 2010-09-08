@@ -149,8 +149,8 @@ function conference_t_shirt_design_contest_views_default_views() {
         'html' => 0,
         'strip_tags' => 0,
       ),
-      'empty' => ' 0',
-      'hide_empty' => 0,
+      'empty' => '',
+      'hide_empty' => 1,
       'empty_zero' => 1,
       'set_precision' => FALSE,
       'precision' => 0,
@@ -232,6 +232,11 @@ function conference_t_shirt_design_contest_views_default_views() {
     'alignment' => 'horizontal',
     'fill_single_line' => 1,
   ));
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+    'hide_empty' => 1,
+  ));
   $handler = $view->new_display('page', 'Page: T-Shirt Design Grid', 'page_1');
   $handler->override_option('path', 'tshirt-designs');
   $handler->override_option('menu', array(
@@ -259,6 +264,7 @@ function conference_t_shirt_design_contest_views_default_views() {
   $handler->override_option('style_options', array(
     'grouping' => '',
   ));
+  $handler->override_option('row_options', array());
   $handler->override_option('block_description', 'T-Shirt Design: Top T-Shirt Design');
   $handler->override_option('block_caching', -1);
 

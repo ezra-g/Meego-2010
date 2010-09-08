@@ -37,11 +37,9 @@ $flags[] = array (
   array (
     'flag' => 
     array (
-      0 => 2,
     ),
     'unflag' => 
     array (
-      0 => 2,
     ),
   ),
   'show_on_page' => 1,
@@ -49,12 +47,12 @@ $flags[] = array (
   'show_on_form' => 0,
   'access_author' => '',
   'i18n' => 0,
-  'api_version' => 2,
   'module' => 'conference_t_shirt_design_contest',
   'locked' => 
   array (
-    0 => 'name',
+    'name' => 'name',
   ),
+  'api_version' => 2,
 );
 return $flags;
 }

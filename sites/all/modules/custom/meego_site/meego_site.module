@@ -24,6 +24,13 @@ function meego_site_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         actions_do($session_action_id, $node, $context);
       }
     }
+    if ($node->type == 'tshirt_design') {
+      $session_action_id = variable_get('meego_site_session_action_id', NULL);
+      // Make sure the variable is set so the action doesn't fail.
+      if (!is_null($session_action_id)) {
+        actions_do($session_action_id, $node, $context);
+      }
+    }
   }
 }
 
