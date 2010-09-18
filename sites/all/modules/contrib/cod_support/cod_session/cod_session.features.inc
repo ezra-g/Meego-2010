@@ -1,55 +1,128 @@
 <?php
 
 /**
- * Implementation of hook_content_default_fields().
- */
-function cod_session_content_default_fields() {
-  module_load_include('inc', 'cod_session', 'cod_session.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_content_default_fields', $args);
-}
-
-/**
- * Implementation of hook_fieldgroup_default_groups().
- */
-function cod_session_fieldgroup_default_groups() {
-  module_load_include('inc', 'cod_session', 'cod_session.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_fieldgroup_default_groups', $args);
-}
-
-/**
  * Implementation of hook_flag_default_flags().
  */
 function cod_session_flag_default_flags() {
-  module_load_include('inc', 'cod_session', 'cod_session.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_flag_default_flags', $args);
+$flags = array();
+// Exported flag: "Session Attending".
+$flags[] = array (
+  'content_type' => 'node',
+  'name' => 'session_schedule',
+  'title' => 'Session Attending',
+  'global' => '0',
+  'types' => 
+  array (
+    0 => 'session',
+  ),
+  'flag_short' => 'Add to my agenda',
+  'flag_long' => 'Add this session to your agenda to organize your session attendance.',
+  'flag_message' => '',
+  'unflag_short' => 'Remove from my agenda',
+  'unflag_long' => 'Remove this session from your agenda.',
+  'unflag_message' => '',
+  'unflag_denied_text' => '',
+  'link_type' => 'toggle',
+  'roles' => 
+  array (
+    'flag' => 
+    array (
+      0 => 2,
+    ),
+    'unflag' => 
+    array (
+      0 => 2,
+    ),
+  ),
+  'show_on_page' => 0,
+  'show_on_teaser' => 0,
+  'show_on_form' => 0,
+  'access_author' => '',
+  'i18n' => 0,
+  'module' => 'cod_session',
+  'locked' => 
+  array (
+    'name' => 'name',
+  ),
+  'api_version' => 2,
+);
+// Exported flag: "Session Vote".
+$flags[] = array (
+  'content_type' => 'node',
+  'name' => 'session_vote',
+  'title' => 'Session Vote',
+  'global' => '0',
+  'types' => 
+  array (
+    0 => 'session',
+  ),
+  'flag_short' => 'Vote for this session',
+  'flag_long' => 'Vote for this session',
+  'flag_message' => 'Your vote has been recorded!',
+  'unflag_short' => 'Retract vote',
+  'unflag_long' => 'Retract your vote for this session.',
+  'unflag_message' => 'Your vote has been retracted.',
+  'unflag_denied_text' => '',
+  'link_type' => 'toggle',
+  'roles' => 
+  array (
+    'flag' => 
+    array (
+      0 => 3,
+    ),
+    'unflag' => 
+    array (
+      0 => 3,
+    ),
+  ),
+  'show_on_page' => 1,
+  'show_on_teaser' => 0,
+  'show_on_form' => 0,
+  'access_author' => '',
+  'i18n' => 0,
+  'module' => 'cod_session',
+  'locked' => 
+  array (
+    'name' => 'name',
+  ),
+  'api_version' => 2,
+);
+return $flags;
 }
 
 /**
  * Implementation of hook_node_info().
  */
 function cod_session_node_info() {
-  module_load_include('inc', 'cod_session', 'cod_session.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_node_info', $args);
+  $items = array(
+    'session' => array(
+      'name' => t('Session'),
+      'module' => 'features',
+      'description' => t('Use this content type to propose sessions at the event. Users can vote on proposed sessions and add sessions to their individual session agendas.'),
+      'has_title' => '1',
+      'title_label' => t('Session Title'),
+      'has_body' => '0',
+      'body_label' => '',
+      'min_word_count' => '0',
+      'help' => t('We want to encourage both commercial developers, OEMs or interested end users as 
+well as the open source community behind MeeGo to get together and share three
+days of presentations, discussions and showcases for products or ideas.
+
+If you have questions about submitting a session, please refer to the <a href="/program/call-session-proposals">Call for Session Proposals</a> description.
+
+In general we are not soliciting sales pitches, but it is ok for technical presentations to refer to (or announce)
+MeeGo related products.
+'),
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_user_default_permissions().
+ * Implementation of hook_views_api().
  */
-function cod_session_user_default_permissions() {
-  module_load_include('inc', 'cod_session', 'cod_session.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_user_default_permissions', $args);
-}
-
-/**
- * Implementation of hook_views_default_views().
- */
-function cod_session_views_default_views() {
-  module_load_include('inc', 'cod_session', 'cod_session.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_cod_session_views_default_views', $args);
+function cod_session_views_api() {
+  return array(
+    'api' => '2',
+  );
 }

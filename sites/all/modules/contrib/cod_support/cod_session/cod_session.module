@@ -1,3 +1,90 @@
 <?php
 
 include_once('cod_session.features.inc');
+
+function cod_session_theme() {
+  return array(
+    'cod_session_calendar' => array(
+      'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+      'template' => 'cod-session-calendar',
+      ),
+    );
+}
+
+
+function template_preprocess_cod_session_calendar(&$vars) {
+  // dpm($vars);
+  
+  // $vars['view']->result contains the raw data
+  // $vars['rows'] contains the row-formatted fields
+
+  // Save raw row results keyed on nid
+  $results = array();
+  foreach ($vars['view']->result as $key => $node) {
+    $sessions[$node->nid] = node_load($node->nid);
+    $results[$node->nid] = $vars['rows'][$key];
+  }
+
+  // Get a list of rooms
+  // @todo I feel like rooms should actually be nodes.
+  $rooms = content_allowed_values(content_fields('field_room'));
+
+  // Create structed grid of sessions
+  $slots = array();
+  $session_grid = array();
+  foreach ($sessions as $session) {
+    if (!empty($session->field_session_slot[0]['nid']) && !empty($session->field_room[0]['value'])) {
+      if (!isset($session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']])) {
+        $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']] = array();
+      }
+      $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']][] = $session;
+      if (!isset($slots[$session->field_session_slot[0]['nid']])) {
+        $slots[$session->field_session_slot[0]['nid']] = node_load($session->field_session_slot[0]['nid']);
+      }
+    }
+  }
+
+  // Arrange slots by days
+  // @todo Give plugin options for date formats and text?
+  $arranged_slots = array();
+  $days = array();
+  $day_count = 1;
+  foreach ($slots as $slot) {
+    $time_start = date_make_date($slot->field_slot_datetime[0]['value'], $slot->field_slot_datetime[0]['timezone']);
+    $time_end = date_make_date($slot->field_slot_datetime[0]['value2'], $slot->field_slot_datetime[0]['timezone']);
+    $day_key = date_format_date($time_start, 'custom', 'Y-m-d');
+    $arranged_slots[$day_key][date_format_date($time_start, 'custom', DATE_FORMAT_UNIX)] = array(
+      'nid' => $slot->nid,
+      'start' => date_format_date($time_start, 'custom', 'g:iA'),
+      'end' => date_format_date($time_end, 'custom', 'g:iA'),
+      );
+    if (!isset($days[$day_key])) {
+      $days[$day_key] = t('Day !count - !date', array('!count' => $day_count++, '!date' => date_format_date($time_start, 'custom', 'F jS, Y')));
+    }
+  }
+
+  // Sort the arranged slots
+  cod_session_ksort_recurse($arranged_slots);
+
+  $vars['results'] = $results;
+  $vars['session_grid'] = $session_grid;
+  $vars['arranged_slots'] = $arranged_slots;
+  $vars['days'] = $days;
+  $vars['rooms'] = $rooms;
+}
+
+/**
+ * Recursive ksort
+ */
+function cod_session_ksort_recurse(&$array) {
+  foreach (array_keys($array) as $key) {
+    if (is_array($array[$key])) {
+      cod_session_ksort_recurse($array[$key]);
+      ksort($array[$key]);
+    }
+    else {
+      return;
+    }
+  }
+  ksort($array);
+}
