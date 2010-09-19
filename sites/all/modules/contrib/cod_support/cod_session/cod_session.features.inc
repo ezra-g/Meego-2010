@@ -42,7 +42,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
@@ -83,7 +83,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
@@ -113,6 +113,17 @@ If you have questions about submitting a session, please refer to the <a href="/
 In general we are not soliciting sales pitches, but it is ok for technical presentations to refer to (or announce)
 MeeGo related products.
 '),
+    ),
+    'time_slot' => array(
+      'name' => t('Time slot'),
+      'module' => 'features',
+      'description' => t('Use time slots to define when sessions will occur.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '0',
+      'body_label' => '',
+      'min_word_count' => '0',
+      'help' => '',
     ),
   );
   return $items;
