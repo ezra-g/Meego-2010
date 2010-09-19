@@ -18,7 +18,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: create time_slot content
   $permissions['create time_slot content'] = array(
     'name' => 'create time_slot content',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: delete any session content
@@ -33,7 +37,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: delete any time_slot content
   $permissions['delete any time_slot content'] = array(
     'name' => 'delete any time_slot content',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: delete own session content
@@ -61,7 +69,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: edit any time_slot content
   $permissions['edit any time_slot content'] = array(
     'name' => 'edit any time_slot content',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: edit field_accepted
@@ -96,7 +108,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: edit field_session_slot
   $permissions['edit field_session_slot'] = array(
     'name' => 'edit field_session_slot',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: edit field_session_summary
@@ -113,7 +129,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: edit field_slot_datetime
   $permissions['edit field_slot_datetime'] = array(
     'name' => 'edit field_slot_datetime',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: edit field_sponsorship_level
@@ -183,7 +203,12 @@ function cod_session_user_default_permissions() {
   // Exported permission: view field_session_slot
   $permissions['view field_session_slot'] = array(
     'name' => 'view field_session_slot',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'authenticated user',
+      '1' => 'content administrator',
+      '2' => 'session organizer',
+      '3' => 'site administrator',
+    ),
   );
 
   // Exported permission: view field_session_summary
@@ -200,7 +225,11 @@ function cod_session_user_default_permissions() {
   // Exported permission: view field_slot_datetime
   $permissions['view field_slot_datetime'] = array(
     'name' => 'view field_slot_datetime',
-    'roles' => array(),
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
   );
 
   // Exported permission: view field_track
