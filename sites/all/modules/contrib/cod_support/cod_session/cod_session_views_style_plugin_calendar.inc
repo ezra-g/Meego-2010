@@ -1,21 +1,5 @@
 <?php
 
-// /**
-//  * Create session calendar
-//  */
-// class cod_session_views_style_plugin_calendar extends views_plugin_style {
-//   /**
-//    * Set default options
-//    */
-//   function options(&$options) {
-//     parent::options($options);
-//   }
-// 
-//   function options_form(&$form, &$form_state) {
-//     parent::options_form($form, $form_state);
-//   }
-// }
-
 /**
  * Style plugin to render each item as a row in a table.
  *
@@ -256,4 +240,3 @@ class cod_session_views_style_plugin_calendar extends views_plugin_style {
   //   );
   // }
 }
-

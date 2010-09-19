@@ -19,7 +19,7 @@
                 <div class="views-item">
                 <?php print $results[$session->nid]; ?>
                 </div>
-              <?php endforeach ?>              
+              <?php endforeach ?>
             <?php endif ?>
           </td>
         <?php endforeach ?>

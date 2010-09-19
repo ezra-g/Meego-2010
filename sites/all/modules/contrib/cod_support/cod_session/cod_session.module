@@ -13,8 +13,6 @@ function cod_session_theme() {
 
 
 function template_preprocess_cod_session_calendar(&$vars) {
-  // dpm($vars);
-  
   // $vars['view']->result contains the raw data
   // $vars['rows'] contains the row-formatted fields
 
@@ -77,6 +75,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
  * Recursive ksort
  */
 function cod_session_ksort_recurse(&$array) {
+  ksort($array);
   foreach (array_keys($array) as $key) {
     if (is_array($array[$key])) {
       cod_session_ksort_recurse($array[$key]);
@@ -86,5 +85,4 @@ function cod_session_ksort_recurse(&$array) {
       return;
     }
   }
-  ksort($array);
 }
