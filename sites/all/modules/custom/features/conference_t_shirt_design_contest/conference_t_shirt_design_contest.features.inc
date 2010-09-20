@@ -37,9 +37,11 @@ $flags[] = array (
   array (
     'flag' => 
     array (
+      0 => 2,
     ),
     'unflag' => 
     array (
+      0 => 2,
     ),
   ),
   'show_on_page' => 1,

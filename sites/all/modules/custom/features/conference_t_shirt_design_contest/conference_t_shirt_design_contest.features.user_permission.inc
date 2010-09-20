@@ -10,7 +10,7 @@ function conference_t_shirt_design_contest_user_default_permissions() {
   $permissions['create tshirt_design content'] = array(
     'name' => 'create tshirt_design content',
     'roles' => array(
-      '0' => 'authenticated user',
+      '0' => 'site administrator',
     ),
   );
 

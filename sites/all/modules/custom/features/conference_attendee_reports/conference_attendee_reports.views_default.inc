@@ -909,7 +909,7 @@ function conference_attendee_reports_views_default_views() {
     'parent_sort' => 1,
   ));
   $handler->override_option('row_plugin', '');
-  $handler->override_option('path', 'reports/attendees2/xls');
+  $handler->override_option('path', 'reports/attendees/xls');
   $handler->override_option('menu', array(
     'type' => 'none',
     'title' => '',
@@ -1203,6 +1203,91 @@ function conference_attendee_reports_views_default_views() {
     'weight' => 0,
     'name' => 'navigation',
   ));
+  $handler = $view->new_display('feed', 'Export: XLS Sponsored Attendees', 'feed_1');
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => 'in',
+      'value' => array(
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+      ),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'status_op',
+        'identifier' => 'signup_status',
+        'label' => 'Filter by signup status:',
+        'optional' => 1,
+        'single' => 0,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'id' => 'status',
+      'table' => 'signup_log',
+      'field' => 'status',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'value' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => '',
+        'label' => 'by assistance:',
+        'identifier' => 'travel_assistance',
+        'optional' => 1,
+        'remember' => 0,
+      ),
+      'id' => 'value',
+      'table' => 'profile_values_profile_conference2010_travel_assistance',
+      'field' => 'value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('items_per_page', 0);
+  $handler->override_option('style_plugin', 'views_xls');
+  $handler->override_option('style_options', array(
+    'mission_description' => FALSE,
+    'description' => '',
+    'attach_text' => 'XLS',
+    'provide_file' => 1,
+    'filename' => 'meego-%view-sponsorship.xls',
+    'parent_sort' => 1,
+  ));
+  $handler->override_option('row_plugin', '');
+  $handler->override_option('path', 'reports/attendees/sponsored/xls');
+  $handler->override_option('menu', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler->override_option('displays', array(
+    'page_3' => 'page_3',
+    'default' => 0,
+    'page_1' => 0,
+    'page_2' => 0,
+  ));
+  $handler->override_option('sitename_title', FALSE);
 
   $views[$view->name] = $view;
 

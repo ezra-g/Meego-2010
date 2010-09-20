@@ -22,22 +22,22 @@ function conference_t_shirt_design_contest_context_default_contexts() {
     ),
     'path' => array(
       'values' => array(
-        'tshirt-designs' => 'tshirt-designs',
+        'tshirt-designs*' => 'tshirt-designs*',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'block-12' => array(
-          'module' => 'block',
-          'delta' => 12,
-          'region' => 'sidebar_first',
-          'weight' => 0,
-        ),
         'block-13' => array(
           'module' => 'block',
           'delta' => 13,
+          'region' => 'sidebar_first',
+          'weight' => 0,
+        ),
+        'block-12' => array(
+          'module' => 'block',
+          'delta' => 12,
           'region' => 'sidebar_first',
           'weight' => 1,
         ),

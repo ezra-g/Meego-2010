@@ -188,10 +188,19 @@ a.lightbox-processed {
 /**
  * T-Shirt Flag Votes
  */
-.flag-tshirt-vote {
+.flag-tshirt-vote,
+.view-tshirt-designs td .number {
   -moz-border-radius:4px 4px 4px 4px;
   background-color:#eee;
   padding: 10px;
+}
+
+.view-tshirt-designs .number {
+  margin-top: 10px;
+}
+
+.view-tshirt-designs .title {
+  font-weight: bold;
 }
 
 /**
