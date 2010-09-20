@@ -52,7 +52,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    0 => 'name',
+    'name' => 'name',
   ),
   'api_version' => 2,
 );
@@ -93,7 +93,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    0 => 'name',
+    'name' => 'name',
   ),
   'api_version' => 2,
 );
