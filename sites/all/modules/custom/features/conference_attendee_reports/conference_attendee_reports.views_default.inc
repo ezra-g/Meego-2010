@@ -615,6 +615,38 @@ function conference_attendee_reports_views_default_views() {
       ),
       'relationship' => 'none',
     ),
+    'value_14' => array(
+      'label' => 'Bio',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'value_14',
+      'table' => 'profile_values_profile_biography',
+      'field' => 'value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('filters', array(
     'status' => array(
@@ -746,7 +778,7 @@ function conference_attendee_reports_views_default_views() {
   $handler->override_option('title', 'MeeGo Conference Attendee Reports');
   $handler->override_option('empty', 'No attendees exist for the filters you\'ve selected. Please reset the form or select another filter combination.');
   $handler->override_option('empty_format', '1');
-  $handler->override_option('items_per_page', 50);
+  $handler->override_option('items_per_page', 100);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
@@ -1147,6 +1179,13 @@ function conference_attendee_reports_views_default_views() {
         'button' => 'Override',
       ),
       'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'role',
+    'role' => array(
+      '3' => 3,
+      '7' => 7,
     ),
   ));
   $handler->override_option('path', 'reports/attendees/sponsored');
