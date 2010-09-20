@@ -193,3 +193,49 @@ a.lightbox-processed {
   background-color:#eee;
   padding: 10px;
 }
+
+/**
+ * Session Nodes
+ */
+.node-type-session .field {margin: 1em 0;}
+  
+.node-type-session .field .field-label,
+.sessions-list .views-field label {
+  font-weight: bold;
+} 
+ 
+.session-details .item-list ul { 
+  padding: 0;
+  list-style-type: none;
+  }
+
+  .session-details .item-list ul li {
+    margin-left: 0;
+  }
+
+  .session-details .item-list ul li .views-field { 
+    border-bottom: 1px solid #F5AFAA;
+    padding: 4px 0;
+    }
+
+    .session-details .item-list ul li .views-field label { 
+      font-weight: bold;
+    }
+
+.session-presenters td {
+  padding: 0;
+  height: 50px;
+  position: relative;
+  }
+
+  .session-presenters td .username {
+    position:absolute; 
+    height:50px; 
+    margin-top:20px;
+    padding-left: 10px;
+    font-weight: bold;
+  }
+
+.field-field-abstract .field-item > p {
+  margin-top: 0;
+}

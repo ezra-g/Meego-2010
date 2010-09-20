@@ -21,11 +21,11 @@ function cod_session_fieldgroup_default_groups() {
         'weight' => '2',
         'label' => 'hidden',
         'teaser' => array(
-          'format' => 'no_style',
+          'format' => 'hidden',
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'no_style',
+          'format' => 'hidden',
           'exclude' => 0,
         ),
         'description' => '',
@@ -61,11 +61,11 @@ function cod_session_fieldgroup_default_groups() {
         'weight' => '1',
         'label' => 'hidden',
         'teaser' => array(
-          'format' => 'no_style',
+          'format' => 'hidden',
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'no_style',
+          'format' => 'hidden',
           'exclude' => 0,
         ),
         'description' => '',

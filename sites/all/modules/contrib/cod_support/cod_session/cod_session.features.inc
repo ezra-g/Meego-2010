@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function cod_session_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+}
+
+/**
  * Implementation of hook_flag_default_flags().
  */
 function cod_session_flag_default_flags() {
@@ -42,7 +52,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
@@ -83,7 +93,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );

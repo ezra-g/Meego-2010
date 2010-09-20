@@ -100,7 +100,7 @@ function cod_session_content_default_fields() {
     'suffix' => '',
     'min' => '0',
     'max' => '2',
-    'allowed_values' => '0| Submitted
+    'allowed_values' => '0| Proposed
 1| Accepted
 2| Deferred',
     'allowed_values_php' => '',
@@ -130,11 +130,11 @@ function cod_session_content_default_fields() {
         'format' => 'inline',
       ),
       'teaser' => array(
-        'format' => 'default',
+        'format' => 'hidden',
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
+        'format' => 'hidden',
         'exclude' => 0,
       ),
       '4' => array(
@@ -185,11 +185,11 @@ function cod_session_content_default_fields() {
         'format' => 'above',
       ),
       'teaser' => array(
-        'format' => 'default',
+        'format' => 'hidden',
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
+        'format' => 'hidden',
         'exclude' => 0,
       ),
       '4' => array(
@@ -240,7 +240,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_room',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '1',
+      'weight' => '2',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'inline',
@@ -358,9 +358,10 @@ havelock|Havelock suite
     'field_name' => 'field_session_slot',
     'type_name' => 'session',
     'display_settings' => array(
+      'weight' => '1',
+      'parent' => 'group_schedule',
       'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
+        'format' => 'inline',
       ),
       'teaser' => array(
         'format' => 'default',
