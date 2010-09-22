@@ -17,6 +17,21 @@ function conference_attendee_reports_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('relationships', array(
+    'flag_content_rel' => array(
+      'label' => 'Flag Sponsored',
+      'required' => 0,
+      'flag' => 'sponsored_attendees',
+      'user_scope' => 'any',
+      'id' => 'flag_content_rel',
+      'table' => 'users',
+      'field' => 'flag_content_rel',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
   $handler->override_option('fields', array(
     'counter' => array(
       'label' => '',
@@ -50,6 +65,39 @@ function conference_attendee_reports_views_default_views() {
         'button' => 'Override',
       ),
       'relationship' => 'none',
+    ),
+    'ops' => array(
+      'label' => 'Flag Sponsored',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_type' => '',
+      'exclude' => 0,
+      'id' => 'ops',
+      'table' => 'flag_content',
+      'field' => 'ops',
+      'relationship' => 'flag_content_rel',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
     'value_11' => array(
       'label' => 'First Name',
@@ -897,7 +945,7 @@ function conference_attendee_reports_views_default_views() {
     'weight' => '0',
     'name' => 'menu-conference',
   ));
-  $handler = $view->new_display('feed', 'Export: XLS', 'feed_2');
+  $handler = $view->new_display('feed', 'Export: XLS All', 'feed_2');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('style_plugin', 'views_xls');
   $handler->override_option('style_options', array(
@@ -927,8 +975,8 @@ function conference_attendee_reports_views_default_views() {
   $handler->override_option('displays', array(
     'page_1' => 'page_1',
     'page_2' => 'page_2',
-    'page_3' => 'page_3',
     'default' => 0,
+    'page_3' => 0,
   ));
   $handler->override_option('sitename_title', FALSE);
   $handler = $view->new_display('page', 'Page: Intel Attendees', 'page_2');
@@ -1253,6 +1301,13 @@ function conference_attendee_reports_views_default_views() {
         'button' => 'Use default',
       ),
       'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'role',
+    'role' => array(
+      '3' => 3,
+      '7' => 7,
     ),
   ));
   $handler->override_option('items_per_page', 0);

@@ -169,15 +169,16 @@ function conference_t_shirt_design_contest_views_default_views() {
     ),
   ));
   $handler->override_option('sorts', array(
-    'count' => array(
-      'order' => 'DESC',
-      'id' => 'count',
-      'table' => 'flag_counts',
-      'field' => 'count',
-      'relationship' => 'flag_count_rel',
+    'created' => array(
+      'order' => 'ASC',
+      'granularity' => 'hour',
+      'id' => 'created',
+      'table' => 'node',
+      'field' => 'created',
       'override' => array(
         'button' => 'Override',
       ),
+      'relationship' => 'none',
     ),
   ));
   $handler->override_option('filters', array(
