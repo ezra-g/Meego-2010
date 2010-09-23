@@ -1028,7 +1028,7 @@ function conference_attendee_reports_views_default_views() {
       'relationship' => 'none',
     ),
     'value_1' => array(
-      'operator' => '=',
+      'operator' => 'contains',
       'value' => '',
       'group' => '0',
       'exposed' => TRUE,
@@ -1045,7 +1045,7 @@ function conference_attendee_reports_views_default_views() {
       'table' => 'profile_values_profile_company',
       'field' => 'value',
       'override' => array(
-        'button' => 'Override',
+        'button' => 'Use default',
       ),
       'relationship' => 'none',
     ),
