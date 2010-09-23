@@ -84,6 +84,10 @@ function meego_site_user($op, &$edit, &$account, $category = NULL) {
 function meego_site_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'signup_form') {
     global $user;
+    // We only want to add profile fields to the main event.
+    if ($form['nid']['#value'] != 1) {
+      return;
+    }
     $status = meego_site_get_signup_status($user, $form['nid']['#value']);
     $form['meego_status'] = array(
       '#type' => 'value',
