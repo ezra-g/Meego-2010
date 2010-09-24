@@ -1,0 +1,28 @@
+/* $Id: views_send.css,v 1.1.2.1.2.2 2010/05/11 20:19:33 claudiucristea Exp $ */
+
+form.views-send-preview label {
+  float: left;
+  clear: both;
+  padding: 2px;
+}
+
+form.views-send-preview .views-send-preview-value {
+  margin-left: 70px;
+  overflow: auto;
+  border: 1px solid #bbbbbb;
+  padding: 2px;
+}
+
+#views-send-preview-to {
+  height: 50px;
+}
+
+#views-send-preview-message {
+  height: 150px;
+}
+
+#views-send-preview-headers {
+  height: 80px;
+  font-family: monospace;
+}
+
