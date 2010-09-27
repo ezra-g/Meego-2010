@@ -52,7 +52,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
@@ -93,7 +93,7 @@ $flags[] = array (
   'module' => 'cod_session',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
@@ -105,6 +105,17 @@ return $flags;
  */
 function cod_session_node_info() {
   $items = array(
+    'schedule_item' => array(
+      'name' => t('Schedule Item'),
+      'module' => 'features',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
     'session' => array(
       'name' => t('Session'),
       'module' => 'features',
