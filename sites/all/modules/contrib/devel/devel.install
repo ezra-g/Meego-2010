@@ -1,5 +1,5 @@
 <?php
-// $Id: devel.install,v 1.24.2.8 2010/08/02 15:04:55 weitzman Exp $
+// $Id: devel.install,v 1.24.2.9 2010/08/05 16:13:21 weitzman Exp $
 /**
  * @file
  *   Install file for devel module.
@@ -180,4 +180,5 @@ function devel_update_6003() {
   if (variable_get('devel_krumo_skin', 'white') == 'schablon.com') {
     variable_set('devel_krumo_skin', 'white');
   }
+  return array();
 }
