@@ -183,6 +183,10 @@ function meego_site_signed_up_to_primary_event($uid) {
  * Return the appropriate signup status code for the current user.
  */
 function meego_site_get_signup_status($account, $nid) {
+  // Only assign a custom status for the main event node.
+  if ($nid != 1) {
+    return 1;
+  }
   // Do they have an Intel or Nokia email address?
   $mail = strtolower($account->mail);
   // Workaround for profile fields being missing from global $user.
@@ -226,6 +230,9 @@ function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup,
     return;
   }
   $messages = array();
+  if ($node->nid != 1) {
+    return;
+  }
   switch ($signup->status) {
     case 4:
       // Intel/Nokia waitlist
