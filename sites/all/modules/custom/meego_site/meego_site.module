@@ -229,8 +229,8 @@ function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup,
   if (empty($signup->status)) {
     return;
   }
-  $messages = array();
   if ($node->nid != 1) {
+    $messages['initial'] = "Thanks for signing up! An email with further details about this event has been sent to your email address.";
     return;
   }
   switch ($signup->status) {
