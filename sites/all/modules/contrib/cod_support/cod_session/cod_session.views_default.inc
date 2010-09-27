@@ -139,6 +139,7 @@ function cod_session_views_default_views() {
       'operator' => 'in',
       'value' => array(
         'session' => 'session',
+        'schedule_item' => 'schedule_item',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -150,6 +151,9 @@ function cod_session_views_default_views() {
       'table' => 'node',
       'field' => 'type',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
     'status' => array(
       'operator' => '=',
@@ -261,7 +265,7 @@ function cod_session_views_default_views() {
   $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'cod_session_calendar');
   $handler->override_option('style_options', NULL);
-  $handler = $view->new_display('page', 'Primary Sessions Listing', 'page_1');
+  $handler = $view->new_display('page', 'Page: Session Schedule', 'page_1');
   $handler->override_option('relationships', array(
     'flag_content_rel' => array(
       'label' => 'flag',
@@ -277,10 +281,10 @@ function cod_session_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('path', 'schedule');
+  $handler->override_option('path', 'program/schedule');
   $handler->override_option('menu', array(
-    'type' => 'none',
-    'title' => 'Sessions',
+    'type' => 'normal',
+    'title' => 'Session Schedule',
     'description' => '',
     'weight' => '0',
     'name' => 'primary-links',
@@ -1003,16 +1007,15 @@ function cod_session_views_default_views() {
     'field_accepted_value_many_to_one' => array(
       'operator' => 'or',
       'value' => array(
-        '0' => '0',
         '1' => '1',
       ),
       'group' => '0',
-      'exposed' => TRUE,
+      'exposed' => FALSE,
       'expose' => array(
-        'use_operator' => 0,
         'operator' => 'field_accepted_value_many_to_one_op',
-        'identifier' => 'status',
         'label' => 'by status:',
+        'use_operator' => 0,
+        'identifier' => 'status',
         'optional' => 1,
         'single' => 1,
         'remember' => 0,
@@ -1036,6 +1039,7 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Sessions');
+  $handler->override_option('css_class', 'view-grouped-list sessions-list');
   $handler->override_option('header_format', '1');
   $handler->override_option('header_empty', 0);
   $handler->override_option('empty_format', '1');
@@ -1047,7 +1051,7 @@ function cod_session_views_default_views() {
     'grouping' => '',
     'type' => 'ul',
   ));
-  $handler = $view->new_display('page', 'Page: Sessions List', 'page_1');
+  $handler = $view->new_display('page', 'Page: Sessions Accepted', 'page_1');
   $handler->override_option('sorts', array(
     'title' => array(
       'order' => 'ASC',
@@ -1060,24 +1064,21 @@ function cod_session_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('title', 'Proposed Sessions');
-  $handler->override_option('css_class', 'view-grouped-list sessions-list');
-  $handler->override_option('header', 'Listed below are all the current session submissions. The program committee will be reviewing the sessions and publishing the conference schedule in September.');
-  $handler->override_option('header_empty', 1);
-  $handler->override_option('path', 'program');
+  $handler->override_option('title', 'Sessions Accepted');
+  $handler->override_option('path', 'program/sessions-accepted');
   $handler->override_option('menu', array(
-    'type' => 'normal',
-    'title' => 'Program',
+    'type' => 'default tab',
+    'title' => 'Sessions Accepted',
     'description' => '',
     'weight' => '0',
     'name' => 'primary-links',
   ));
   $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
+    'type' => 'normal',
+    'title' => 'Program',
     'description' => '',
-    'weight' => 0,
-    'name' => 'navigation',
+    'weight' => '0',
+    'name' => 'primary-links',
   ));
   $handler = $view->new_display('feed', 'Feed: Sessions All', 'feed_1');
   $handler->override_option('style_plugin', 'rss');
@@ -1685,6 +1686,127 @@ function cod_session_views_default_views() {
   ));
   $handler->override_option('block_description', 'Sessions: Session Presenters');
   $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('page', 'Page: Sessions Proposed', 'page_2');
+  $handler->override_option('filters', array(
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'session' => 'session',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+    ),
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'field_track_value_many_to_one' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => 'field_track_value_many_to_one_op',
+        'label' => 'Track',
+        'use_operator' => 0,
+        'identifier' => 'track',
+        'optional' => 1,
+        'single' => 0,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'id' => 'field_track_value_many_to_one',
+      'table' => 'node_data_field_track',
+      'field' => 'field_track_value_many_to_one',
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+      'override' => array(
+        'button' => 'Override',
+      ),
+    ),
+    'keys' => array(
+      'operator' => 'optional',
+      'value' => '',
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'keys_op',
+        'identifier' => 'keys',
+        'label' => 'Filter by keywords:',
+        'optional' => 1,
+        'remember' => 0,
+      ),
+      'id' => 'keys',
+      'table' => 'search_index',
+      'field' => 'keys',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_accepted_value_many_to_one' => array(
+      'operator' => 'or',
+      'value' => array(
+        '0' => '0',
+        '1' => '1',
+      ),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'field_accepted_value_many_to_one_op',
+        'identifier' => 'status',
+        'label' => 'by status:',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 1,
+      ),
+      'id' => 'field_accepted_value_many_to_one',
+      'table' => 'node_data_field_accepted',
+      'field' => 'field_accepted_value_many_to_one',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+  ));
+  $handler->override_option('title', 'Sessions Proposed');
+  $handler->override_option('path', 'program/sessions-proposed');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'Sessions Proposed',
+    'description' => '',
+    'weight' => '10',
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
 
   $views[$view->name] = $view;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.1.2.23.2.24 2010/08/09 15:30:46 yhahn Exp $
+// $Id: admin.module,v 1.1.2.23.2.26 2010/08/12 18:00:26 yhahn Exp $
 
 /**
  * Implementation of hook_init().
@@ -69,7 +69,7 @@ function admin_block($op = 'list', $delta = 0, $edit = array()) {
             }
             return array(
               'subject' => !empty($item['title']) ? $item['title'] : t('Create content'),
-              'content' => theme('admin_menu_tree_output', $menu),
+              'content' => theme('admin_drilldown_menu_tree_output', $menu),
             );
           }
           break;
@@ -83,7 +83,7 @@ function admin_block($op = 'list', $delta = 0, $edit = array()) {
           if ($item && $item['access']) {
             return array(
               'subject' => !empty($item['title']) ? $item['title'] : t('Administer'),
-              'content' => theme('admin_menu_tree_output', menu_tree_all_data('admin')),
+              'content' => theme('admin_drilldown_menu_tree_output', menu_tree_all_data('admin')),
             );
           }
           break;
@@ -250,28 +250,28 @@ function admin_theme($cache, $type, $theme, $path) {
     'path' => $path . '/theme',
     'file' => 'theme.inc',
   );
-  $items['admin_menu_tree_output'] = array(
+  $items['admin_drilldown_menu_tree_output'] = array(
     'arguments' => array('menu' => array()),
     'path' => $path . '/theme',
     'file' => 'theme.inc',
   );
-  $items['admin_menu_tree'] = array(
+  $items['admin_drilldown_menu_tree'] = array(
     'arguments' => array('menu' => array()),
     'path' => $path . '/theme',
     'file' => 'theme.inc',
   );
-  $items['admin_menu_item'] = array(
+  $items['admin_drilldown_menu_item'] = array(
     'arguments' => array(
       'link' => NULL,
       'has_children' => NULL,
       'menu' => '',
       'in_active_trail' => FALSE,
-      'extra_class' => NULL
+      'extra_class' => NULL,
     ),
     'path' => $path . '/theme',
     'file' => 'theme.inc',
   );
-  $items['admin_menu_item_link'] = array(
+  $items['admin_drilldown_menu_item_link'] = array(
     'arguments' => array('item' => array()),
     'path' => $path . '/theme',
     'file' => 'theme.inc',

@@ -270,8 +270,7 @@ function cod_session_content_default_fields() {
     'active' => '1',
     'text_processing' => '0',
     'max_length' => '',
-    'allowed_values' => 'presidents|Presidents Terrace
-p1|Presidents area 1
+    'allowed_values' => 'p1|Presidents area 1
 p2|Presidents area 2
 vavasour|Vavasour suite
 henry|Henry suite

@@ -16,6 +16,9 @@ function template_preprocess_cod_session_calendar(&$vars) {
   // $vars['view']->result contains the raw data
   // $vars['rows'] contains the row-formatted fields
 
+  // @todo Create style option whether to display both populated and non-populated slots
+  $show_all_slots = TRUE;
+
   // Save raw row results keyed on nid
   $results = array();
   foreach ($vars['view']->result as $key => $node) {
@@ -28,7 +31,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
   $rooms = content_allowed_values(content_fields('field_room'));
 
   // Create structed grid of sessions
-  $slots = array();
+  $slot_nids = array();
   $session_grid = array();
   foreach ($sessions as $session) {
     if (!empty($session->field_session_slot[0]['nid']) && !empty($session->field_room[0]['value'])) {
@@ -36,10 +39,26 @@ function template_preprocess_cod_session_calendar(&$vars) {
         $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']] = array();
       }
       $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']][] = $session;
-      if (!isset($slots[$session->field_session_slot[0]['nid']])) {
-        $slots[$session->field_session_slot[0]['nid']] = node_load($session->field_session_slot[0]['nid']);
+      // Create array of populated slots
+      if (!$show_all_slots && !in_array($session->field_session_slot[0]['nid'], $slot_nids)) {
+        $slot_nids[] = $session->field_session_slot[0]['nid'];
       }
     }
+  }
+
+  if ($show_all_slots) {
+    $result = db_query("SELECT nid FROM {node} node WHERE type = 'time_slot'");
+    while ($node = db_fetch_object($result)) {
+      $slot_nids[] = $node->nid;
+    }
+  }
+
+  // Load each slot. 
+  // @todo This could be malperformant. Consider revising such that all slots 
+  // are loaded with single query.
+  foreach ($slot_nids as $slot_nid) {
+    $slot = node_load($slot_nid);
+    $slots[$slot->nid] = $slot;
   }
 
   // Arrange slots by days
@@ -48,16 +67,16 @@ function template_preprocess_cod_session_calendar(&$vars) {
   $days = array();
   $day_count = 1;
   foreach ($slots as $slot) {
-    $time_start = date_make_date($slot->field_slot_datetime[0]['value'], $slot->field_slot_datetime[0]['timezone']);
-    $time_end = date_make_date($slot->field_slot_datetime[0]['value2'], $slot->field_slot_datetime[0]['timezone']);
-    $day_key = date_format_date($time_start, 'custom', 'Y-m-d');
-    $arranged_slots[$day_key][date_format_date($time_start, 'custom', DATE_FORMAT_UNIX)] = array(
+    $date_start = date_make_date($slot->field_slot_datetime[0]['value'], 'UTC');
+    $date_end = date_make_date($slot->field_slot_datetime[0]['value2'], 'UTC');
+    $day_key = date_format_date($date_start, 'custom', 'Y-m-d');
+    $arranged_slots[$day_key][date_format_date($date_start, 'custom', DATE_FORMAT_UNIX)] = array(
       'nid' => $slot->nid,
-      'start' => date_format_date($time_start, 'custom', 'g:iA'),
-      'end' => date_format_date($time_end, 'custom', 'g:iA'),
+      'start' => date_format_date($date_start, 'custom', 'g:iA'),
+      'end' => date_format_date($date_end, 'custom', 'g:iA'),
       );
     if (!isset($days[$day_key])) {
-      $days[$day_key] = t('Day !count - !date', array('!count' => $day_count++, '!date' => date_format_date($time_start, 'custom', 'F jS, Y')));
+      $days[$day_key] = t('Day !count - !date', array('!count' => $day_count++, '!date' => date_format_date($date_start, 'custom', 'F jS, Y')));
     }
   }
 

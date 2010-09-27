@@ -59,7 +59,7 @@ function theme_admin_tab($tab, $class = '') {
  * Alternative to menu_tree_output() which uses admin implementations of the
  * core menu theme functions.
  */
-function theme_admin_menu_tree_output($tree) {
+function theme_admin_drilldown_menu_tree_output($tree) {
   $output = '';
   $items = array();
 
@@ -80,16 +80,16 @@ function theme_admin_menu_tree_output($tree) {
     if ($i == $num_items - 1) {
       $extra_class = 'last';
     }
-    $link = theme('admin_menu_item_link', $data['link']);
+    $link = theme('admin_drilldown_menu_item_link', $data['link']);
     $in_active_trail = isset($data['link']['in_active_trail']) ? $data['link']['in_active_trail'] : FALSE;
     if ($data['below']) {
-      $output .= theme('admin_menu_item', $link, $data['link']['has_children'], theme('admin_menu_tree_output', $data['below']), $in_active_trail, $extra_class);
+      $output .= theme('admin_drilldown_menu_item', $link, $data['link']['has_children'], theme('admin_drilldown_menu_tree_output', $data['below']), $in_active_trail, $extra_class);
     }
     else {
-      $output .= theme('admin_menu_item', $link, $data['link']['has_children'], '', $in_active_trail, $extra_class);
+      $output .= theme('admin_drilldown_menu_item', $link, $data['link']['has_children'], '', $in_active_trail, $extra_class);
     }
   }
-  return $output ? theme('admin_menu_tree', $output) : '';
+  return $output ? theme('admin_drilldown_menu_tree', $output) : '';
 }
 
 /**
@@ -97,23 +97,23 @@ function theme_admin_menu_tree_output($tree) {
  * Ensures custom theme-level overrides of theme_menu_tree() do not break
  * markup expected by admin.
  */
-function theme_admin_menu_tree($tree) {
+function theme_admin_drilldown_menu_tree($tree) {
   return theme_menu_tree($tree);
 }
 
 /**
- * Alternative to theme_admin_menu_item().
+ * Alternative to theme_menu_item().
  * Ensures custom theme-level overrides of theme_menu_item() do not break
  * markup expected by admin.
  */
-function theme_admin_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
+function theme_admin_drilldown_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
   return theme_menu_item($link, $has_children, $menu, $in_active_trail, $extra_class);
 }
 
 /**
  * Alternative to theme_menu_item_link().
  */
-function theme_admin_menu_item_link($link) {
+function theme_admin_drilldown_menu_item_link($link) {
   $link['localized_options'] = empty($link['localized_options']) ? array() : $link['localized_options'];
   $link['localized_options']['html'] = TRUE;
   $link['localized_options']['purl'] = array('disabled' => TRUE);
