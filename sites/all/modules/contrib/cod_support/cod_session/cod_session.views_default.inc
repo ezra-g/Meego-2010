@@ -139,6 +139,7 @@ function cod_session_views_default_views() {
       'operator' => 'in',
       'value' => array(
         'session' => 'session',
+        'schedule_item' => 'schedule_item',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -150,6 +151,9 @@ function cod_session_views_default_views() {
       'table' => 'node',
       'field' => 'type',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
     'status' => array(
       'operator' => '=',
