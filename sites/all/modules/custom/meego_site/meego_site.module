@@ -85,7 +85,7 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'signup_form') {
     global $user;
     // We only want to add profile fields to the main event.
-    if ($form['nid']['#value'] != 1) {
+    if ($form['nid']['#value'] != MEEGO_CONFERENCE_EVENT_NID) {
       return;
     }
     $status = meego_site_get_signup_status($user, $form['nid']['#value']);
@@ -184,7 +184,7 @@ function meego_site_signed_up_to_primary_event($uid) {
  */
 function meego_site_get_signup_status($account, $nid) {
   // Only assign a custom status for the main event node.
-  if ($nid != 1) {
+  if ($nid != MEEGO_CONFERENCE_EVENT_NID) {
     return 1;
   }
   // Do they have an Intel or Nokia email address?
@@ -229,7 +229,8 @@ function meego_site_signup_confirm_messages_alter(&$messages = array(), $signup,
   if (empty($signup->status)) {
     return;
   }
-  if ($node->nid != 1) {
+  $messages = array();
+  if ($node->nid != MEEGO_CONFERENCE_EVENT_NID) {
     $messages['initial'] = "Thanks for signing up! An email with further details about this event has been sent to your email address.";
     return;
   }
