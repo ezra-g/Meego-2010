@@ -10,7 +10,7 @@
     <?php foreach ($arranged_slots[$day_key] as $slot): ?>
       <tr class="<?php print $zebra = $zebra == 'even' ? 'odd':'even'; ?>">
         <td>
-          <?php print $slot['start']; ?> - <?php print $slot['end']; ?>
+          <?php print $slot['start']; ?> -<br /><?php print $slot['end']; ?>
         </td>
         <?php foreach (array_keys($rooms) as $room_key): ?>
           <td>
