@@ -142,36 +142,41 @@ function template_preprocess_cod_session_calendar(&$vars) {
   cod_session_ksort_recurse($arranged_slots);
 
   // Calculate colspans
+  // For each day...
   foreach ($days as $day_key => $day_title) {
-    // For each day
+    // For each slot...
     foreach ($arranged_slots[$day_key] as $slot) {
-      // For each slot
       if (!empty($session_grid[$slot['nid']])) {
         $row = &$session_grid[$slot['nid']];
         $room_nids = array_keys($rooms);
-        // For each room in slot
+        // For each room in slot...
         foreach ($room_nids as $room_key => $room_nid) {
           // Check if session exists
           if (!empty($row[$room_nid]['session'])) {
             $session = $row[$room_nid]['session'];
-            // For remaining rooms in row, check for other sessions.
             $colspan = 1;
+            // For remaining rooms in row, check for other sessions.
             for ($i=$room_key + 1; $i < count($room_nids); $i++) {
               if (!empty($row[$room_nids[$i]]['session'])) {
                 $adjacent = $row[$room_nids[$i]]['session'];
-                // Check to see if adjacent row matches.
+                // Check to see if adjacent column matches.
                 if ($session->nid == $adjacent->nid) {
-                  $colspan++;
                   // We'll accommodate for this in the markup.
+                  $colspan++;
                   $row[$room_nids[$i]]['spanned'] = TRUE;
                   unset($row[$room_nids[$i]]['session']);
                 }
                 else {
-                  // Only consider those which are adjacent.
+                  // Adjacent session does not match.
                   break;
                 }
               }
+              else {
+                // Only consider those which are adjacent.
+                break;
+              }
             }
+            // Add colspan attribute to session grid.
             if ($colspan > 1) {
               $row[$room_nid]['colspan'] = $colspan;
             }
@@ -180,9 +185,6 @@ function template_preprocess_cod_session_calendar(&$vars) {
       }
     }
   }
-  
-  
-  
 
   $vars['results'] = $results;
   $vars['session_grid'] = $session_grid;
