@@ -427,3 +427,12 @@ ul.pager li.pager-current {
 .session-calendar .views-item {
   text-align: center;
 }
+
+.session-calendar .type-session .title {
+  text-align: left;
+}
+
+.session-calendar .type-session .field_presenters_uid {
+  font-size: .917em;
+  text-align: right;
+}
