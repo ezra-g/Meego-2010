@@ -10,8 +10,9 @@ function cod_session_user_default_permissions() {
   $permissions['create session content'] = array(
     'name' => 'create session content',
     'roles' => array(
-      '0' => 'session organizer',
-      '1' => 'site administrator',
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
     ),
   );
 
@@ -30,7 +31,8 @@ function cod_session_user_default_permissions() {
     'name' => 'delete any session content',
     'roles' => array(
       '0' => 'content administrator',
-      '1' => 'site administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
     ),
   );
 
@@ -93,6 +95,16 @@ function cod_session_user_default_permissions() {
       '1' => 'content administrator',
       '2' => 'session organizer',
       '3' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: edit field_session_room
+  $permissions['edit field_session_room'] = array(
+    'name' => 'edit field_session_room',
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
     ),
   );
 
@@ -177,6 +189,17 @@ function cod_session_user_default_permissions() {
       '0' => 'content administrator',
       '1' => 'session organizer',
       '2' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: view field_session_room
+  $permissions['view field_session_room'] = array(
+    'name' => 'view field_session_room',
+    'roles' => array(
+      '0' => 'authenticated user',
+      '1' => 'content administrator',
+      '2' => 'session organizer',
+      '3' => 'site administrator',
     ),
   );
 
