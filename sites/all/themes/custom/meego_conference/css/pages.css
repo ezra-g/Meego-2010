@@ -441,6 +441,6 @@ ul.pager li.pager-current {
   text-align: right;
 }
 
-.session-calendar th {
+.session-calendar th.room-label {
   width: 120px;
 }

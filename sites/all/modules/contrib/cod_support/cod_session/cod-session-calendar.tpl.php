@@ -4,7 +4,7 @@
     <tr>
       <th><?php print t('Time'); ?></th>
     <?php foreach ($rooms as $room_key => $room_title): ?>
-      <th><?php print $room_title; ?></th>
+      <th class="room-label"><?php print $room_title; ?></th>
     <?php endforeach ?>
     </tr>
     <?php foreach ($arranged_slots[$day_key] as $slot): ?>
