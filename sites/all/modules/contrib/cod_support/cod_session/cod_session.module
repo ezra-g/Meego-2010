@@ -2,6 +2,9 @@
 
 include_once('cod_session.features.inc');
 
+/**
+ * Implementation of hook_theme().
+ */
 function cod_session_theme() {
   return array(
     'cod_session_calendar' => array(
@@ -11,7 +14,61 @@ function cod_session_theme() {
     );
 }
 
+/**
+ * Implementation of hook_nodeapi().
+ */
+function cod_session_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  if ($op == 'validate') {
+    
+    // If the node has a room and slot field, make sure there are no existing nodes that have the same room/slot combination.
+    if (!empty($node->field_session_slot[0]['nid']) && !empty($node->field_session_room[0]['nid'])) {
+      $slots = array();
+      $rooms = array();
+      foreach ($node->field_session_slot as $slot) {
+        if (!empty($slot['nid'])) {
+          $slots[] = $slot['nid'];
+        }
+      }
+      foreach ($node->field_session_room as $room) {
+        if (!empty($room['nid'])) {
+          $rooms[] = $room['nid'];
+        }
+      }
 
+      if (!empty($slots) && !empty($rooms)) {
+        $result = db_query("SELECT DISTINCT
+        node.nid nid,
+        node.title title,
+        content_field_session_room.field_session_room_nid room_nid,
+        node2.title room_title
+        FROM {node} node
+        INNER JOIN {content_field_session_room} content_field_session_room
+        ON content_field_session_room.nid = node.nid AND content_field_session_room.vid = node.vid 
+        AND content_field_session_room.field_session_room_nid IN (" . db_placeholders($rooms, 'int') . ")
+        INNER JOIN {node} node2
+        ON content_field_session_room.field_session_room_nid = node2.nid 
+        INNER JOIN {content_field_session_slot} content_field_session_slot
+        ON content_field_session_slot.nid = node.nid AND content_field_session_slot.vid = node.vid 
+        AND content_field_session_slot.field_session_slot_nid IN (" . db_placeholders($slots, 'int') . ")
+        WHERE node.nid != %d
+        ", array_merge($rooms, $slots, array($node->nid)));
+
+        $errors = array();
+        while ($node = db_fetch_object($result)) {
+          $errors[] = t('!session in !room', array('!session' => l($node->title, 'node/' . $node->nid), '!room' => l($node->room_title, 'node/' . $node->room_nid)));
+        }
+
+        if (!empty($errors)) {
+          form_set_error('', format_plural(count($errors), 'The proposed slot and room conflicts with the following item:','The proposed slot and rooms conflict with the following items:') . theme('item_list', $errors) . format_plural(count($errors), 'Please select a different slot and/or room.', 'Please select a different slot and/or rooms.'));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Theme function to render the calendar grid.
+ */
 function template_preprocess_cod_session_calendar(&$vars) {
   // $vars['view']->result contains the raw data
   // $vars['rows'] contains the row-formatted fields
@@ -27,9 +84,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
   }
 
   // Get a list of rooms
-  // @todo I feel like rooms should actually be nodes.
-  // $rooms = content_allowed_values(content_fields('field_room'));
-  $result = db_query("SELECT node.nid, node.title FROM {node} node WHERE node.type = 'room' AND node.status = 1");
+  $result = db_query("SELECT node.nid, node.title FROM {node} node WHERE node.type = 'room' AND node.status = 1 ORDER BY node.title ASC");
   while ($node = db_fetch_object($result)) {
     $rooms[$node->nid] = check_plain($node->title);
   }
@@ -40,10 +95,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
   foreach ($sessions as $session) {
     if (!empty($session->field_session_slot[0]['nid']) && !empty($session->field_session_room[0]['nid'])) {
       foreach ($session->field_session_room as $room_instance) {
-        if (!isset($session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'])) {
-          $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'] = array();
-        }
-        $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'][] = $session;
+        $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['session'] = $session;
       }
       // Create array of populated slots
       if (!$show_all_slots && !in_array($session->field_session_slot[0]['nid'], $slot_nids)) {
@@ -88,6 +140,49 @@ function template_preprocess_cod_session_calendar(&$vars) {
 
   // Sort the arranged slots
   cod_session_ksort_recurse($arranged_slots);
+
+  // Calculate colspans
+  foreach ($days as $day_key => $day_title) {
+    // For each day
+    foreach ($arranged_slots[$day_key] as $slot) {
+      // For each slot
+      if (!empty($session_grid[$slot['nid']])) {
+        $row = &$session_grid[$slot['nid']];
+        $room_nids = array_keys($rooms);
+        // For each room in slot
+        foreach ($room_nids as $room_key => $room_nid) {
+          // Check if session exists
+          if (!empty($row[$room_nid]['session'])) {
+            $session = $row[$room_nid]['session'];
+            // For remaining rooms in row, check for other sessions.
+            $colspan = 1;
+            for ($i=$room_key + 1; $i < count($room_nids); $i++) {
+              if (!empty($row[$room_nids[$i]]['session'])) {
+                $adjacent = $row[$room_nids[$i]]['session'];
+                // Check to see if adjacent row matches.
+                if ($session->nid == $adjacent->nid) {
+                  $colspan++;
+                  // We'll accommodate for this in the markup.
+                  $row[$room_nids[$i]]['spanned'] = TRUE;
+                  unset($row[$room_nids[$i]]['session']);
+                }
+                else {
+                  // Only consider those which are adjacent.
+                  break;
+                }
+              }
+            }
+            if ($colspan > 1) {
+              $row[$room_nid]['colspan'] = $colspan;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  
+  
 
   $vars['results'] = $results;
   $vars['session_grid'] = $session_grid;
