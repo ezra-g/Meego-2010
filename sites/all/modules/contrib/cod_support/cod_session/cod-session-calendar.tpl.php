@@ -13,15 +13,18 @@
           <?php print $slot['start']; ?> -<br /><?php print $slot['end']; ?>
         </td>
         <?php foreach (array_keys($rooms) as $room_key): ?>
-          <td>
-            <?php if (!empty($session_grid[$slot['nid']][$room_key])): ?>
-              <?php foreach ($session_grid[$slot['nid']][$room_key] as $session): ?>
+          <?php if (!empty($session_grid[$slot['nid']][$room_key]['sessions'])): ?>
+          <td class="occupied">
+              <?php foreach ($session_grid[$slot['nid']][$room_key]['sessions'] as $session): ?>
                 <div class="views-item">
                 <?php print $results[$session->nid]; ?>
                 </div>
               <?php endforeach ?>
-            <?php endif ?>
           </td>
+          <?php else: ?>
+          <td class="empty">&nbsp;</td>
+          <?php endif ?>
+          
         <?php endforeach ?>
       </tr>
     <?php endforeach ?>

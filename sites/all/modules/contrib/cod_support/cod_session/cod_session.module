@@ -28,17 +28,23 @@ function template_preprocess_cod_session_calendar(&$vars) {
 
   // Get a list of rooms
   // @todo I feel like rooms should actually be nodes.
-  $rooms = content_allowed_values(content_fields('field_room'));
+  // $rooms = content_allowed_values(content_fields('field_room'));
+  $result = db_query("SELECT node.nid, node.title FROM {node} node WHERE node.type = 'room' AND node.status = 1");
+  while ($node = db_fetch_object($result)) {
+    $rooms[$node->nid] = check_plain($node->title);
+  }
 
   // Create structed grid of sessions
   $slot_nids = array();
   $session_grid = array();
   foreach ($sessions as $session) {
-    if (!empty($session->field_session_slot[0]['nid']) && !empty($session->field_room[0]['value'])) {
-      if (!isset($session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']])) {
-        $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']] = array();
+    if (!empty($session->field_session_slot[0]['nid']) && !empty($session->field_session_room[0]['nid'])) {
+      foreach ($session->field_session_room as $room_instance) {
+        if (!isset($session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'])) {
+          $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'] = array();
+        }
+        $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['sessions'][] = $session;
       }
-      $session_grid[$session->field_session_slot[0]['nid']][$session->field_room[0]['value']][] = $session;
       // Create array of populated slots
       if (!$show_all_slots && !in_array($session->field_session_slot[0]['nid'], $slot_nids)) {
         $slot_nids[] = $session->field_session_slot[0]['nid'];
@@ -47,7 +53,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
   }
 
   if ($show_all_slots) {
-    $result = db_query("SELECT nid FROM {node} node WHERE type = 'time_slot'");
+    $result = db_query("SELECT node.nid FROM {node} node WHERE node.type = 'time_slot'");
     while ($node = db_fetch_object($result)) {
       $slot_nids[] = $node->nid;
     }

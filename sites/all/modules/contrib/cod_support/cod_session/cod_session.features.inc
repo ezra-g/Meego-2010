@@ -105,6 +105,17 @@ return $flags;
  */
 function cod_session_node_info() {
   $items = array(
+    'room' => array(
+      'name' => t('Room'),
+      'module' => 'features',
+      'description' => t('Rooms provide a location for each session.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
     'schedule_item' => array(
       'name' => t('Schedule Item'),
       'module' => 'features',

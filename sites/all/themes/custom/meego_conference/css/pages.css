@@ -414,3 +414,12 @@ ul.pager li.pager-current {
   overflow: hidden;
   position: absolute;
 }
+
+.occupied {
+  border: 1px solid #ccc;
+  background-color: #f5f5ff;
+}
+
+tr.even, tr.odd {
+  border-bottom: 0;
+}

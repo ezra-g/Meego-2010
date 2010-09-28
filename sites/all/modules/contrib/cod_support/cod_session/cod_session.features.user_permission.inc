@@ -85,15 +85,6 @@ function cod_session_user_default_permissions() {
     ),
   );
 
-  // Exported permission: edit field_room
-  $permissions['edit field_room'] = array(
-    'name' => 'edit field_room',
-    'roles' => array(
-      '0' => 'session organizer',
-      '1' => 'site administrator',
-    ),
-  );
-
   // Exported permission: edit field_session_confirmation
   $permissions['edit field_session_confirmation'] = array(
     'name' => 'edit field_session_confirmation',
@@ -176,17 +167,6 @@ function cod_session_user_default_permissions() {
       '2' => 'content administrator',
       '3' => 'session organizer',
       '4' => 'site administrator',
-    ),
-  );
-
-  // Exported permission: view field_room
-  $permissions['view field_room'] = array(
-    'name' => 'view field_room',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-      '2' => 'session organizer',
-      '3' => 'site administrator',
     ),
   );
 

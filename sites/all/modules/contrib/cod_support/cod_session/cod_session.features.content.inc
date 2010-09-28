@@ -62,15 +62,14 @@ function cod_session_content_default_fields() {
     ),
   );
 
-  // Exported field: field_room
-  $fields['schedule_item-field_room'] = array(
-    'field_name' => 'field_room',
+  // Exported field: field_session_room
+  $fields['schedule_item-field_session_room'] = array(
+    'field_name' => 'field_session_room',
     'type_name' => 'schedule_item',
     'display_settings' => array(
-      'weight' => '2',
-      'parent' => 'group_schedule',
       'label' => array(
-        'format' => 'inline',
+        'format' => 'above',
+        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
@@ -84,38 +83,52 @@ function cod_session_content_default_fields() {
         'format' => 'default',
         'exclude' => 0,
       ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'token' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
     ),
     'widget_active' => '1',
-    'type' => 'text',
+    'type' => 'nodereference',
     'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
+    'multiple' => '1',
+    'module' => 'nodereference',
     'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => 'p1|Presidents area 1
-p2|Presidents area 2
-vavasour|Vavasour suite
-henry|Henry suite
-havelock|Havelock suite
-',
-    'allowed_values_php' => '',
+    'referenceable_types' => array(
+      'room' => 'room',
+      'event' => 0,
+      'news' => 0,
+      'page' => 0,
+      'schedule_item' => 0,
+      'session' => 0,
+      'sponsor' => 0,
+      'tshirt_design' => 0,
+      'time_slot' => 0,
+    ),
+    'advanced_view' => '--',
+    'advanced_view_args' => '',
     'widget' => array(
+      'autocomplete_match' => 'contains',
+      'size' => 60,
       'default_value' => array(
         '0' => array(
-          'value' => '',
+          'nid' => NULL,
         ),
       ),
       'default_value_php' => NULL,
       'label' => 'Room',
-      'weight' => '32',
-      'description' => '',
-      'type' => 'optionwidgets_buttons',
-      'module' => 'optionwidgets',
+      'weight' => '38',
+      'description' => 'Select room(s) in which the schedule item occurs.',
+      'type' => 'nodereference_buttons',
+      'module' => 'nodereference',
     ),
   );
 
@@ -417,63 +430,6 @@ havelock|Havelock suite
     ),
   );
 
-  // Exported field: field_room
-  $fields['session-field_room'] = array(
-    'field_name' => 'field_room',
-    'type_name' => 'session',
-    'display_settings' => array(
-      'weight' => '2',
-      'parent' => 'group_schedule',
-      'label' => array(
-        'format' => 'inline',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => 'p1|Presidents area 1
-p2|Presidents area 2
-vavasour|Vavasour suite
-henry|Henry suite
-havelock|Havelock suite
-',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Room',
-      'weight' => '2',
-      'description' => '',
-      'type' => 'optionwidgets_buttons',
-      'module' => 'optionwidgets',
-    ),
-  );
-
   // Exported field: field_session_confirmation
   $fields['session-field_session_confirmation'] = array(
     'field_name' => 'field_session_confirmation',
@@ -531,6 +487,76 @@ havelock|Havelock suite
       'description' => 'If your session has been accepted in the program, please indicate your confirmation that you can or can not actually present this session at the conference. ',
       'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_session_room
+  $fields['session-field_session_room'] = array(
+    'field_name' => 'field_session_room',
+    'type_name' => 'session',
+    'display_settings' => array(
+      'label' => array(
+        'format' => 'above',
+        'exclude' => 0,
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'nodereference',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'nodereference',
+    'active' => '1',
+    'referenceable_types' => array(
+      'room' => 'room',
+      'event' => 0,
+      'news' => 0,
+      'page' => 0,
+      'schedule_item' => 0,
+      'session' => 0,
+      'sponsor' => 0,
+      'tshirt_design' => 0,
+      'time_slot' => 0,
+    ),
+    'advanced_view' => '--',
+    'advanced_view_args' => '',
+    'widget' => array(
+      'autocomplete_match' => 'contains',
+      'size' => 60,
+      'default_value' => array(
+        '0' => array(
+          'nid' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Room',
+      'weight' => '1',
+      'description' => 'Select room(s) in which the session occurs.',
+      'type' => 'nodereference_buttons',
+      'module' => 'nodereference',
     ),
   );
 
@@ -596,7 +622,7 @@ havelock|Havelock suite
       ),
       'default_value_php' => NULL,
       'label' => 'Time slot',
-      'weight' => '1',
+      'weight' => '-1',
       'description' => '',
       'type' => 'nodereference_select',
       'module' => 'nodereference',

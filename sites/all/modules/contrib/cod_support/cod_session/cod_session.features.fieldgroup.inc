@@ -39,7 +39,7 @@ function cod_session_fieldgroup_default_groups() {
         ),
       ),
     ),
-    'weight' => '2',
+    'weight' => '3',
     'fields' => array(
       '0' => 'field_topics',
       '1' => 'field_track',
@@ -83,7 +83,7 @@ function cod_session_fieldgroup_default_groups() {
     'fields' => array(
       '0' => 'field_accepted',
       '1' => 'field_session_slot',
-      '2' => 'field_room',
+      '2' => 'field_session_room',
     ),
   );
 
