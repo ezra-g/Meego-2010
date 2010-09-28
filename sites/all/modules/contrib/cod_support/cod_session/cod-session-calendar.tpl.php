@@ -4,13 +4,13 @@
     <tr>
       <th><?php print t('Time'); ?></th>
     <?php foreach ($rooms as $room_key => $room_title): ?>
-      <th class="room-label"><?php print $room_title; ?></th>
+      <th><span class="room-label"><?php print $room_title; ?></th>
     <?php endforeach ?>
     </tr>
     <?php foreach ($arranged_slots[$day_key] as $slot): ?>
       <tr class="<?php print $zebra = $zebra == 'even' ? 'odd':'even'; ?>">
         <td class="time-label">
-          <?php print $slot['start']; ?> -<br /><?php print $slot['end']; ?>
+          <?php print $slot['start']; ?>&nbsp;-<br /><?php print $slot['end']; ?>
         </td>
         <?php foreach (array_keys($rooms) as $room_key): ?>
           <?php if (!empty($session_grid[$slot['nid']][$room_key]['session'])): ?>
