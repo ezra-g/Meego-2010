@@ -76,20 +76,20 @@ function template_preprocess_cod_session_calendar(&$vars) {
   // @todo Create style option whether to display both populated and non-populated slots
   $show_all_slots = TRUE;
 
-  // Save raw row results keyed on nid
+  // Save raw row results keyed on nid.
   $results = array();
   foreach ($vars['view']->result as $key => $node) {
     $sessions[$node->nid] = node_load($node->nid);
     $results[$node->nid] = $vars['rows'][$key];
   }
 
-  // Get a list of rooms
+  // Get a list of rooms.
   $result = db_query("SELECT node.nid, node.title FROM {node} node WHERE node.type = 'room' AND node.status = 1 ORDER BY node.title ASC");
   while ($node = db_fetch_object($result)) {
     $rooms[$node->nid] = check_plain($node->title);
   }
 
-  // Create structed grid of sessions
+  // Create structed grid of sessions.
   $slot_nids = array();
   $session_grid = array();
   foreach ($sessions as $session) {
@@ -97,13 +97,14 @@ function template_preprocess_cod_session_calendar(&$vars) {
       foreach ($session->field_session_room as $room_instance) {
         $session_grid[$session->field_session_slot[0]['nid']][$room_instance['nid']]['session'] = $session;
       }
-      // Create array of populated slots
+      // Create array of populated slots.
       if (!$show_all_slots && !in_array($session->field_session_slot[0]['nid'], $slot_nids)) {
         $slot_nids[] = $session->field_session_slot[0]['nid'];
       }
     }
   }
 
+  // Get all slots.
   if ($show_all_slots) {
     $result = db_query("SELECT node.nid FROM {node} node WHERE node.type = 'time_slot'");
     while ($node = db_fetch_object($result)) {
@@ -119,7 +120,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
     $slots[$slot->nid] = $slot;
   }
 
-  // Arrange slots by days
+  // Arrange slots by days.
   // @todo Give plugin options for date formats and text?
   $arranged_slots = array();
   $days = array();
@@ -138,10 +139,10 @@ function template_preprocess_cod_session_calendar(&$vars) {
     }
   }
 
-  // Sort the arranged slots
+  // Sort the arranged slots.
   cod_session_ksort_recurse($arranged_slots);
 
-  // Calculate colspans
+  // Calculate colspans.
   // For each day...
   foreach ($days as $day_key => $day_title) {
     // For each slot...
@@ -151,7 +152,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
         $room_nids = array_keys($rooms);
         // For each room in slot...
         foreach ($room_nids as $room_key => $room_nid) {
-          // Check if session exists
+          // Check if session exists.
           if (!empty($row[$room_nid]['session'])) {
             $session = $row[$room_nid]['session'];
             $colspan = 1;
@@ -194,7 +195,7 @@ function template_preprocess_cod_session_calendar(&$vars) {
 }
 
 /**
- * Recursive ksort
+ * Recursive ksort.
  */
 function cod_session_ksort_recurse(&$array) {
   ksort($array);
