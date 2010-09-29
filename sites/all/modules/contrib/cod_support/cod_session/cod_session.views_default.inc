@@ -261,6 +261,8 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Schedule');
+  $handler->override_option('empty', '<?php print theme(\'cod_session_calendar\'); ?>');
+  $handler->override_option('empty_format', '3');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'cod_session_calendar');
@@ -651,6 +653,7 @@ function cod_session_views_default_views() {
       'reduce_duplicates' => 0,
     ),
   ));
+  $handler->override_option('empty', 'No sessions listed.');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
     'grouping' => '',
