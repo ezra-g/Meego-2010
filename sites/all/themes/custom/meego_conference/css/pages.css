@@ -434,6 +434,7 @@ ul.pager li.pager-current {
 
 .session-calendar .type-session .title {
   text-align: left;
+  margin-bottom: .5em;
 }
 
 .session-calendar .type-session .field_presenters_uid {
