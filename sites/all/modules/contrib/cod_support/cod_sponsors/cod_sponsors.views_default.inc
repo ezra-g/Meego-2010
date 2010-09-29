@@ -126,7 +126,7 @@ function cod_sponsors_views_default_views() {
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('header_format', '1');
+  $handler->override_option('header_format', '2');
   $handler->override_option('header_empty', 0);
   $handler->override_option('items_per_page', 0);
   $handler->override_option('use_more', 1);
@@ -296,7 +296,6 @@ function cod_sponsors_views_default_views() {
     ),
   ));
   $handler->override_option('header', '<h2 class="platinum-sponsors">Platinum Sponsors</h2>');
-  $handler->override_option('header_format', '2');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'columns' => '1',
@@ -431,7 +430,6 @@ function cod_sponsors_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Gold Sponsors');
-  $handler->override_option('header_format', '2');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Silver Sponsor Block', 'block_2');
@@ -547,7 +545,6 @@ function cod_sponsors_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Silver Sponsors');
-  $handler->override_option('header_format', '2');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Bronze Sponsor Block', 'block_3');
@@ -663,7 +660,6 @@ function cod_sponsors_views_default_views() {
     ),
   ));
   $handler->override_option('header', '<h3>Bronze</h3>');
-  $handler->override_option('header_format', '2');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Home Page Platinum Featured', 'block_4');
@@ -1302,6 +1298,62 @@ function cod_sponsors_views_default_views() {
     ),
   ));
   $handler->override_option('header', '<h2 class="media-sponsors">Media Sponsors</h2>');
+  $handler->override_option('attachment_position', 'after');
+  $handler->override_option('inherit_arguments', TRUE);
+  $handler->override_option('inherit_exposed_filters', FALSE);
+  $handler->override_option('inherit_pager', FALSE);
+  $handler->override_option('render_pager', 0);
+  $handler->override_option('displays', array(
+    'page_1' => 'page_1',
+    'default' => 0,
+    'block_1' => 0,
+    'block_2' => 0,
+    'block_3' => 0,
+    'block_4' => 0,
+    'block_5' => 0,
+    'block_6' => 0,
+    'block_7' => 0,
+  ));
+  $handler = $view->new_display('attachment', 'Attachment: Other Sponsors', 'attachment_4');
+  $handler->override_option('filters', array(
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'sponsor' => 'sponsor',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+    ),
+    'field_sponsorship_level_value_many_to_one' => array(
+      'operator' => 'or',
+      'value' => array(
+        'Other' => 'Other',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'field_sponsorship_level_value_many_to_one',
+      'table' => 'node_data_field_sponsorship_level',
+      'field' => 'field_sponsorship_level_value_many_to_one',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+  ));
+  $handler->override_option('header', '<h2 class="other-sponsors">Other Sponsors</h2>');
   $handler->override_option('attachment_position', 'after');
   $handler->override_option('inherit_arguments', TRUE);
   $handler->override_option('inherit_exposed_filters', FALSE);
