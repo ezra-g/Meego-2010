@@ -78,9 +78,12 @@ function template_preprocess_cod_session_calendar(&$vars) {
 
   // Save raw row results keyed on nid.
   $results = array();
-  foreach ($vars['view']->result as $key => $node) {
-    $sessions[$node->nid] = node_load($node->nid);
-    $results[$node->nid] = $vars['rows'][$key];
+  $sessions = array();
+  if (!empty($vars['view']->result)) {
+    foreach ($vars['view']->result as $key => $node) {
+      $sessions[$node->nid] = node_load($node->nid);
+      $results[$node->nid] = $vars['rows'][$key];
+    }
   }
 
   // Get a list of rooms.
