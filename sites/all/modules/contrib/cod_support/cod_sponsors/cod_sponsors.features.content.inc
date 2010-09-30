@@ -161,7 +161,8 @@ function cod_sponsors_content_default_fields() {
     'allowed_values' => 'Platinum
 Gold
 Silver
-Media',
+Media
+Other',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(

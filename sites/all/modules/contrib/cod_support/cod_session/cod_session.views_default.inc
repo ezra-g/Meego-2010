@@ -214,24 +214,6 @@ function cod_session_views_default_views() {
       'relationship' => 'none',
       'reduce_duplicates' => 0,
     ),
-    'field_room_value' => array(
-      'operator' => 'not empty',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'case' => 1,
-      'id' => 'field_room_value',
-      'table' => 'node_data_field_room',
-      'field' => 'field_room_value',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
     'field_session_slot_nid' => array(
       'operator' => 'not empty',
       'value' => array(),
@@ -250,6 +232,24 @@ function cod_session_views_default_views() {
       'relationship' => 'none',
       'reduce_duplicates' => 0,
     ),
+    'field_session_room_nid' => array(
+      'operator' => 'not empty',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'field_session_room_nid',
+      'table' => 'node_data_field_session_room',
+      'field' => 'field_session_room_nid',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'role',
@@ -261,6 +261,8 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Schedule');
+  $handler->override_option('empty', '<?php print theme(\'cod_session_calendar\'); ?>');
+  $handler->override_option('empty_format', '3');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'cod_session_calendar');
@@ -651,6 +653,7 @@ function cod_session_views_default_views() {
       'reduce_duplicates' => 0,
     ),
   ));
+  $handler->override_option('empty', 'No sessions listed.');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
     'grouping' => '',
