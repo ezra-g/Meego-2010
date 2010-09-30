@@ -52,7 +52,7 @@ $flags[] = array (
   'module' => 'conference_t_shirt_design_contest',
   'locked' => 
   array (
-    'name' => 'name',
+    0 => 'name',
   ),
   'api_version' => 2,
 );
