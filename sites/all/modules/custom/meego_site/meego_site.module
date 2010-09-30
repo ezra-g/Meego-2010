@@ -82,6 +82,11 @@ function meego_site_user($op, &$edit, &$account, $category = NULL) {
  * Implementation of hook_form_alter().
  */
 function meego_site_form_alter(&$form, &$form_state, $form_id) {
+  // Temporarily prevent folks from uploading user pictures until symlink issues are fixed.
+  // http://project.growingventuresolutions.com/node/4418
+  if ($form_id == 'user_profile_form') {
+    $form['picture']['#access'] = FALSE;
+  }
   if ($form_id == 'signup_form') {
     global $user;
     // We only want to add profile fields to the main event.
