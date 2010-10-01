@@ -415,9 +415,24 @@ ul.pager li.pager-current {
   position: absolute;
 }
 
+.view-schedule h2 {
+  color: #EB2A8A;
+  font-size: 1.7em;
+  margin-bottom: 0;
+}
+
 .session-calendar .occupied {
   border: 1px solid #ccc;
   background-color: #f5f5ff;
+}
+
+.session-calendar th {
+  border-right: 1px solid #ccc;
+}
+
+.session-calendar {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 3em;
 }
 
 .session-calendar tr.even, tr.odd {
@@ -435,11 +450,17 @@ ul.pager li.pager-current {
 .session-calendar .type-session .title {
   text-align: left;
   margin-bottom: .5em;
+  width: 114px;
+  font-size: .95em;
 }
 
 .session-calendar .type-session .field_presenters_uid {
   font-size: .917em;
   text-align: right;
+}
+
+.session-calendar .type-session .field_track_value {
+  color: #54B87B;
 }
 
 .session-calendar .room-label {

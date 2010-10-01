@@ -12,6 +12,7 @@
 a:link,
 a:visited {
   text-decoration: underline !important;
+  border: none;
 }
 
 /* Don't underline header */
@@ -52,6 +53,7 @@ body,
 
 /* Hide sidebars and nav elements */
 #skip-to-nav,
+#search-box,
 #navigation,
 .region-sidebar-first,
 .region-sidebar-second,
@@ -72,4 +74,31 @@ div.tabs,
    the content after the first page. */
 #page-wrapper {
   overflow-y: visible;
+}
+
+/* Session Calendar Print Styles */
+.session-calendar a:link,
+.session-calendar a:visited {
+  text-decoration: none !important;
+  border-bottom:1px dotted #333333;
+}
+
+.view-schedule .view-filters {
+  visibility: hidden;
+  display: none;
+}
+
+.session-calendar a:link:after,
+.session-calendar a:visited:after {
+  content: none !important;
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
+div#site-name {
+  background:url("/sites/all/themes/custom/meego_conference/images/site_name.png") no-repeat scroll left top transparent;
+  display:block;
+  height:62px;
+  margin:0;
+  width:205px;
 }
