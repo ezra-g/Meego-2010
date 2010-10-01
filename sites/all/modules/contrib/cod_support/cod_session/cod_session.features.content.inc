@@ -776,7 +776,7 @@ function cod_session_content_default_fields() {
     'active' => '1',
     'text_processing' => '0',
     'max_length' => '',
-    'allowed_values' => 'TBC',
+    'allowed_values' => 'BoF',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(

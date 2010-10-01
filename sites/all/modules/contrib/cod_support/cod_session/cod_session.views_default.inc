@@ -18,39 +18,6 @@ function cod_session_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
-    'title' => array(
-      'label' => '',
-      'alter' => array(
-        'alter_text' => 1,
-        'text' => '<strong>[title]</strong>',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'link_to_node' => 1,
-      'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-      'override' => array(
-        'button' => 'Override',
-      ),
-    ),
     'field_track_value' => array(
       'label' => '',
       'alter' => array(
@@ -91,6 +58,39 @@ function cod_session_views_default_views() {
         'button' => 'Override',
       ),
       'relationship' => 'none',
+    ),
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<strong>[title]</strong>',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
     'field_presenters_uid' => array(
       'label' => '',
@@ -198,10 +198,10 @@ function cod_session_views_default_views() {
       'expose' => array(
         'use_operator' => 0,
         'operator' => 'field_track_value_many_to_one_op',
-        'identifier' => 'field_track_value_many_to_one',
-        'label' => 'Track',
+        'identifier' => 'track',
+        'label' => 'Filter by track:',
         'optional' => 1,
-        'single' => 0,
+        'single' => 1,
         'remember' => 0,
         'reduce' => 0,
       ),
@@ -252,10 +252,7 @@ function cod_session_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'role',
-    'role' => array(
-      '3' => 3,
-    ),
+    'type' => 'none',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
