@@ -190,30 +190,6 @@ function cod_session_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_track_value_many_to_one' => array(
-      'operator' => 'or',
-      'value' => array(),
-      'group' => '0',
-      'exposed' => TRUE,
-      'expose' => array(
-        'use_operator' => 0,
-        'operator' => 'field_track_value_many_to_one_op',
-        'identifier' => 'track',
-        'label' => 'Filter by track:',
-        'optional' => 1,
-        'single' => 1,
-        'remember' => 0,
-        'reduce' => 0,
-      ),
-      'id' => 'field_track_value_many_to_one',
-      'table' => 'node_data_field_track',
-      'field' => 'field_track_value_many_to_one',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-      'reduce_duplicates' => 0,
-    ),
     'field_session_slot_nid' => array(
       'operator' => 'not empty',
       'value' => array(),
@@ -258,6 +234,9 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Schedule');
+  $handler->override_option('header', '<strong>Note:</strong> The below schedule is a work in progress and is subject to changes until officially announced. ');
+  $handler->override_option('header_format', '1');
+  $handler->override_option('header_empty', 0);
   $handler->override_option('empty', '<?php print theme(\'cod_session_calendar\'); ?>');
   $handler->override_option('empty_format', '3');
   $handler->override_option('items_per_page', 0);
