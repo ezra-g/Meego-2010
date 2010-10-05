@@ -181,7 +181,7 @@ function conference_early_bird_events_views_default_views() {
     'nid' => array(
       'operator' => '=',
       'value' => array(
-        'value' => '357',
+        'value' => '388',
         'min' => '',
         'max' => '',
       ),
