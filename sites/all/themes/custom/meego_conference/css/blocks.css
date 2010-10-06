@@ -93,6 +93,7 @@
 #suffix .block {
   width: 240px;
   margin-right: 20px;
+  min-height: 250px;
   float: left;
 }
 
@@ -110,6 +111,15 @@
 
 #suffix .region-count-3 {
   background-color: #ffc501;
+}
+
+.block-featured-presenter .grouped-content .views-field {
+  padding-left: 15px;
+}
+
+.block-featured-presenter .view-grouped-list .grouped-meta a:link, 
+.block-featured-presenter .view-grouped-list .grouped-meta a:visited {
+color:#333;
 }
 
 /*

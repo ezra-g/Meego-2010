@@ -1044,7 +1044,7 @@ function cod_session_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Sessions Accepted');
-  $handler->override_option('path', 'program/sessions-accepted');
+  $handler->override_option('path', 'program/sessions/accepted');
   $handler->override_option('menu', array(
     'type' => 'default tab',
     'title' => 'Sessions Accepted',
@@ -1054,7 +1054,7 @@ function cod_session_views_default_views() {
   ));
   $handler->override_option('tab_options', array(
     'type' => 'normal',
-    'title' => 'Program',
+    'title' => 'Sessions',
     'description' => '',
     'weight' => '0',
     'name' => 'primary-links',
@@ -1070,7 +1070,7 @@ function cod_session_views_default_views() {
     'relationship' => 'none',
     'item_length' => 'fulltext',
   ));
-  $handler->override_option('path', 'sessions/rss');
+  $handler->override_option('path', 'program/sessions/proposed/rss');
   $handler->override_option('menu', array(
     'type' => 'none',
     'title' => '',
@@ -1771,7 +1771,7 @@ function cod_session_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Sessions Proposed');
-  $handler->override_option('path', 'program/sessions-proposed');
+  $handler->override_option('path', 'program/sessions/proposed');
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'Sessions Proposed',
