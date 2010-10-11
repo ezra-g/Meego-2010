@@ -38,6 +38,8 @@ function cod_session_context_default_contexts() {
         ),
       ),
     ),
+    'breadcrumb' => 'program/sessions',
+    'menu' => 'program/sessions',
   );
   $context->condition_mode = 0;
 
