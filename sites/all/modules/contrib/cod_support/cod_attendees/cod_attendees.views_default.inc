@@ -168,6 +168,27 @@ function cod_attendees_views_default_views() {
     ),
   ));
   $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => 'in',
+      'value' => array(
+        '1' => '1',
+        '3' => '3',
+        '5' => '5',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'signup_log',
+      'field' => 'status',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
     'nid' => array(
       'operator' => '=',
       'value' => array(
