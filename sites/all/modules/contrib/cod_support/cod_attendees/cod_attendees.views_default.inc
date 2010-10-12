@@ -219,7 +219,7 @@ function cod_attendees_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Attendees');
-  $handler->override_option('items_per_page', 100);
+  $handler->override_option('items_per_page', 99);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'grid');
   $handler->override_option('style_options', array(
