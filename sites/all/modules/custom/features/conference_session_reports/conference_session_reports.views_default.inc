@@ -341,14 +341,12 @@ function conference_session_reports_views_default_views() {
     ),
   ));
   $handler->override_option('sorts', array(
-    'title' => array(
+    'created' => array(
       'order' => 'ASC',
-      'id' => 'title',
+      'granularity' => 'minute',
+      'id' => 'created',
       'table' => 'node',
-      'field' => 'title',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'field' => 'created',
       'relationship' => 'none',
     ),
   ));
@@ -381,7 +379,7 @@ function conference_session_reports_views_default_views() {
         'label' => 'Filter by status:',
         'optional' => 1,
         'single' => 1,
-        'remember' => 0,
+        'remember' => 1,
         'reduce' => 0,
       ),
       'id' => 'field_accepted_value_many_to_one',
@@ -452,7 +450,7 @@ function conference_session_reports_views_default_views() {
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'Presenters');
+  $handler->override_option('title', 'Sessions');
   $handler->override_option('header_format', '1');
   $handler->override_option('header_empty', 0);
   $handler->override_option('empty', 'No sessions match the filters you have selected. Please select a new set of filters or reset the form.');
@@ -470,7 +468,6 @@ function conference_session_reports_views_default_views() {
     'columns' => array(
       'counter' => 'counter',
       'name' => 'name',
-      'mail' => 'mail',
       'title' => 'title',
       'field_session_confirmation_value' => 'field_session_confirmation_value',
     ),
@@ -479,10 +476,6 @@ function conference_session_reports_views_default_views() {
         'separator' => '',
       ),
       'name' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
-      'mail' => array(
         'sortable' => 0,
         'separator' => '',
       ),
@@ -527,7 +520,6 @@ function conference_session_reports_views_default_views() {
       'flag_nodes:aef03798d09d56ae0af7837a63516fb5' => 0,
       'node_unpromote_action' => 0,
       'node_mass_update:8ce21b08bb8e773d10018b484fe4815e' => 0,
-      'flag_nodes:0638bdc223d32244bb90f41695e704ed' => 0,
       'flag_nodes:239577173a2877b8739df0bcb9471d0f' => 0,
       'node_save_action' => 0,
       'system_send_email_action' => 0,
@@ -539,7 +531,6 @@ function conference_session_reports_views_default_views() {
       'node_unpublish_by_keyword_action' => 0,
       'pathauto_node_update_alias_multiple:0d56f9c10fbb36ec3264abea71b6f416' => 0,
       'flag_nodes:26a2244bc5178ba475d6c829fd45c29e' => 0,
-      'flag_nodes:52d6ee5629eb59847655ea09f50c1ace' => 0,
     ),
     'views_bulk_operations_fields_action' => array(
       'php_code' => 0,
@@ -549,7 +540,7 @@ function conference_session_reports_views_default_views() {
       '_error_element_base' => 'style_options][views_bulk_operations_fields_action][',
     ),
   ));
-  $handler = $view->new_display('page', 'Page: Sessions', 'page_1');
+  $handler = $view->new_display('page', 'Page:Sessions', 'page_1');
   $handler->override_option('path', 'reports/sessions/all');
   $handler->override_option('menu', array(
     'type' => 'default tab',
@@ -708,7 +699,7 @@ function conference_session_reports_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
-      'link_to_user' => 'mailto',
+      'link_to_user' => '0',
       'exclude' => 0,
       'id' => 'mail',
       'table' => 'users',
@@ -717,6 +708,47 @@ function conference_session_reports_views_default_views() {
         'button' => 'Use default',
       ),
       'relationship' => 'field_presenters_uid',
+    ),
+    'field_accepted_value' => array(
+      'label' => 'Session Status',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'custom',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_accepted_value',
+      'table' => 'node_data_field_accepted',
+      'field' => 'field_accepted_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
     ),
     'title' => array(
       'label' => 'Title',
@@ -747,12 +779,9 @@ function conference_session_reports_views_default_views() {
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
-      'override' => array(
-        'button' => 'Use default',
-      ),
     ),
     'field_session_confirmation_value' => array(
-      'label' => 'Session Confirmation',
+      'label' => 'Confirm',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
@@ -764,9 +793,9 @@ function conference_session_reports_views_default_views() {
         'suffix' => '',
         'target' => '',
         'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
+        'trim' => 1,
+        'max_length' => '8',
+        'word_boundary' => 0,
         'ellipsis' => 1,
         'html' => 0,
         'strip_tags' => 0,
@@ -775,7 +804,7 @@ function conference_session_reports_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 0,
-      'label_type' => 'widget',
+      'label_type' => 'custom',
       'format' => 'default',
       'multiple' => array(
         'group' => TRUE,
@@ -787,6 +816,18 @@ function conference_session_reports_views_default_views() {
       'id' => 'field_session_confirmation_value',
       'table' => 'node_data_field_session_confirmation',
       'field' => 'field_session_confirmation_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'title' => array(
+      'order' => 'ASC',
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -810,20 +851,39 @@ function conference_session_reports_views_default_views() {
       'field' => 'type',
       'relationship' => 'none',
     ),
+    'keys' => array(
+      'operator' => 'optional',
+      'value' => '',
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'keys_op',
+        'identifier' => 'keys',
+        'label' => 'Filter by keywords:',
+        'optional' => 1,
+        'remember' => 0,
+      ),
+      'id' => 'keys',
+      'table' => 'search_index',
+      'field' => 'keys',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
     'field_accepted_value_many_to_one' => array(
       'operator' => 'or',
-      'value' => array(
-        '1' => '1',
-      ),
+      'value' => array(),
       'group' => '0',
-      'exposed' => FALSE,
+      'exposed' => TRUE,
       'expose' => array(
-        'operator' => 'field_accepted_value_many_to_one_op',
-        'label' => 'Filter by status:',
-        'use_operator' => 0,
-        'identifier' => 'status',
+        'use_operator' => 1,
+        'operator' => 'status',
+        'identifier' => 'session_status',
+        'label' => 'by session status:',
         'optional' => 1,
-        'single' => 1,
+        'single' => 0,
         'remember' => 0,
         'reduce' => 0,
       ),
@@ -837,6 +897,7 @@ function conference_session_reports_views_default_views() {
       ),
     ),
   ));
+  $handler->override_option('title', 'Presenters');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('distinct', 0);
   $handler->override_option('path', 'reports/sessions/presenters');
