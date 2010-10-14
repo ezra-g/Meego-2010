@@ -206,7 +206,7 @@ function cod_sponsors_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 1,
-      'exclude' => 1,
+      'exclude' => 0,
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
@@ -985,7 +985,7 @@ function cod_sponsors_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 1,
-      'exclude' => 1,
+      'exclude' => 0,
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
@@ -1117,7 +1117,7 @@ function cod_sponsors_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 1,
-      'exclude' => 1,
+      'exclude' => 0,
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
@@ -1249,7 +1249,7 @@ function cod_sponsors_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 1,
-      'exclude' => 1,
+      'exclude' => 0,
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
@@ -1335,6 +1335,7 @@ function cod_sponsors_views_default_views() {
     'field_sponsorship_level_value_many_to_one' => array(
       'operator' => 'or',
       'value' => array(
+        'Additional' => 'Additional',
         'Other' => 'Other',
       ),
       'group' => '0',
@@ -1353,7 +1354,7 @@ function cod_sponsors_views_default_views() {
       'reduce_duplicates' => 0,
     ),
   ));
-  $handler->override_option('header', '<h2 class="other-sponsors">Other Sponsors</h2>');
+  $handler->override_option('header', '<h2 class="additional-sponsors">Additional Sponsors</h2>');
   $handler->override_option('attachment_position', 'after');
   $handler->override_option('inherit_arguments', TRUE);
   $handler->override_option('inherit_exposed_filters', FALSE);
