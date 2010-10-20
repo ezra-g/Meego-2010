@@ -90,7 +90,7 @@ function meego_site_form_alter(&$form, &$form_state, $form_id) {
   // This issue also prevents the user_admin_settings form
   // from passing validation.
   if ($form_id == 'user_admin_settings') {
-    $form['pictures']['#access'] = FALSE;
+    unset($form['pictures']);
   }
   if ($form_id == 'signup_form') {
     global $user;
