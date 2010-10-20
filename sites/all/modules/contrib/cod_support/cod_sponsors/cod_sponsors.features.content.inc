@@ -162,6 +162,7 @@ function cod_sponsors_content_default_fields() {
 Gold
 Silver
 Media
+Additional
 Other',
     'allowed_values_php' => '',
     'widget' => array(

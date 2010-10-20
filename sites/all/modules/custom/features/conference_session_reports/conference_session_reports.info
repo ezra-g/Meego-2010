@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "content"
+dependencies[] = "search"
 dependencies[] = "views_bonus_export"
 dependencies[] = "views_bulk_operations"
 dependencies[] = "views_send"
