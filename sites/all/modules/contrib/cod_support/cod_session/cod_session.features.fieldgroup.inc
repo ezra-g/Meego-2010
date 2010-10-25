@@ -147,6 +147,7 @@ function cod_session_fieldgroup_default_groups() {
       '1' => 'field_session_slot',
       '2' => 'field_session_room',
       '3' => 'field_duration',
+      '4' => 'field_live_streaming',
     ),
   );
 

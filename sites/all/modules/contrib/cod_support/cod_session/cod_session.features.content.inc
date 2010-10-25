@@ -928,7 +928,6 @@ function cod_session_content_default_fields() {
   // Included for use with string extractors like potx.
   t('Date and time');
   t('Duration');
-  t('Live Streaming');
   t('Presenter(s)');
   t('Room');
   t('Session Abstract');
