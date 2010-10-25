@@ -245,7 +245,7 @@ function cod_session_content_default_fields() {
       'size' => 60,
       'default_value' => array(
         '0' => array(
-          'value' => '<br>
+          'value' => '
 ',
           'format' => '1',
           '_error_element' => 'default_value_widget][field_abstract][0][value',
@@ -363,9 +363,9 @@ function cod_session_content_default_fields() {
       'default_value_php' => NULL,
       'rows' => 5,
       'size' => '60',
-      'label' => 'Preferred session duration',
-      'weight' => '-1',
-      'description' => 'Default is 30 minutes, but we\'ll entertain other requests where possible',
+      'label' => 'Duration',
+      'weight' => '1',
+      'description' => '',
       'type' => 'text_textfield',
       'module' => 'text',
     ),
@@ -497,9 +497,10 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_session_room',
     'type_name' => 'session',
     'display_settings' => array(
+      'weight' => '1',
+      'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
@@ -555,7 +556,7 @@ function cod_session_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Room',
-      'weight' => '1',
+      'weight' => 0,
       'description' => 'Select room(s) in which the session occurs.',
       'type' => 'nodereference_buttons',
       'module' => 'nodereference',
@@ -567,7 +568,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_session_slot',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '1',
+      'weight' => '-1',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'inline',
@@ -685,6 +686,64 @@ function cod_session_content_default_fields() {
       'description' => '',
       'type' => 'text_textarea',
       'module' => 'text',
+    ),
+  );
+
+  // Exported field: field_slides
+  $fields['session-field_slides'] = array(
+    'field_name' => 'field_slides',
+    'type_name' => 'session',
+    'display_settings' => array(
+      'weight' => '-2',
+      'parent' => 'group_slides',
+      'label' => array(
+        'format' => 'hidden',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'filefield',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'filefield',
+    'active' => '1',
+    'list_field' => '1',
+    'list_default' => 1,
+    'description_field' => '0',
+    'widget' => array(
+      'file_extensions' => 'pdf ppt ods odt',
+      'file_path' => 'sessions',
+      'progress_indicator' => 'bar',
+      'max_filesize_per_file' => '',
+      'max_filesize_per_node' => '',
+      'label' => 'Slides',
+      'weight' => '-2',
+      'description' => '',
+      'type' => 'filefield_widget',
+      'module' => 'filefield',
     ),
   );
 
@@ -868,12 +927,14 @@ function cod_session_content_default_fields() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Date and time');
-  t('Preferred session duration');
+  t('Duration');
+  t('Live Streaming');
   t('Presenter(s)');
   t('Room');
   t('Session Abstract');
   t('Session Confirmation');
   t('Session Summary');
+  t('Slides');
   t('Status');
   t('Time slot');
   t('Topic Keywords');

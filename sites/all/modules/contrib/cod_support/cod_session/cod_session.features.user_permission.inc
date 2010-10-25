@@ -10,10 +10,9 @@ function cod_session_user_default_permissions() {
   $permissions['create session content'] = array(
     'name' => 'create session content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'content administrator',
-      '2' => 'session organizer',
-      '3' => 'site administrator',
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
     ),
   );
 
@@ -79,12 +78,44 @@ function cod_session_user_default_permissions() {
     ),
   );
 
+  // Exported permission: edit field_abstract
+  $permissions['edit field_abstract'] = array(
+    'name' => 'edit field_abstract',
+    'roles' => array(
+      '0' => 'authenticated user',
+      '1' => 'content administrator',
+      '2' => 'session organizer',
+      '3' => 'site administrator',
+    ),
+  );
+
   // Exported permission: edit field_accepted
   $permissions['edit field_accepted'] = array(
     'name' => 'edit field_accepted',
     'roles' => array(
       '0' => 'session organizer',
       '1' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: edit field_duration
+  $permissions['edit field_duration'] = array(
+    'name' => 'edit field_duration',
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: edit field_presenters
+  $permissions['edit field_presenters'] = array(
+    'name' => 'edit field_presenters',
+    'roles' => array(
+      '0' => 'authenticated user',
+      '1' => 'content administrator',
+      '2' => 'session organizer',
+      '3' => 'site administrator',
     ),
   );
 
@@ -130,6 +161,14 @@ function cod_session_user_default_permissions() {
     ),
   );
 
+  // Exported permission: edit field_slides
+  $permissions['edit field_slides'] = array(
+    'name' => 'edit field_slides',
+    'roles' => array(
+      '0' => 'authenticated user',
+    ),
+  );
+
   // Exported permission: edit field_slot_datetime
   $permissions['edit field_slot_datetime'] = array(
     'name' => 'edit field_slot_datetime',
@@ -145,6 +184,16 @@ function cod_session_user_default_permissions() {
     'name' => 'edit field_sponsorship_level',
     'roles' => array(
       '0' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: edit field_topics
+  $permissions['edit field_topics'] = array(
+    'name' => 'edit field_topics',
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
     ),
   );
 
@@ -171,6 +220,18 @@ function cod_session_user_default_permissions() {
     'roles' => array(),
   );
 
+  // Exported permission: view field_abstract
+  $permissions['view field_abstract'] = array(
+    'name' => 'view field_abstract',
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+      '2' => 'content administrator',
+      '3' => 'session organizer',
+      '4' => 'site administrator',
+    ),
+  );
+
   // Exported permission: view field_accepted
   $permissions['view field_accepted'] = array(
     'name' => 'view field_accepted',
@@ -180,6 +241,28 @@ function cod_session_user_default_permissions() {
       '2' => 'content administrator',
       '3' => 'session organizer',
       '4' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: view field_duration
+  $permissions['view field_duration'] = array(
+    'name' => 'view field_duration',
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+      '2' => 'content administrator',
+      '3' => 'session organizer',
+      '4' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: view field_presenters
+  $permissions['view field_presenters'] = array(
+    'name' => 'view field_presenters',
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+      '2' => 'content administrator',
     ),
   );
 
@@ -226,9 +309,28 @@ function cod_session_user_default_permissions() {
     ),
   );
 
+  // Exported permission: view field_slides
+  $permissions['view field_slides'] = array(
+    'name' => 'view field_slides',
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+    ),
+  );
+
   // Exported permission: view field_slot_datetime
   $permissions['view field_slot_datetime'] = array(
     'name' => 'view field_slot_datetime',
+    'roles' => array(
+      '0' => 'content administrator',
+      '1' => 'session organizer',
+      '2' => 'site administrator',
+    ),
+  );
+
+  // Exported permission: view field_topics
+  $permissions['view field_topics'] = array(
+    'name' => 'view field_topics',
     'roles' => array(
       '0' => 'content administrator',
       '1' => 'session organizer',

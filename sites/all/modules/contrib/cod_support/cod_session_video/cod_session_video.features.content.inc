@@ -11,9 +11,10 @@ function cod_session_video_content_default_fields() {
     'field_name' => 'field_video',
     'type_name' => 'session',
     'display_settings' => array(
+      'weight' => '9',
+      'parent' => 'group_video',
       'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
+        'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'default',
@@ -56,7 +57,7 @@ function cod_session_video_content_default_fields() {
       'thumbnail_width' => '120',
       'thumbnail_height' => '90',
       'thumbnail_default_path' => '',
-      'thumbnail_link_title' => 'See video',
+      'thumbnail_link_title' => 'Play Video',
       'providers' => array(),
       'default_value' => array(
         '0' => array(
@@ -66,7 +67,7 @@ function cod_session_video_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Video',
-      'weight' => '8',
+      'weight' => '9',
       'description' => '',
       'type' => 'emvideo_textfields',
       'module' => 'emvideo',

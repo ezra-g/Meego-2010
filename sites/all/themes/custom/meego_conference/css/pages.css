@@ -454,7 +454,8 @@ ul.pager li.pager-current {
   font-size: .95em;
 }
 
-.session-calendar .type-session .field_presenters_uid {
+.session-calendar .type-session .field_presenters_uid,
+.session-calendar .edit {
   font-size: .917em;
   text-align: right;
 }
@@ -467,4 +468,22 @@ ul.pager li.pager-current {
   text-align: center;
   display: block;
   width: 114px;
+}
+
+.session-calendar .field_live_streaming_value {
+  margin-bottom: 20px;
+  padding: 4px 0;
+  background-color: #ECECFB;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+
+.session-calendar .field_live_streaming_value a {
+  background: transparent url(../icons/live_stream.png) no-repeat scroll top left;
+  border-bottom: none;
+  color: #EB2A8A;
+  font-weight: bold;
+  font-size: .95em;
+  padding-left: 20px;
 }

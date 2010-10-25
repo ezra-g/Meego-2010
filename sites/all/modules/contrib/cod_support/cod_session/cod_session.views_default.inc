@@ -18,6 +18,47 @@ function cod_session_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
+    'field_live_streaming_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 1,
+        'path' => 'program/live-streaming',
+        'link_class' => 'live-streaming',
+        'alt' => 'Live Streaming',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_live_streaming_value',
+      'table' => 'node_data_field_live_streaming',
+      'field' => 'field_live_streaming_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
     'field_track_value' => array(
       'label' => '',
       'alter' => array(
@@ -133,6 +174,39 @@ function cod_session_views_default_views() {
       ),
       'relationship' => 'none',
     ),
+    'edit_node' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'text' => 'edit',
+      'exclude' => 0,
+      'id' => 'edit_node',
+      'table' => 'node',
+      'field' => 'edit_node',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('filters', array(
     'type' => array(
@@ -234,7 +308,7 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Schedule');
-  $handler->override_option('header', '<strong>Note:</strong> The below schedule is a work in progress and is subject to changes until officially announced. ');
+  $handler->override_option('header', '<strong>Note:</strong> Sessions sometimes need to be moved or changed due to unforeseen events, so be sure to check back just before the conference on Nov. 15 for the final schedule.');
   $handler->override_option('header_format', '1');
   $handler->override_option('header_empty', 0);
   $handler->override_option('empty', '<?php print theme(\'cod_session_calendar\'); ?>');
@@ -243,6 +317,11 @@ function cod_session_views_default_views() {
   $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'cod_session_calendar');
   $handler->override_option('style_options', NULL);
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+    'hide_empty' => 1,
+  ));
   $handler = $view->new_display('page', 'Page: Session Schedule', 'page_1');
   $handler->override_option('relationships', array(
     'flag_content_rel' => array(
@@ -656,6 +735,7 @@ function cod_session_views_default_views() {
     ),
     'default' => '-1',
   ));
+  $handler->override_option('row_options', array());
   $handler->override_option('path', 'sessions-admin');
   $handler->override_option('menu', array(
     'type' => 'none',
@@ -1149,7 +1229,7 @@ function cod_session_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'title' => array(
+    'field_session_slot_nid' => array(
       'label' => 'Schedule: ',
       'alter' => array(
         'alter_text' => 0,
@@ -1173,14 +1253,63 @@ function cod_session_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 0,
+      'label_type' => 'custom',
+      'format' => 'plain',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
       'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
+      'id' => 'field_session_slot_nid',
+      'table' => 'node_data_field_session_slot',
+      'field' => 'field_session_slot_nid',
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'field_session_slot_nid',
+      'relationship' => 'none',
+    ),
+    'field_session_room_nid' => array(
+      'label' => 'Room: ',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'custom',
+      'format' => 'plain',
+      'multiple' => array(
+        'group' => 1,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_session_room_nid',
+      'table' => 'node_data_field_session_room',
+      'field' => 'field_session_room_nid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
     ),
     'field_duration_value' => array(
       'label' => 'Duration: ',
@@ -1223,15 +1352,15 @@ function cod_session_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_room_value' => array(
-      'label' => 'Room: ',
+    'field_live_streaming_value' => array(
+      'label' => '',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
+        'make_link' => 1,
+        'path' => 'program/live-streaming',
+        'link_class' => 'live-streaming',
+        'alt' => 'live-streaming',
         'prefix' => '',
         'suffix' => '',
         'target' => '',
@@ -1247,7 +1376,7 @@ function cod_session_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 0,
-      'label_type' => 'custom',
+      'label_type' => 'none',
       'format' => 'default',
       'multiple' => array(
         'group' => TRUE,
@@ -1256,50 +1385,9 @@ function cod_session_views_default_views() {
         'multiple_reversed' => FALSE,
       ),
       'exclude' => 0,
-      'id' => 'field_room_value',
-      'table' => 'node_data_field_room',
-      'field' => 'field_room_value',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-    'field_track_value' => array(
-      'label' => 'Track: ',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'link_to_node' => 0,
-      'label_type' => 'custom',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
-      'exclude' => 0,
-      'id' => 'field_track_value',
-      'table' => 'node_data_field_track',
-      'field' => 'field_track_value',
+      'id' => 'field_live_streaming_value',
+      'table' => 'node_data_field_live_streaming',
+      'field' => 'field_live_streaming_value',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -1341,6 +1429,47 @@ function cod_session_views_default_views() {
       'id' => 'field_topics_value',
       'table' => 'node_data_field_topics',
       'field' => 'field_topics_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_track_value' => array(
+      'label' => 'Track: ',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'custom',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_track_value',
+      'table' => 'node_data_field_track',
+      'field' => 'field_track_value',
       'override' => array(
         'button' => 'Use default',
       ),
