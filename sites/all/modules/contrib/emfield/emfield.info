@@ -7,9 +7,9 @@ dependencies[] = content
 package = Media
 php = 5.2
 
-; Information added by drupal.org packaging script on 2010-09-22
-version = "6.x-2.1"
+; Information added by drupal.org packaging script on 2010-10-28
+version = "6.x-2.3"
 core = "6.x"
 project = "emfield"
-datestamp = "1285164662"
+datestamp = "1288277132"
 

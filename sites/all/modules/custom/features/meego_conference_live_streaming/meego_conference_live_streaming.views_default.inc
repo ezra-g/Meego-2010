@@ -32,8 +32,8 @@ function meego_conference_live_streaming_views_default_views() {
     ),
   ));
   $handler->override_option('fields', array(
-    'field_session_slot_nid' => array(
-      'label' => 'Time slot',
+    'field_slot_datetime_value' => array(
+      'label' => 'Date/Time',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
@@ -56,22 +56,28 @@ function meego_conference_live_streaming_views_default_views() {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 0,
-      'label_type' => 'widget',
-      'format' => 'plain',
+      'label_type' => 'custom',
+      'format' => 'short',
       'multiple' => array(
-        'group' => TRUE,
         'multiple_number' => '',
         'multiple_from' => '',
-        'multiple_reversed' => FALSE,
+        'multiple_to' => '',
+        'group' => '',
+      ),
+      'repeat' => array(
+        'show_repeat_rule' => '',
+      ),
+      'fromto' => array(
+        'fromto' => 'value',
       ),
       'exclude' => 0,
-      'id' => 'field_session_slot_nid',
-      'table' => 'node_data_field_session_slot',
-      'field' => 'field_session_slot_nid',
-      'relationship' => 'none',
+      'id' => 'field_slot_datetime_value',
+      'table' => 'node_data_field_slot_datetime',
+      'field' => 'field_slot_datetime_value',
       'override' => array(
         'button' => 'Override',
       ),
+      'relationship' => 'field_session_slot_nid',
     ),
     'title' => array(
       'label' => 'Session',
@@ -249,10 +255,18 @@ function meego_conference_live_streaming_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Live Streaming');
-  $handler->override_option('header', '[Live Streaming Embed Goes Here]
+  $handler->override_option('header', '<div class="live-stream-wrapper">
 
-<h3>Schedule</h3>');
-  $handler->override_option('header_format', '2');
+
+</div>
+
+<?php
+  if (module_exists(\'clock\')) {
+    $block = (object) module_invoke(\'clock\', \'block\', \'view\', \'0\');
+    print \'<div class="dublin-clock"><strong>Local Dublin Time:</strong> \'.$block->content.\'</div>\';
+  }
+?>');
+  $handler->override_option('header_format', '3');
   $handler->override_option('header_empty', 1);
   $handler->override_option('items_per_page', 50);
   $handler->override_option('style_plugin', 'table');

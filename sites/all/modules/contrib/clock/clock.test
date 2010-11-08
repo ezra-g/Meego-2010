@@ -1,0 +1,140 @@
+<?php
+// $Id: clock.test,v 1.4.2.5 2010/10/07 17:17:12 tstoeckler Exp $
+
+/**
+ * @file
+ * Tests for Clock module.
+ */
+
+class ClockBlockTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Clock module tests',
+      'description' => 'Ensure that the clock block functions properly.',
+      'group' => 'Clock',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('date_api', 'date_timezone', 'clock');
+    $privileged_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    // Save the test user's uid to access the user edit page later.
+    variable_set('test_user_id', $privileged_user->uid);
+    $this->drupalLogin($privileged_user);
+    // Date Timezone requires to set a site timezone.
+    $edit = array();
+    $edit['date_default_timezone_name'] = 'UTC';
+    $this->drupalPost('admin/settings/date-time', $edit, 'Save configuration');
+    // Enable the clock block in the right sidebar.
+    $edit = array();
+    $edit['clock_clock[region]'] = 'right';
+    $this->drupalPost('admin/build/block', $edit, 'Save blocks');
+  }
+
+  public function testClockBlock() {
+    // Test the default display.
+    $clock = date_format_date(date_now('UTC'), 'short');
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed by default.');
+    $edit['timezone'] = '3';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $this->assertText($clock, 'Ensure that the clock falls back to the site time with Local time zone enabled and without JavaScript.');
+
+    // Test the user time zone.
+    $edit = array();
+    $edit['timezone_name'] = 'Pacific/Fiji';
+    $this->drupalPost('user/' . variable_get('test_user_id', '1') . '/edit', $edit, 'Save');
+    // Set the clock block to display the user time zone.
+    $edit = array();
+    $edit['timezone'] = '2';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $clock = date_format_date(date_now('Pacific/Fiji'), 'short');
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed in the user time zone.');
+
+    // Test a custom time zone.
+    $edit = array();
+    $edit['timezone'] = '4';
+    $edit['custom_timezone'] = 'Africa/Lubumbashi';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $clock = date_format_date(date_now('Africa/Lubumbashi'), 'short');
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed in a custom date format.');
+    // Reset the time zone.
+    $edit['timezone'] = '1';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+
+    // Test the medium date format.
+    $edit = array();
+    $edit['date_format'] = 'medium';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $clock = date_format_date(date_now(), 'medium');
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed in the medium date format.');
+
+    // Test the long date format.
+    $edit = array();
+    $edit['date_format'] = 'long';
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $clock = date_format_date(date_now(), 'long');
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed in the long date format.');
+
+    // Test a custom date format.
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    $this->assertNoText('Custom date format', 'Ensure that no custom date formats are displayed if there are none.');
+    // Create a custom date format.
+    $format = 'aAbBcCdDeEfFgGhHiIjJlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
+    $edit = array();
+    $edit['add_date_format'] = $format;
+    $this->drupalPost('admin/settings/date-time/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    // Set the clock block to display the custom format.
+    $edit = array();
+    $edit['date_format'] = 'custom';
+    $edit['custom_date_format'] = $format;
+    $this->drupalPost('admin/build/block/configure/clock/clock', $edit, 'Save block');
+    $clock = date_format_date(date_now(), 'custom', $format);
+    $this->assertText($clock, 'Ensure that the clock is correctly displayed in a custom format.');
+  }
+
+}
+
+class ClockConfigureTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Clock interface tests',
+      'description' => 'Ensure that the user interface functions correctly.',
+      'group' => 'Clock',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('date_api', 'date_timezone', 'clock');
+    $privileged_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    $this->drupalLogin($privileged_user);
+    $edit = array();
+    $edit['date_default_timezone_name'] = 'UTC';
+    $this->drupalPost('admin/settings/date-time', $edit, 'Save configuration');
+  }
+
+  public function testClockInterfaceUserTimezone() {
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    $this->assertText('User time zone', 'Make sure the "User time zone" setting is available when user time zones are enabled.');
+    $edit = array();
+    $edit['configurable_timezones'] = '0';
+    $this->drupalPost('admin/settings/date-time', $edit, 'Save configuration');
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    $this->assertNoText('User time zone', 'Make sure the "User time zone" setting is not available when user time zones are disabled.');
+  }
+
+  public function testClockInterfaceCustomDateFormat() {
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    $this->assertNoText('Custom date format', 'Make sure the "Custom date format" setting is not available when no custom date formats are defined.');
+    $edit = array();
+    $edit['add_date_format'] = 'g:i a';
+    $this->drupalPost('admin/settings/date-time/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/build/block/configure/clock/clock');
+    $this->assertText('Custom date format', 'Make sure the "Custom date format" setting is available when custom date formats are defined.');
+    $custom_date_format = date_format_date(date_now(), 'custom', 'g:i a');
+    $this->assertText($custom_date_format, 'Make sure custom date formats show up.');
+  }
+
+}

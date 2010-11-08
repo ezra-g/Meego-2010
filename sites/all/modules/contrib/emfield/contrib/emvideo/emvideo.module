@@ -1,5 +1,5 @@
 <?php
-// $Id: emvideo.module,v 1.1.2.30.2.5 2010/09/21 20:17:53 aaron Exp $
+// $Id: emvideo.module,v 1.1.2.30.2.7 2010/10/10 21:07:12 aaron Exp $
 
 /**
  * @file
@@ -537,6 +537,22 @@ function emvideo_widget_settings($op, $widget) {
         if (module_exists('token')) {
           $form['tn']['thumbnail_link_title']['#suffix'] = theme('token_help', 'global');
         }
+
+        $form['meta_data'] = array(
+          '#type' => 'fieldset',
+          '#title' => t('Additional fields'),
+          '#description' => t('Makes addition fields available for describing your content.'),
+          '#collapsible' => TRUE,
+          '#collapsed' => FALSE,
+        );
+        $form['meta_data']['meta_fields'] = array(
+          '#type' => 'checkboxes',
+          '#title' => t('Additional fields'),
+          '#multiple' => TRUE,
+          '#default_value' => is_array($widget['meta_fields']) ? $widget['meta_fields'] : array(),
+          '#options' => array('title' => t('Title'), 'description' => t('Description')),
+        );
+
       }
       return $form;
 
@@ -565,7 +581,7 @@ function emvideo_widget_settings($op, $widget) {
 
     case 'save':
       if ($widget['widget_type'] == 'emvideo_textfields') {
-        $columns = array('video_width', 'video_height', 'video_autoplay', 'preview_width', 'preview_height', 'preview_autoplay', 'thumbnail_width', 'thumbnail_height', 'thumbnail_default_path', 'thumbnail_link_title');
+        $columns = array('video_width', 'video_height', 'video_autoplay', 'preview_width', 'preview_height', 'preview_autoplay', 'thumbnail_width', 'thumbnail_height', 'thumbnail_default_path', 'thumbnail_link_title', 'meta_fields');
         $columns = array_merge($columns, emfield_emfield_widget_settings('save', $widget, 'emvideo'));
         return $columns;
       }
@@ -685,6 +701,113 @@ function emvideo_seconds_to_time($time) {
 }
 
 /**
+*  Implements hook_emfield_field_columns_extra().
+*  This is called to add 2 extra columns to the database to store the title and description.
+*/
+
+function emvideo_emfield_field_columns_extra(){
+  $columns = array(
+    'title' => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => TRUE),
+    'description' => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => TRUE),
+    );
+  return $columns;
+}
+
+/**
+*  Implements hook_emfield_field_extra().
+*  This is called on field operations to allow us to act on emvideos.
+*/
+function emvideo_emfield_field_extra($op, &$node, $field, &$items, $teaser, $page, $module) {
+  switch ($op) {
+    case 'validate':
+      // Title and Description should be optional.
+      break;
+    case 'insert':
+    case 'update':
+      // Called before content.module defaults.
+      foreach ($items as $delta => $item) {
+        if (isset($item['emvideo']['delete']) && $item['emvideo']['delete']) {
+          $items[$delta]['embed'] = NULL;
+          $items[$delta]['value'] = NULL;
+          $items[$delta]['provider'] = NULL;
+          $items[$delta]['data'] = NULL;
+          $items[$delta]['embed'] = NULL;
+          $items[$delta]['version'] = 0;
+          $items[$delta]['duration'] = 0;
+          $items[$delta]['title'] = NULL;
+          $items[$delta]['description'] = NULL;
+        }
+        else {
+          // Add alt text and alt title
+          if (!empty($items[$delta]['emvideo']['title'])) {
+            $items[$delta]['title'] = $items[$delta]['emvideo']['title'];
+          }
+          if (!empty($items[$delta]['emvideo']['description'])) {
+            $items[$delta]['description'] = $items[$delta]['emvideo']['description'];
+          }
+        }
+      }
+      // We're saving in the data property so delete emvideo
+      if (isset($items[$delta]['emvideo'])) {
+        unset($items[$delta]['emvideo']);
+      }
+      // FIX FOR STATUS FIELD
+      if (!isset($items[$delta]['status'])) {
+        $items[$delta]['status'] = EMFIELD_STATUS_AVAILABLE;
+      }
+      // FIX FOR DATA NOT EMPTY
+      if (empty($items[$delta]['data'])) {
+         unset($items[$delta]['data']);
+      }
+      // Compact deltas.
+      $items = array_values($items);
+      break;
+  }
+}
+
+/**
+*  Implements hook_emfield_widget_extra().
+*/
+function emvideo_emfield_widget_extra($form, $form_state, $field, $items, $delta = 0, $module) {
+  $element = array();
+  if ($module == 'emvideo') {
+    // Add a title field, but only if the field is allowed.
+    // If the title is already being used allow it for editing even if it is disabled.
+    if ($field['widget']['meta_fields']['title'] || !empty($items[$delta]['title'])) {
+      $element['title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Video Title'),
+        '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : '',
+        '#size' => 60,
+        '#maxlength' => 35,
+        '#description' => t('The title for the video.'),
+      );
+    }
+    // Add a description field, but only if the field is allowed.
+    // If the description is already being used allow it for editing even if it is disabled.
+    if ($field['widget']['meta_fields']['description'] || !empty($items[$delta]['description'])) {
+      $element['description'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Video Description'),
+        '#default_value' => isset($items[$delta]['description']) ? $items[$delta]['description'] : '',
+        '#size' => 60,
+        '#maxlength' => 100,
+        '#description' => t('The description for the video.  Provide text for visitors who can not see the images in page.'),
+      );
+    }
+    if (!empty($items[$delta]['embed'])) {
+      $element['delete'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Delete the Video'),
+        '#description' => t("Checking this field will delete the video."),
+        '#default_value' => 0,
+        );
+    }
+  }
+  return $element;
+}
+
+/**
  * Implementation of hook_views_api().
  */
 function emvideo_views_api() {
@@ -694,3 +817,9 @@ function emvideo_views_api() {
   );
 }
 
+/**
+ * Implementation of hook_content_generate().
+ */
+function emvideo_content_generate($node, $field) {
+  return emfield_content_generate($node, $field);
+}

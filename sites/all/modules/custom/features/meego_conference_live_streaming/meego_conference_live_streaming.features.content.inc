@@ -11,9 +11,10 @@ function meego_conference_live_streaming_content_default_fields() {
     'field_name' => 'field_live_streaming',
     'type_name' => 'session',
     'display_settings' => array(
+      'weight' => '2',
+      'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',

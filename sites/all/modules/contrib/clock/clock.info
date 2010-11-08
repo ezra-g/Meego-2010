@@ -1,0 +1,15 @@
+; $Id: clock.info,v 1.4.2.2 2010/04/21 20:32:01 tstoeckler Exp $
+name = Clock
+description = Provides a block displaying the time of a selected time zone.
+core = 6.x
+package = Date/Time
+dependencies[] = date_api
+dependencies[] = date_timezone
+
+
+; Information added by drupal.org packaging script on 2010-10-07
+version = "6.x-1.4"
+core = "6.x"
+project = "clock"
+datestamp = "1286472961"
+

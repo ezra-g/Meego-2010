@@ -1,5 +1,5 @@
 <?php
-// $Id: emfield.module,v 1.12.4.46.2.12 2010/09/14 16:55:33 aaron Exp $
+// $Id: emfield.module,v 1.12.4.46.2.14 2010/10/10 19:26:02 aaron Exp $
 
 /**
  * @file
@@ -600,7 +600,7 @@ function emfield_system_list($module, $provider = NULL, $options = array()) {
 function emfield_include_list($file = NULL, $remove = FALSE) {
   static $list = array();
 
-  if ($file && !isset($list[$file->filename])) {
+  if ($file && $file->filename && !isset($list[$file->filename])) {
     include_once('./'. $file->filename);
     $list[$file->filename] = $file->name;
   }
@@ -925,6 +925,20 @@ function emfield_theme() {
 function emfield_retrieve_xml($url, $display_errors = FALSE, $refresh = FALSE) {
   module_load_include('inc', 'emfield', 'includes/emfield.xml');
   return _emfield_retrieve_xml($url, $display_errors, $refresh);
+}
+
+/**
+ * This will audit all nodes to ensure all emfield providers are present.
+ *
+ * The function will pass through all emfield fields to see if there is any
+ * content in the system without a provider.
+ *
+ * @return array
+ *  An array of all missing providers. Ideally the array will be empty.
+ */
+function emfield_audit() {
+  module_load_include('inc', 'emfield', 'includes/emfield.audit');
+  return _emfield_audit();
 }
 
 /**

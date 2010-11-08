@@ -1,0 +1,306 @@
+<?php
+// $Id: clock.module,v 1.9.2.15 2010/10/07 17:17:12 tstoeckler Exp $
+
+/**
+ * @file
+ * Functions to manage the display of a clock.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function clock_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#clock':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Clock module allows the display of a clock on your site.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Administering the clock') . '</dt>';
+      $output .= '<dd>' . t('Since the clock is a block, it can be administered via its <a href="@clock-settings">block settings page</a> which is accessible from the <a href="@block-admin">block administration page</a>. In addition to the usual block configuration options there are a number of options.', array('@clock-settings' => '/admin/build/block/configure/clock/clock', '@block-admin' => '/admin/build/block')) . '</dd>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Time zone') . '</dt>';
+      $output .= '<dd>' . t('The time zone of the clock.') . '</dd>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Site time zone') . '</dt>';
+      $output .= '<dd>' . t('The time zone that has been set on the <a href="@date-admin">date and time settings page</a>.', array('@date-admin' => '/admin/settings/date-time')) . '</dd>';
+      $output .= '<dt>' . t('User time zone') . '</dt>';
+      $output .= '<dd>' . t('This option will only show up, if user-configurable time zones are enabled. The time zone the user has selected.') . '</dd>';
+      $output .= '<dt>' . t('Local time zone') . '</dt>';
+      $output .= '<dd>' . t('The local time zone on the computer of the visiting user (anonymous and authenticated). Since JavaScript is used to calculate this time, it falls back to the site time zone if the visitor has JavaScript disabled.');
+      $output .= '<dt>' . t('Custom time zone') . '</dt>';
+      $output .= '<dd>' . t('A custom time zone that can be selected in the select box below the radio buttons.') . '</dd>';
+      $output .= '</dl>';
+      $output .= '<dt>' . t('Date format') . '</dt>';
+      $output .= '<dd>' . t('The date format that the clock is to be displayed in.') . '</dd>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Short date format') . '</dt>';
+      $output .= '<dd>' . t('The short date format that has been set on the <a href="@format-admin">date format configuration page</a>. The expected output (not necessarily in the correct timezone) is shown in parentheses.', array('@format-admin' => '/admin/settings/date-time/formats')). '</dd>';
+      $output .= '<dt>' . t('Medium date format') . '</dt>';
+      $output .= '<dd>' . t('The medium date format that has been set on the <a href="@format-admin">date format configuration page</a>. The expected output (not necessarily in the correct timezone) is shown in parentheses.', array('@format-admin' => '/admin/settings/date-time/formats')). '</dd>';
+      $output .= '<dt>' . t('Long date format') . '</dt>';
+      $output .= '<dd>' . t('The long date format that has been set on the <a href="@format-admin">date format configuration page</a>. The expected output (not necessarily in the correct timezone) is shown in parentheses.', array('@format-admin' => '/admin/settings/date-time/formats')). '</dd>';
+      $output .= '<dt>' . t('Custom date format') . '</dt>';
+      $output .= '<dd>' . t('This options will only show up, if there are <a href="@custom-formats">custom date formats</a>. A custom date format can be selected in the select box below the radio buttons.', array('@custom-formats' => '/admin/settings/date-time/formats/custom')) . '</dd>';
+      $output .= '</dl>';
+      $output .= '<dt>' . t('JavaScript updating') . '</dt>';
+      $output .= '<dd>' . t('Whether or not the clock should be updated continuously via JavaScript. This is especially useful if seconds are displayed. It only works if the visitor has JavaScript enabled.') . '</dd>';
+      $output .= '</dl>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_block().
+ */
+function clock_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks['clock'] = array(
+        'info' => t('Clock'),
+        // The clock needs to be updated continuously and should not be cached.
+        'cache' => BLOCK_NO_CACHE,
+      );
+      return $blocks;
+
+    case 'configure':
+      drupal_add_js(drupal_get_path('module', 'clock') . '/clock.js');
+
+      // Time zone options.
+      $form['timezone'] = array(
+        '#type' => 'radios',
+        '#title' => t('Time zone settings'),
+        '#description' => t('<em>Local time zone</em> is the user\'s operating system time zone.'),
+        '#weight' => 1,
+        '#default_value' => variable_get('clock_timezone_type', '1'),
+        '#options' => array(
+          '1' => t('Site time zone'),
+          '3' => t('Local time zone'),
+          '4' => t('Custom time zone'),
+        ),
+        '#prefix' => '<div class="edit-timezone">',
+        '#suffix' => '</div>',
+      );
+
+      // In case of user-configurable timezones show it as an option.
+      if (variable_get('configurable_timezones', 1) == 1) {
+        $form['timezone']['#description'] = t('<em>Local time zone</em> is the user\'s operating system time zone, while <em>User time zone</em> is the time zone of the Drupal user.');
+        $form['timezone']['#options'] = array(
+          '1' => t('Site time zone'),
+          '2' => t('User time zone'),
+          '3' => t('Local time zone'),
+          '4' => t('Custom time zone'),
+        );
+      }
+
+      $form['timezone']['custom_timezone'] = array(
+        '#type' => 'select',
+        '#multiple' => FALSE,
+        '#weight' => 2,
+        '#default_value' => variable_get('clock_custom_timezone', 'UTC'),
+        '#options' => date_timezone_names(),
+        '#prefix' => '<div class="edit-custom-timezone">',
+        '#suffix' => '</div>',
+      );
+
+      // Format the current time with each of the three default date formats to display them in the form.
+      $timezone = clock_get_timezone();
+      $short = date_format_date(date_now($timezone), $type = 'short');
+      $medium = date_format_date(date_now($timezone), $type = 'medium');
+      $long = date_format_date(date_now($timezone), $type = 'long');
+
+      // Date format options.
+      $form['date_format'] = array(
+        '#type' => 'radios',
+        '#title' => t('Date format settings'),
+        '#weight' => 3,
+        '#default_value' => variable_get('clock_date_format_type', 'short'),
+        '#options' => array(
+          'short' => t('Short date format (@short)', array('@short' => $short)),
+          'medium' => t('Medium date format (@medium)', array('@medium' => $medium)),
+          'long' => t('Long date format (@long)', array('@long' => $long)),
+        ),
+      );
+
+      // If there are custom date formats, gather them and prepare them to display them in the form.
+      $result = db_query("SELECT format FROM {date_formats} WHERE type = 'custom'");
+      $date_formats = array();
+      while ($date_format = db_fetch_object($result)) {
+        $date_formats[$date_format->format] = date_format_date(date_now($timezone), $type = 'custom', $format = $date_format->format);
+      }
+
+      if ($date_formats) {
+        $form['date_format']['#options']['custom'] = t('Custom date format');
+        $form['date_format']['#prefix'] = '<div class="edit-date-format">';
+        $form['date_format']['#suffix'] = '</div>';
+
+        $form['date_format']['custom_date_format'] = array(
+          '#type' => 'select',
+          '#multiple' => FALSE,
+          '#weight' => 4,
+          '#default_value' => variable_get('clock_custom_date_format', 'g:i a'),
+          '#options' => $date_formats,
+          '#prefix' => '<div class="edit-custom-date-format">',
+          '#suffix' => '</div>',
+        );
+      }
+
+      // JavaScript options.
+      $form['js'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use JavaScript to continuously update the clock'),
+        '#weight' => 5,
+        '#default_value' => variable_get('clock_js', '1'),
+      );
+
+      return $form;
+
+    case 'save':
+      variable_set('clock_timezone_type', $edit['timezone']);
+      if ($edit['timezone'] == '4') {
+        variable_set('clock_custom_timezone', $edit['custom_timezone']);
+      }
+
+      variable_set('clock_date_format_type', $edit['date_format']);
+      if ($edit['date_format'] == 'custom') {
+        variable_set('clock_custom_date_format', $edit['custom_date_format']);
+      }
+
+      variable_set('clock_js', $edit['js']);
+
+      return;
+
+    case 'view':
+      $timezone = clock_get_timezone();
+      $date_format = clock_get_date_format();
+      $js = variable_get('clock_js', '1');
+
+      $block['subject'] = 'Clock';
+      $block['content'] = theme_clock($timezone, $date_format, $js);
+      return $block;
+  }
+}
+
+/**
+ * Implements hook_theme.
+ */
+function clock_theme() {
+  return array(
+    'clock' => array(
+      'arguments' => array(
+        'timezone' => 'UTC',
+        'date_format' => 'short',
+        'js' => '1',
+      ),
+    ),
+  );
+}
+
+/**
+ * Gets the correct time zone.
+ *
+ * @return
+ *   A string containing the time zone name or NULL if the time zone type is
+ *   'User time zone'. If the time zone type is 'Local time zone' the string
+ *   'Local' is returned.
+ */
+function clock_get_timezone() {
+  $timezone_type = variable_get('clock_timezone_type', '1');
+
+  switch ($timezone_type) {
+    // Site time zone.
+    case '1':
+      $timezone = variable_get('date_default_timezone_name', 'UTC');
+      break;
+    // User time zone.
+    case '2':
+      $timezone = NULL;
+      break;
+    // Local time zone.
+    case '3':
+      $timezone = 'Local';
+      break;
+    // Custom time zone.
+    case '4':
+      $timezone = variable_get('clock_custom_timezone', 'UTC');
+      break;
+  }
+
+  return $timezone;
+}
+
+/**
+ * Gets the correct date format.
+ *
+ * @return
+ *   A date format string. See http://php.net/date for more information.
+ */
+function clock_get_date_format() {
+  $date_format_type = variable_get('clock_date_format_type', 'short');
+
+  switch ($date_format_type) {
+    case 'short':
+      $date_format = variable_get('date_format_short', 'd/m/Y - H:i');
+      break;
+    case 'medium':
+      $date_format = variable_get('date_format_medium', 'l, m/d/Y, g:i a');
+      break;
+    case 'long':
+      $date_format = variable_get('date_format_long', 'l, Y,  F j - H:i');
+      break;
+    case 'custom':
+      $date_format = variable_get('clock_custom_date_format', 'g:i a');
+      break;
+  }
+
+  return $date_format;
+}
+
+/**
+ * Formats a clock in HTML.
+ */
+function theme_clock($timezone, $date_format, $js) {
+  if ($js == '1' || $timezone == 'Local') {
+
+    if ($timezone == 'Local') {
+      $local = TRUE;
+      // Use the site time zone as a fallback for non-JavaScript users.
+      $timezone = variable_get('date_default_timezone_name', 'UTC');
+    }
+
+    // Create variables that are needed for the JavaScript time calculation.
+    // Create a time string.
+    $time = date_format_date(date_now($timezone), $type = 'custom', $format = 'F j, Y H:i:s');
+    // Get the time zone offset in seconds.
+    $offset_seconds = date_format_date(date_now($timezone), $type = 'custom', $format = 'Z');
+    // Get Daylight Savings Time information. '1' for yes, '0' for no.
+    $daylight_savings_time = date_format_date(date_now($timezone), $type = 'custom', $format = 'I');
+    // Get the name of the offset, e.g. 'GMT'.
+    $offset_name = date_format_date(date_now($timezone), $type = 'custom', $format = 'T');
+    // Get the correct date format.
+
+    // Pass the variables to JavaScript.
+    drupal_add_js(array(
+      'update' => $js,
+      'local' => isset($local) ? TRUE : FALSE,
+      'time' => $time,
+      'offset_seconds' => $offset_seconds,
+      'timezone_name' => $timezone,
+      'daylight_savings_time' => $daylight_savings_time,
+      'offset_name' => $offset_name,
+      'date_format' => $date_format,
+    ), 'setting');
+
+    drupal_add_js(drupal_get_path('module', 'clock') . '/clock.js');
+  }
+
+  // Create a date object with the correct timezone and format it with the correct date format.
+  $clock = date_format_date(date_now($timezone), $type = 'custom', $format = $date_format);
+
+  $output = '<div class="clock">' . $clock . '</div>';
+
+  return $output;
+}
+

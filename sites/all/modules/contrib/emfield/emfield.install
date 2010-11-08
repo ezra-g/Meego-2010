@@ -1,5 +1,5 @@
 <?php
-// $Id: emfield.install,v 1.1.6.14.2.5 2010/09/14 17:10:02 aaron Exp $
+// $Id: emfield.install,v 1.1.6.14.2.8 2010/10/20 20:15:54 aaron Exp $
 
 /**
  * @file
@@ -46,6 +46,49 @@ function emfield_enable() {
  */
 function emfield_disable() {
   cache_clear_all('*', 'cache_emfield_xml', TRUE);
+}
+
+function emfield_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time
+  $t = get_t();
+
+  // Check the existance of third party media providers.
+  if ($phase == 'runtime') {
+    $providers = emfield_audit();
+    $emvideo_list = module_exists('emvideo') && emfield_system_list('emvideo');
+    $emimage_list = module_exists('emimage') && emfield_system_list('emimage');
+    $emaudio_list = module_exists('emaudio') && emfield_system_list('emaudio');
+    if (empty($providers) && empty($emvideo_list) && empty($emimage_list) && empty($emaudio_list)) {
+      $value = t('No providers');
+      $description = t('You have no third party media providers enabled. You will need to install additional modules for these; see the !emfield module page for a listing of available modules.', array('!emfield' => l(t('Embedded Media Field'), 'http://drupal.org/project/emfield', array('attributes' => array('target' => '_blank')))));
+      $severity = REQUIREMENT_WARNING;
+    }
+    else if (empty($providers)) {
+      $value = t('Providers enabled');
+      $description = t('All media fields are properly associated with third party media providers. You may still wish to install additional modules; see the !emfield module page for a listing of available modules.', array('!emfield' => l(t('Embedded Media Field'), 'http://drupal.org/project/emfield', array('attributes' => array('target' => '_blank')))));
+      $severity = REQUIREMENT_OK;
+    }
+    else {
+      $value = t('Missing providers');
+      $description = t('The following third party media providers found in existing media fields are currently missing from the system: %providers. You must install the corresponding modules supporting the provider(s) to support them. See the !emfield module page for a listing of available modules.', array('%providers' => implode(', ', $providers), '!emfield' => l(t('Embedded Media Field'), 'http://drupal.org/project/emfield', array('attributes' => array('target' => '_blank')))));
+      $items = array();
+      foreach ($providers as $provider) {
+        $items[] = l($provider, 'http://drupal.org/project/media_'. $provider, array('attributes' => array('target' => '_blank')));
+      }
+      $description .= t('<p>You may be able to locate the missing provider(s) at one or more of the following project pages. Note that these are educated guesses, and may actually not be an existing Drupal project:</p>!list', array('!list' => theme('item_list', $items)));
+      $description .= t('<p>Finally, you might be able to locate the missing provider(s) at one of the %flotsam project pages, such as !video, !image, or !audio. Note that these three are placeholder projects, seriously in need of proper homes. Please contribute if you are able!</p>', array('%flotsam' => t('Media: Flotsam'), '!video' => l(t('Media: Video Flotsam'), 'http://drupal.org/project/media_video_flotsam', array('attributes' => array('target' => '_blank'))), '!image' => l(t('Media: Image Flotsam'), 'http://drupal.org/project/media_image_flotsam', array('attributes' => array('target' => '_blank'))), '!audio' => l(t('Media: Audio Flotsam'), 'http://drupal.org/project/media_audio_flotsam', array('attributes' => array('target' => '_blank')))));
+      $severity = REQUIREMENT_ERROR;
+    }
+    $requirements['emfield'] = array(
+      'title' => $t('Embedded Media Field'),
+      'value' => $value,
+      'description' => $description,
+      'severity' => $severity,
+    );
+  }
+
+  return $requirements;
 }
 
 /**
@@ -255,7 +298,7 @@ function emfield_update_6203() {
  */
 function emfield_update_6204() {
   $warning = t('Embedded Media Field no longer offers default third party media providers. If you have not already done so, you will most likely need to visit the !project project page and install the module(s) supporting the provider(s) you wish to include.', array('!project' => l(t('Embedded Media Field'), 'http://drupal.org/project/emfield', array('attributes' => array('target' => '_blank')))));
-  drupal_set_message($warning, 'error');
+  drupal_set_message($warning, 'warning');
   return array(array('query' => $warning, 'success' => TRUE));
 }
 

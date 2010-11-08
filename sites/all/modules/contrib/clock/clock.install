@@ -1,0 +1,23 @@
+<?php
+// $Id: clock.install,v 1.4.2.2 2010/04/21 20:32:01 tstoeckler Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the clock module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function clock_uninstall() {
+  // Delete all clock variables if they are set.
+  variable_del('clock_timezone_type');
+  variable_del('clock_custom_timezone');
+  variable_del('clock_date_format_type');
+  variable_del('clock_custom_date_format');
+  variable_del('clock_js');
+
+  // Delete the clock block from the blocks table.
+  db_query("DELETE FROM {blocks} WHERE module = 'clock'");
+}
+

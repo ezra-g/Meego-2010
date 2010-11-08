@@ -497,3 +497,11 @@ ul.pager li.pager-current {
 .session-details .field_live_streaming_value a {
   margin-left: 4px;
 }
+
+.view-live-streaming td.views-field-date {
+  width: 160px;
+}
+
+.view-live-streaming .views-field-title {
+  font-weight: bold;
+}
