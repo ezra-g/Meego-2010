@@ -244,12 +244,7 @@ function meego_conference_live_streaming_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'role',
-    'role' => array(
-      '5' => 5,
-      '3' => 3,
-      '4' => 4,
-    ),
+    'type' => 'none',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
