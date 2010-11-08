@@ -20,9 +20,8 @@ function meego_conference_live_streaming_user_default_permissions() {
   $permissions['view field_live_streaming'] = array(
     'name' => 'view field_live_streaming',
     'roles' => array(
-      '0' => 'content administrator',
-      '1' => 'session organizer',
-      '2' => 'site administrator',
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
     ),
   );
 
