@@ -66,7 +66,8 @@ function cod_session_fieldgroup_default_groups() {
         'description' => '',
       ),
       'display' => array(
-        'description' => '',
+        'weight' => '3',
+        'label' => 'hidden',
         'teaser' => array(
           'format' => 'hidden',
           'exclude' => 0,
@@ -75,6 +76,7 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'hidden',
           'exclude' => 0,
         ),
+        'description' => '',
         '4' => array(
           'format' => 'fieldset',
           'exclude' => 0,
@@ -91,10 +93,9 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'hidden',
       ),
     ),
-    'weight' => '4',
+    'weight' => '3',
     'fields' => array(
       '0' => 'field_topics',
       '1' => 'field_track',
@@ -113,7 +114,8 @@ function cod_session_fieldgroup_default_groups() {
         'description' => '',
       ),
       'display' => array(
-        'description' => '',
+        'weight' => '2',
+        'label' => 'hidden',
         'teaser' => array(
           'format' => 'hidden',
           'exclude' => 0,
@@ -122,6 +124,7 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'hidden',
           'exclude' => 0,
         ),
+        'description' => '',
         '4' => array(
           'format' => 'fieldset',
           'exclude' => 0,
@@ -138,10 +141,9 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'hidden',
       ),
     ),
-    'weight' => '3',
+    'weight' => '2',
     'fields' => array(
       '0' => 'field_accepted',
       '1' => 'field_session_slot',
@@ -163,7 +165,8 @@ function cod_session_fieldgroup_default_groups() {
         'description' => '',
       ),
       'display' => array(
-        'description' => '',
+        'weight' => '1',
+        'label' => 'above',
         'teaser' => array(
           'format' => 'hidden',
           'exclude' => 0,
@@ -172,6 +175,7 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'hidden',
           'exclude' => 0,
         ),
+        'description' => '',
         '4' => array(
           'format' => 'fieldset',
           'exclude' => 0,
@@ -188,7 +192,6 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'above',
       ),
     ),
     'weight' => '1',
@@ -205,17 +208,17 @@ function cod_session_fieldgroup_default_groups() {
     'label' => 'Video',
     'settings' => array(
       'form' => array(
-        'style' => 'fieldset_collapsible',
+        'style' => 'fieldset_collapsed',
         'description' => '',
       ),
       'display' => array(
         'description' => '',
         'teaser' => array(
-          'format' => 'simple',
+          'format' => 'no_style',
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'simple',
+          'format' => 'no_style',
           'exclude' => 0,
         ),
         '4' => array(
@@ -234,12 +237,12 @@ function cod_session_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'above',
+        'label' => 'hidden',
       ),
     ),
-    'weight' => '2',
+    'weight' => '-4',
     'fields' => array(
-      '0' => 'field_video',
+      '0' => 'field_video_embed',
     ),
   );
 

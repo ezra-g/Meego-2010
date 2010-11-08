@@ -43,7 +43,7 @@ function cod_sponsors_views_default_views() {
       'empty_zero' => 0,
       'link_to_node' => 1,
       'label_type' => 'none',
-      'format' => 'sponsor_logo_callout_linked',
+      'format' => 'sponsor_logo_gold_linked',
       'multiple' => array(
         'group' => TRUE,
         'multiple_number' => '',

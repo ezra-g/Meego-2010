@@ -208,7 +208,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_abstract',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '-3',
+      'weight' => '-2',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -253,7 +253,7 @@ function cod_session_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Session Abstract',
-      'weight' => '-3',
+      'weight' => '-2',
       'description' => '',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -321,8 +321,8 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_duration',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '-1',
-      'parent' => '',
+      'weight' => '1',
+      'parent' => 'group_schedule',
       'label' => array(
         'format' => 'inline',
       ),
@@ -376,7 +376,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_presenters',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '-2',
+      'weight' => '-1',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -425,7 +425,7 @@ function cod_session_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Presenter(s)',
-      'weight' => '-2',
+      'weight' => '-1',
       'description' => 'Add your username and optionally 1-5 additional presenter usernames. Users must have a meego.com username to appear in the list.',
       'type' => 'userreference_autocomplete',
       'module' => 'userreference',
@@ -497,7 +497,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_session_room',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '1',
+      'weight' => 0,
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -639,7 +639,7 @@ function cod_session_content_default_fields() {
     'field_name' => 'field_session_summary',
     'type_name' => 'session',
     'display_settings' => array(
-      'weight' => '-4',
+      'weight' => '-3',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -682,7 +682,7 @@ function cod_session_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Session Summary',
-      'weight' => '-4',
+      'weight' => '-3',
       'description' => '',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -852,6 +852,70 @@ function cod_session_content_default_fields() {
     ),
   );
 
+  // Exported field: field_video_embed
+  $fields['session-field_video_embed'] = array(
+    'field_name' => 'field_video_embed',
+    'type_name' => 'session',
+    'display_settings' => array(
+      'weight' => '10',
+      'parent' => 'group_video',
+      'label' => array(
+        'format' => 'hidden',
+      ),
+      'teaser' => array(
+        'format' => 'hidden',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '1',
+    'max_length' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'rows' => '4',
+      'size' => 60,
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+          'format' => '1',
+          '_error_element' => 'default_value_widget][field_video_embed][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Video Embed',
+      'weight' => '10',
+      'description' => 'Embed video code in this field. It will display at the top of the session page. ',
+      'type' => 'text_textarea',
+      'module' => 'text',
+    ),
+  );
+
   // Exported field: field_slot_datetime
   $fields['time_slot-field_slot_datetime'] = array(
     'field_name' => 'field_slot_datetime',
@@ -938,6 +1002,7 @@ function cod_session_content_default_fields() {
   t('Time slot');
   t('Topic Keywords');
   t('Track');
+  t('Video Embed');
 
   return $fields;
 }
