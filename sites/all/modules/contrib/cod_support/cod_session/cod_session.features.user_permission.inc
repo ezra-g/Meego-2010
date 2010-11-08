@@ -322,9 +322,11 @@ function cod_session_user_default_permissions() {
   $permissions['view field_slot_datetime'] = array(
     'name' => 'view field_slot_datetime',
     'roles' => array(
-      '0' => 'content administrator',
-      '1' => 'session organizer',
-      '2' => 'site administrator',
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+      '2' => 'content administrator',
+      '3' => 'session organizer',
+      '4' => 'site administrator',
     ),
   );
 
