@@ -251,7 +251,7 @@ function meego_conference_live_streaming_views_default_views() {
   ));
   $handler->override_option('title', 'Live Streaming');
   $handler->override_option('header', '<div class="live-stream-wrapper">
-
+<p>The MeeGo Conference 2010 has concluded and all live streaming sessions are no longer available. All session videos will be posted to each session page once they are done.</p>
 
 </div>
 

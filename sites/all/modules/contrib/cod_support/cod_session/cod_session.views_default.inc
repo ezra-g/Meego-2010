@@ -2305,6 +2305,19 @@ function cod_session_views_default_views() {
     'name' => 'navigation',
   ));
   $handler = $view->new_display('feed', 'Feed: Session Videos', 'feed_2');
+  $handler->override_option('sorts', array(
+    'changed' => array(
+      'order' => 'ASC',
+      'granularity' => 'second',
+      'id' => 'changed',
+      'table' => 'node',
+      'field' => 'changed',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
   $handler->override_option('filters', array(
     'type' => array(
       'operator' => 'in',
@@ -2383,7 +2396,6 @@ function cod_session_views_default_views() {
   ));
   $handler->override_option('title', 'Session Videos');
   $handler->override_option('css_class', 'session-video-list');
-  $handler->override_option('items_per_page', 10);
   $handler->override_option('style_plugin', 'rss');
   $handler->override_option('style_options', array(
     'mission_description' => 0,
@@ -2392,7 +2404,7 @@ function cod_session_views_default_views() {
   $handler->override_option('row_plugin', 'node_rss');
   $handler->override_option('row_options', array(
     'relationship' => 'none',
-    'item_length' => 'default',
+    'item_length' => 'title',
   ));
   $handler->override_option('path', 'program/session-videos/feed');
   $handler->override_option('menu', array(

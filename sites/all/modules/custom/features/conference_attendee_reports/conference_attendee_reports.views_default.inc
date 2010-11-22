@@ -64,6 +64,40 @@ function conference_attendee_reports_views_default_views() {
       ),
       'relationship' => 'none',
     ),
+    'signup_time' => array(
+      'label' => 'Signup Time',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'date_format' => 'small',
+      'custom_date_format' => '',
+      'exclude' => 0,
+      'id' => 'signup_time',
+      'table' => 'signup_log',
+      'field' => 'signup_time',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
     'value_11' => array(
       'label' => 'First Name',
       'alter' => array(
@@ -656,6 +690,19 @@ function conference_attendee_reports_views_default_views() {
       'id' => 'value_14',
       'table' => 'profile_values_profile_conference2010_hotelinfo',
       'field' => 'value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'signup_time' => array(
+      'order' => 'ASC',
+      'granularity' => 'second',
+      'id' => 'signup_time',
+      'table' => 'signup_log',
+      'field' => 'signup_time',
       'override' => array(
         'button' => 'Override',
       ),

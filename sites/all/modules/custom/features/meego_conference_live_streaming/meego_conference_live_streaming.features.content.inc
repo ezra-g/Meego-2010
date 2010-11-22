@@ -13,18 +13,18 @@ function meego_conference_live_streaming_content_default_fields() {
     'display_settings' => array(
       'weight' => '2',
       'parent' => 'group_schedule',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
-        'format' => 'above',
+        'format' => 'inline',
       ),
       'teaser' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),

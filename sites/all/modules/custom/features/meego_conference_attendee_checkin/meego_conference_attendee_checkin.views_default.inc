@@ -359,28 +359,25 @@ function meego_conference_attendee_checkin_views_default_views() {
     ),
   ));
   $handler->override_option('filters', array(
-    'status' => array(
-      'operator' => 'in',
-      'value' => array(),
+    'attended' => array(
+      'operator' => '=',
+      'value' => 'All',
       'group' => '0',
       'exposed' => TRUE,
       'expose' => array(
-        'use_operator' => 0,
-        'operator' => 'status_op',
-        'identifier' => 'status',
-        'label' => 'Filter by signup status:',
+        'operator' => '',
+        'identifier' => 'attended',
+        'label' => 'Filter by attended:',
         'optional' => 1,
-        'single' => 0,
         'remember' => 0,
-        'reduce' => 0,
       ),
-      'id' => 'status',
+      'id' => 'attended',
       'table' => 'signup_log',
-      'field' => 'status',
-      'relationship' => 'uid',
+      'field' => 'attended',
       'override' => array(
         'button' => 'Override',
       ),
+      'relationship' => 'uid',
     ),
     'value' => array(
       'operator' => 'contains',
@@ -472,6 +469,7 @@ function meego_conference_attendee_checkin_views_default_views() {
       'counter' => 'counter',
       'attended' => 'attended',
       'value' => 'value',
+      'mail' => 'mail',
       'status' => 'status',
       'value_1' => 'value_1',
       'value_2' => 'value_1',
@@ -482,19 +480,23 @@ function meego_conference_attendee_checkin_views_default_views() {
         'separator' => '',
       ),
       'attended' => array(
-        'sortable' => 0,
+        'sortable' => 1,
         'separator' => '',
       ),
       'value' => array(
-        'sortable' => 0,
+        'sortable' => 1,
+        'separator' => '',
+      ),
+      'mail' => array(
+        'sortable' => 1,
         'separator' => '',
       ),
       'status' => array(
-        'sortable' => 0,
+        'sortable' => 1,
         'separator' => '',
       ),
       'value_1' => array(
-        'sortable' => 0,
+        'sortable' => 1,
         'separator' => ', ',
       ),
       'value_2' => array(
@@ -508,7 +510,7 @@ function meego_conference_attendee_checkin_views_default_views() {
     ),
     'default' => '-1',
     'execution_type' => '1',
-    'display_type' => '0',
+    'display_type' => '1',
     'hide_select_all' => 0,
     'skip_confirmation' => 1,
     'display_result' => 1,
