@@ -100,6 +100,14 @@
 }
 
 /**
+ * Session Videos
+ */
+.session-video-list td.views-field-title a {
+  background: transparent url(../icons/monitor_meego.png) no-repeat scroll top left;
+  padding-left: 25px;
+}
+
+/**
  * Sponsors View
  */
 .view-display-id-page_1 .view-header h2 {

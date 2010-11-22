@@ -210,6 +210,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-2',
       'parent' => '',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'above',
       ),
@@ -218,10 +222,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -267,6 +267,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-2',
       'parent' => 'group_schedule',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -275,10 +279,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -323,6 +323,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '1',
       'parent' => 'group_schedule',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -332,10 +336,6 @@ function cod_session_content_default_fields() {
       ),
       'full' => array(
         'format' => 'hidden',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
         'exclude' => 0,
       ),
       'token' => array(
@@ -378,6 +378,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-1',
       'parent' => '',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'above',
       ),
@@ -387,10 +391,6 @@ function cod_session_content_default_fields() {
       ),
       'full' => array(
         'format' => 'hidden',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
         'exclude' => 0,
       ),
       'token' => array(
@@ -439,6 +439,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => 0,
       'parent' => '',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -447,10 +451,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -499,6 +499,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => 0,
       'parent' => 'group_schedule',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
         'format' => 'above',
       ),
@@ -507,10 +511,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -570,6 +570,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-1',
       'parent' => 'group_schedule',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -578,10 +582,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -641,6 +641,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-3',
       'parent' => '',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'above',
       ),
@@ -649,10 +653,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -696,6 +696,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-2',
       'parent' => 'group_slides',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'hidden',
       ),
@@ -704,10 +708,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -734,7 +734,7 @@ function cod_session_content_default_fields() {
     'list_default' => 1,
     'description_field' => '0',
     'widget' => array(
-      'file_extensions' => 'pdf ppt ods odt',
+      'file_extensions' => 'pdf ppt ods odt odp',
       'file_path' => 'sessions',
       'progress_indicator' => 'bar',
       'max_filesize_per_file' => '',
@@ -754,6 +754,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-4',
       'parent' => 'group_audience',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -762,10 +766,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -807,6 +807,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '-3',
       'parent' => 'group_audience',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'label' => array(
         'format' => 'inline',
       ),
@@ -815,10 +819,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -859,6 +859,10 @@ function cod_session_content_default_fields() {
     'display_settings' => array(
       'weight' => '10',
       'parent' => 'group_video',
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
       'label' => array(
         'format' => 'hidden',
       ),
@@ -867,10 +871,6 @@ function cod_session_content_default_fields() {
         'exclude' => 0,
       ),
       'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
