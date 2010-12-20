@@ -1,5 +1,5 @@
 <?php
-// $Id: pathauto.inc,v 1.56.2.36 2010/08/12 15:10:58 davereid Exp $
+// $Id: pathauto.inc,v 1.56.2.40 2010/11/11 17:37:58 davereid Exp $
 
 /**
  * @file
@@ -7,7 +7,8 @@
  *
  * This also contains some constants giving human readable names to some numeric
  * settings; they're included here as they're only rarely used outside this file
- * anyway. Use _pathauto_include() if the constants need to be available.
+ * anyway. Use module_load_include('inc', 'pathauto') if the constants need to
+ * be available.
  *
  * @ingroup pathauto
  */
@@ -632,9 +633,10 @@ function _pathauto_verbose($message = NULL, $op = NULL) {
  *   Pathauto expects to see them.
  */
 function pathauto_get_placeholders($type, $object) {
-  $full = token_get_values($type, $object, TRUE);
+  $options = array('pathauto' => TRUE);
+  $full = token_get_values($type, $object, TRUE, $options);
   $tokens = token_prepare_tokens($full->tokens);
-  $values = pathauto_clean_token_values($full);
+  $values = pathauto_clean_token_values($full, $options);
   return array('tokens' => $tokens, 'values' => $values);
 }
 
@@ -648,23 +650,25 @@ function pathauto_get_placeholders($type, $object) {
  * @return
  *   An array of the cleaned tokens.
  */
-function pathauto_clean_token_values($full) {
+function pathauto_clean_token_values($full, $options = array()) {
   $replacements = array();
   foreach ($full->values as $key => $value) {
-    // Only clean non-path tokens.
     $token = $full->tokens[$key];
-    if (!preg_match('/(path|alias|url|url-brief)(-raw)?$/', $token)) {
-      $replacements[$token] = pathauto_cleanstring($value);
-    }
-    elseif (preg_match('/(bookpath|menupath)(-raw)?$/', $token)) {
-      // A few tokens violate the path/path-raw naming convention and should
-      // still have their segments cleaned using pathauto_cleanstring().
-      $segments = explode('/', $value);
-      $segments = array_map('pathauto_cleanstring', $segments);
+    if (strpos($token, 'path') !== FALSE && is_array($value) && !empty($options['pathauto'])) {
+      // If the token name contains 'path', the token value is an array, and
+      // the 'pathauto' option was passed to token_get_values(), then the token
+      // should have each segment cleaned, and then glued back together to
+      // construct a value resembling an URL.
+      $segments = array_map('pathauto_cleanstring', $value);
       $replacements[$token] = implode('/', $segments);
     }
-    else {
+    elseif (preg_match('/(path|alias|url|url-brief)(-raw)?$/', $token)) {
+      // Token name matches an URL-type name and should be left raw.
       $replacements[$token] = $value;
+    }
+    else {
+      // Token is not an URL, so it should have its value cleaned.
+      $replacements[$token] = pathauto_cleanstring($value);
     }
   }
   return $replacements;

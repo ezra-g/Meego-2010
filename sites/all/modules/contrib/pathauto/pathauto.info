@@ -6,9 +6,9 @@ dependencies[] = token
 core = 6.x
 recommends[] = path_redirect
 
-; Information added by drupal.org packaging script on 2010-08-13
+; Information added by drupal.org packaging script on 2010-12-18
 version = "6.x-2.x-dev"
 core = "6.x"
 project = "pathauto"
-datestamp = "1281658529"
+datestamp = "1292631994"
 

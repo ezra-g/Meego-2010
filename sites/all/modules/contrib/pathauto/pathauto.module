@@ -1,5 +1,5 @@
 <?php
-// $Id: pathauto.module,v 1.126.2.36 2010/08/09 18:03:06 davereid Exp $
+// $Id: pathauto.module,v 1.126.2.38 2010/12/17 21:49:48 davereid Exp $
 
 /**
  * @defgroup pathauto Pathauto: Automatically generates aliases for content
@@ -98,6 +98,24 @@ function pathauto_menu() {
 }
 
 /**
+ * Deprecated. Use module_load_include('inc', 'pathauto') instead.
+ */
+function _pathauto_include() {
+  module_load_include('inc', 'pathauto');
+
+  // Trigger a watchdog notice about whatever file/function is improperly
+  // calling this deprecated function.
+  $backtrace = debug_backtrace();
+  watchdog('pathauto', "The !deprecated function has been deprecated and !replacement should be used instead. It was called from %file on line %line, function %function().", array(
+    '!deprecated' => __FUNCTION__,
+    '!replacement' => "module_load_include('inc', 'pathauto')",
+    '%file' => basename($backtrace[0]['file']),
+    '%line' => $backtrace[0]['line'],
+    '%function' => $backtrace[1]['function'],
+  ), WATCHDOG_NOTICE);
+}
+
+/**
  * Implements hook_token_list().
  */
 function pathauto_token_list($type = 'all') {
@@ -108,9 +126,9 @@ function pathauto_token_list($type = 'all') {
 /**
  * Implements hook_token_values().
  */
-function pathauto_token_values($type, $object = NULL) {
+function pathauto_token_values($type, $object = NULL, $options = array()) {
   module_load_include('inc', 'pathauto', 'pathauto.tokens');
-  return _pathauto_token_values($type, $object);
+  return _pathauto_token_values($type, $object, $options);
 }
 
 /**
