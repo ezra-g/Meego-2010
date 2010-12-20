@@ -1,5 +1,5 @@
 <?php
-// $Id: context_menu_block.module,v 1.2.2.1 2010/07/11 02:41:41 itafroma Exp $
+// $Id: context_menu_block.module,v 1.2.2.3 2010/10/20 22:48:10 itafroma Exp $
 
 /**
  * @file
@@ -70,19 +70,18 @@ function _context_menu_block_has_active_trail($tree) {
 function _context_menu_block_active_values($context_name) {
   $contexts = context_get();
   $active_values = array();
-  
+
   // If there aren't any contexts available, then there aren't any active values.
   if (empty($contexts['context'])) {
     return $active_values;
   }
-  
+
   foreach ($contexts['context'] as $context) {
     if ($context->reactions && array_key_exists($context_name, $context->reactions)) {
-      $reaction = $context->reactions[$context_name];
-      $active_values[$reaction] = $context->reactions[$context_name];
+      $active_values[] = $context->reactions[$context_name];
     }
   }
-  
+
   return $active_values;
 }
 

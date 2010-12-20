@@ -1,5 +1,10 @@
-$Id: CHANGELOG.txt,v 1.1.2.1 2010/07/11 02:44:10 itafroma Exp $
+$Id: CHANGELOG.txt,v 1.1.2.4 2010/10/20 22:48:10 itafroma Exp $
 Context: Menu Block Module 6.x
+
+Context: Menu Block 6.x-3.0-beta3
+---------------------------
+#850902 by NikLP: .cvsignore should not be in Drupal repository
+#945068 by amorfati: Context Menu Block assumes Menu reactions are not empty
 
 Context: Menu Block 6.x-3.0-beta2
 ---------------------------
