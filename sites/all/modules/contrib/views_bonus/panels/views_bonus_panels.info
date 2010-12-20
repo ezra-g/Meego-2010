@@ -6,9 +6,9 @@ dependencies[] = panels
 package = Views
 core = 6.x
 
-; Information added by drupal.org packaging script on 2010-07-23
+; Information added by drupal.org packaging script on 2010-11-12
 version = "6.x-1.x-dev"
 core = "6.x"
 project = "views_bonus"
-datestamp = "1279844443"
+datestamp = "1289564892"
 

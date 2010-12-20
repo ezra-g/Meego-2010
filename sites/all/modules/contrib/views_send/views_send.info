@@ -7,9 +7,9 @@ core = 6.x
 
 
 
-; Information added by drupal.org packaging script on 2010-07-11
+; Information added by drupal.org packaging script on 2010-11-12
 version = "6.x-1.x-dev"
 core = "6.x"
 project = "views_send"
-datestamp = "1278836299"
+datestamp = "1289564926"
 
