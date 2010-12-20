@@ -1,37 +1,50 @@
-; $Id: CHANGELOG.txt,v 1.6.2.7 2010/10/07 17:25:01 tstoeckler Exp $
+; $Id: CHANGELOG.txt,v 1.6.2.9 2010/12/11 15:29:20 tstoeckler Exp $
+
+Clock 6.x-1.5, 2010-12-11
+----------------------
+- #978600 by iantresman, tstoeckler: Fix incorrect ordinals displayed with JS
+          for 22nd, 31st, etc.
+- #937120 by tstoeckler: Add dependencies to SimpleTest info.
 
 Clock 6.x-1.4, 2010-10-07
 ----------------------
-- #808302: Remove translation files because of http://localize.drupal.org.
+- #808302 by tstoeckler: Remove translation files because of
+          http://localize.drupal.org.
 
 Clock 6.x-1.3, 2010-10-07
 ----------------------
-- #918734: Remove dependency on jQuery Timers.
+- #918734 by tstoeckler: Remove dependency on jQuery Timers.
 
 Clock 6.x-1.2, 2010-05-25
 ----------------------
-- #792432: Fix local time.
-- #742028: Clean-up the .module and .js file, add README.txt, remove
-           INSTALL.txt.
-- #755402: Provide online help and improve inline descriptions.
-- #758294: Fix time zone in JavaScript.
-- #706594: Start with Libraries API integration.
-- #742020: Create option to use users local time.
-- #717020: Use correct constant for disabling block cache for the clock block.
-- #701938: Fix formatters that are broken with JavaScript. Also code clean-up.
+- #792432 by tstoeckler: Fix local time.
+- #742028 by tstoeckler: Clean-up the .module and .js file, add README.txt,
+          remove INSTALL.txt.
+- #755402 by tstoeckler: Provide online help and improve inline descriptions.
+- #758294 by tstoeckler: Fix time zone in JavaScript.
+- #706594 by tstoeckler: Start with Libraries API integration.
+- #742020 by tstoeckler: Create option to use users local time.
+- #717020 by tstoeckler: Use correct constant for disabling block cache for the
+          clock block.
+- #701938 by tstoeckler: Fix formatters that are broken with JavaScript. Also
+          code clean-up.
 
 Clock 6.x-1.1, 2010-01-28
 ----------------------
-- #697900: Delete the clock block from the blocks table during uninstall.
-- #697712: Show the date format options in the interface in the correct timezone.
-- #695756: Add German translation.
-- #691104: Add the ability to continuously update the clock via JavaScript.
-- #691102: Hide the select boxes in the interface if the corresponding options
-           are disabled.
-- #677694: Test coverage. Tests the default display, all time zone and date
-           format settings. Also tests the admin interface to conditionally
-           display the "User time zone" and "Custom date format" option.
-- #677698: Uninstall variables.
+- #697900 by tstoeckler: Delete the clock block from the blocks table during
+          uninstall.
+- #697712 by tstoeckler: Show the date format options in the interface in the
+          correct timezone.
+- #695756 by tstoeckler: Add German translation.
+- #691104 by tstoeckler: Add the ability to continuously update the clock via
+          JavaScript.
+- #691102 by tstoeckler: Hide the select boxes in the interface if the
+          corresponding options are disabled.
+- #677694 by tstoeckler: Test coverage. Tests the default display, all time zone
+          and date format settings. Also tests the admin interface to
+          conditionally display the "User time zone" and "Custom date format"
+          option.
+- #677698 by tstoeckler: Uninstall variables.
 
 Clock 6.x-1.0, 2010-01-07
 ----------------------

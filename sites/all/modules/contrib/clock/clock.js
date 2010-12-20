@@ -1,4 +1,4 @@
-// $Id: clock.js,v 1.9.2.7 2010/09/21 22:36:43 tstoeckler Exp $
+// $Id: clock.js,v 1.9.2.8 2010/11/22 16:24:57 tstoeckler Exp $
 
 /**
  * Gets the date format and time zone related parameters from PHP and formats the date according
@@ -222,12 +222,16 @@ function formatDate(date, dateFormat, timezone, monthNames, weekdayNames) {
   var dayLeadingZero = ((day < 10) ? '0' + day : day);
   switch (day) {
     case 1:
+    case 21:
+    case 31:
       var dayOfMonthAppend = Drupal.t('st');
       break;
     case 2:
+    case 22:
       var dayOfMonthAppend = Drupal.t('nd');
       break;
     case 3:
+    case 23:
       var dayOfMonthAppend = Drupal.t('rd');
       break;
     default:

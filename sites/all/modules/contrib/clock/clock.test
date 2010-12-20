@@ -1,5 +1,5 @@
 <?php
-// $Id: clock.test,v 1.4.2.5 2010/10/07 17:17:12 tstoeckler Exp $
+// $Id: clock.test,v 1.4.2.6 2010/10/19 11:34:21 tstoeckler Exp $
 
 /**
  * @file
@@ -13,6 +13,7 @@ class ClockBlockTestCase extends DrupalWebTestCase {
       'name' => 'Clock module tests',
       'description' => 'Ensure that the clock block functions properly.',
       'group' => 'Clock',
+      'dependencies' => array('date_api', 'date_timezone'),
     );
   }
 
