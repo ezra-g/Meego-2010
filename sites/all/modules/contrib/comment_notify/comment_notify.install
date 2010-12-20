@@ -1,5 +1,5 @@
 <?php
-// $Id: comment_notify.install,v 1.16 2009/04/08 01:52:02 greggles Exp $
+// $Id: comment_notify.install,v 1.16.2.1 2010/10/11 01:08:29 greggles Exp $
 /**
  * @file
  * comment_notify.install.
@@ -38,7 +38,7 @@ function comment_notify_uninstall() {
  */
 function comment_notify_schema() {
   $schema['comment_notify'] = array(
-    'description' => t('Stores information about which commenters on the site have subscriped to followup emails.'),
+    'description' => 'Stores information about which commenters on the site have subscriped to followup emails.',
     'fields' => array(
       'cid' => array(
         'type' => 'int',

@@ -4,9 +4,9 @@ description = "Comment follow-up e-mail notification for anonymous as well as re
 dependencies[] = comment
 core = 6.x
 
-; Information added by drupal.org packaging script on 2010-03-10
-version = "6.x-1.4"
+; Information added by drupal.org packaging script on 2010-10-11
+version = "6.x-1.5"
 core = "6.x"
 project = "comment_notify"
-datestamp = "1268261105"
+datestamp = "1286827567"
 
