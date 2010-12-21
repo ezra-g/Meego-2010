@@ -248,3 +248,13 @@ a.lightbox-processed {
 .field-field-abstract .field-item > p {
   margin-top: 0;
 }
+
+/**
+ * Post Survey Questions
+ */
+.node-type-webform h3 {
+  color: #EB2A8A;
+  font-size: 1.7em;
+  margin-bottom: 0;
+  border-bottom: 2px solid #CCCCCC;
+}
