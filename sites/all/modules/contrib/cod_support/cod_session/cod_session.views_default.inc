@@ -308,7 +308,7 @@ function cod_session_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Schedule');
-  $handler->override_option('header', '<strong>Note:</strong> Sessions sometimes need to be moved or changed due to unforeseen events, so be sure to check back just before the conference on Nov. 15 for the final schedule.');
+  $handler->override_option('header', 'Although the MeeGo Conference 2010 has concluded, you can still experience the event by downloading the slides and viewing the videos of all sessions. Visit each session page to watch the videos and download the slides. ');
   $handler->override_option('header_format', '1');
   $handler->override_option('header_empty', 0);
   $handler->override_option('empty', '<?php print theme(\'cod_session_calendar\'); ?>');

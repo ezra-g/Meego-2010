@@ -356,7 +356,7 @@ function cod_session_content_default_fields() {
     'widget' => array(
       'default_value' => array(
         '0' => array(
-          'value' => '30 mins',
+          'value' => '45 mins',
           '_error_element' => 'default_value_widget][field_duration][0][value',
         ),
       ),
@@ -734,7 +734,7 @@ function cod_session_content_default_fields() {
     'list_default' => 1,
     'description_field' => '0',
     'widget' => array(
-      'file_extensions' => 'pdf ppt ods odt odp',
+      'file_extensions' => 'pdf ppt ods odt odp zip',
       'file_path' => 'sessions',
       'progress_indicator' => 'bar',
       'max_filesize_per_file' => '',
@@ -835,7 +835,8 @@ function cod_session_content_default_fields() {
     'active' => '1',
     'text_processing' => '0',
     'max_length' => '',
-    'allowed_values' => 'BoF',
+    'allowed_values' => 'BoF
+Unconference',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(

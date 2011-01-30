@@ -23,7 +23,6 @@ $flags[] = array (
   'global' => '0',
   'types' => 
   array (
-    0 => 'session',
   ),
   'flag_short' => 'Add to my agenda',
   'flag_long' => 'Add this session to your agenda to organize your session attendance.',
@@ -64,7 +63,6 @@ $flags[] = array (
   'global' => '0',
   'types' => 
   array (
-    0 => 'session',
   ),
   'flag_short' => 'Vote for this session',
   'flag_long' => 'Vote for this session',
