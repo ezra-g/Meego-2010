@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_roles.ca.inc,v 1.1.2.13 2009/10/20 20:58:08 islandusurper Exp $
+// $Id: uc_roles.ca.inc,v 1.1.2.16 2010/07/15 17:18:58 islandusurper Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function uc_roles_ca_predicate() {
         '#name' => 'uc_roles_order_renew',
         '#title' => t('Update all role expirations for this order.'),
         '#argument_map' => array(
-          'order' => 'order',
+          'order' => 'updated_order',
         ),
         '#settings' => array(
           'message' => FALSE,
@@ -381,63 +381,6 @@ function uc_roles_action_user_email_form($form_state, $settings = array()) {
 }
 
 /**
- * Build an email settings form.
- */
-function ca_build_email_form($form_state, $settings, $token_filters) {
-  $form = array();
-
-  $form['from'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Sender'),
-    '#default_value' => $settings['from'],
-    '#description' => t('The "From" address.'),
-    '#required' => TRUE,
-  );
-  $form['addresses'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Recipients'),
-    '#default_value' => $settings['addresses'],
-    '#description' => t('Enter the email addresses to receive the notifications, one on each line. You may use order tokens for dynamic email addresses.'),
-    '#required' => TRUE,
-  );
-  $form['subject'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Subject'),
-    '#default_value' => $settings['subject'],
-    '#required' => TRUE,
-  );
-  $form['message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message'),
-    '#default_value' => $settings['message'],
-  );
-
-  // We add the #is_format element to allow us to locate and configure the filters.
-  $form['format'] = filter_form($settings['format']) + array('#is_format' => TRUE);
-
-  $form['token_help'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Replacement patterns'),
-    '#description' => t('You can make use of the replacement patterns in the recipients field, the subject, and the message body.'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-  );
-  foreach ($token_filters as $name) {
-    $form['token_help'][$name] = array(
-      '#type' => 'fieldset',
-      '#title' => t('@name replacement patterns', array('@name' => drupal_ucfirst($name))),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    $form['token_help'][$name]['content'] = array(
-      '#value' => theme('token_help', $name),
-    );
-  }
-
-  return $form;
-}
-
-/**
  * Renew an orders product roles.
  *
  * This function updates expiration time on all roles found on all products
@@ -521,4 +464,3 @@ function uc_roles_action_order_renew_form($form_state, $settings = array()) {
 
   return $form;
 }
-

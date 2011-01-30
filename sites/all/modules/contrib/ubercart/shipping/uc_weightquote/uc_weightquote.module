@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_weightquote.module,v 1.5.2.12 2009/11/18 16:19:35 islandusurper Exp $
+// $Id: uc_weightquote.module,v 1.5.2.13 2010/01/27 22:23:32 islandusurper Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function uc_weightquote_menu() {
  *
  * Add a form element for the shipping rate of a product.
  */
-function uc_weightquote_form_alter(&$form, &$form_state, $form_id) {
+function uc_weightquote_form_alter(&$form, $form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     $sign_flag = variable_get('uc_sign_after_amount', FALSE);
     $currency_sign = variable_get('uc_currency_sign', '$');

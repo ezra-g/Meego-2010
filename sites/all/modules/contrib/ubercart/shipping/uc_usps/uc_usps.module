@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_usps.module,v 1.6.2.18 2009/09/21 14:34:47 islandusurper Exp $
+// $Id: uc_usps.module,v 1.6.2.22 2010/02/08 16:31:28 islandusurper Exp $
 
 /**
  * @file
@@ -30,13 +30,24 @@ function uc_usps_menu() {
 }
 
 /**
+ * Implementation of hook_theme().
+ */
+function uc_usps_theme() {
+  return array(
+    'uc_usps_option_label' => array(
+      'arguments' => array('service' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_form_alter().
  *
  * Add package type to products.
  *
  * @see uc_product_form()
  */
-function uc_usps_form_alter(&$form, &$form_state, $form_id) {
+function uc_usps_form_alter(&$form, $form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
     $enabled = variable_get('uc_quote_enabled', array());
@@ -256,6 +267,7 @@ function uc_usps_shipping_method() {
   $methods = array(
     'usps_env' => array(
       'id' => 'usps_env',
+      'module' => 'uc_usps',
       'title' => t('U.S. Postal Service (Envelope)'),
       'quote' => array(
         'type' => 'envelope',
@@ -267,6 +279,7 @@ function uc_usps_shipping_method() {
     ),
     'usps' => array(
       'id' => 'usps',
+      'module' => 'uc_usps',
       'title' => t('U.S. Postal Service (Parcel)'),
       'quote' => array(
         'type' => 'small_package',
@@ -278,6 +291,7 @@ function uc_usps_shipping_method() {
     ),
     'usps_intl_env' => array(
       'id' => 'usps_intl_env',
+      'module' => 'uc_usps',
       'title' => t('U.S. Postal Service (Intl., Envelope)'),
       'quote' => array(
         'type' => 'envelope',
@@ -289,6 +303,7 @@ function uc_usps_shipping_method() {
     ),
     'usps_intl' => array(
       'id' => 'usps_intl',
+      'module' => 'uc_usps',
       'title' => t('U.S. Postal Service (Intl., Parcel)'),
       'quote' => array(
         'type' => 'small_package',
@@ -412,13 +427,32 @@ function uc_usps_quote($products, $details, $method) {
       $services[$key]['rate'] = uc_price($quote['rate'], $context);
       $context['revision'] = 'formatted';
       $services[$key]['format'] = uc_price($quote['rate'], $context);
-      $services[$key]['option_label'] = $quote['label'];
+      $services[$key]['option_label'] = theme('uc_usps_option_label', $quote['label']);
     }
   }
 
   uasort($services, 'uc_quote_price_sort');
 
   return $services;
+}
+
+/**
+ * Theme function to format the USPS service name and rate amount line-item
+ * shown to the customer.
+ *
+ * @param $service
+ *   The USPS service name.
+ * @ingroup themeable
+ */
+function theme_uc_usps_option_label($service) {
+  // Start with logo
+  $output = '<img class="usps-logo" src="'. url(drupal_get_path('module', 'uc_usps')) .'/uc_usps_logo.gif" alt="'. t('USPS Logo') .'" /> ';
+
+  // Add USPS service name, removing the first nine characters
+  // (== 'U.S.P.S. ') because these replicate the logo image
+  $output .= substr($service, 9);
+
+  return $output;
 }
 
 /**
@@ -436,12 +470,13 @@ function uc_usps_quote($products, $details, $method) {
 function uc_usps_rate_request($packages, $origin, $destination) {
   $request  = '<RateV3Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
   $services_count = 0;
+  $rate_type = variable_get('uc_usps_online_rates', FALSE);
 
   foreach ($packages as $package) {
     $qty = $package->qty;
     for ($i = 0; $i < $qty; $i++) {
       $request .= '<Package ID="'. $services_count .'">'.
-        '<Service>ALL</Service>'.
+        '<Service>'. ($rate_type ? 'ONLINE' : 'ALL') .'</Service>'.
         '<ZipOrigination>'. substr($origin->postal_code, 0, 5) .'</ZipOrigination>'.
         '<ZipDestination>'. substr($destination->postal_code, 0, 5) .'</ZipDestination>'.
         '<Pounds>'. intval($package->pounds) .'</Pounds>'.

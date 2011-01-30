@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_product.module,v 1.14.2.39 2009/11/17 14:26:34 islandusurper Exp $
+// $Id: uc_product.module,v 1.14.2.43 2010/07/16 15:51:35 islandusurper Exp $
 
 /**
  * @file
@@ -366,7 +366,7 @@ function uc_product_node_info($reset = FALSE) {
  */
 function uc_product_forms($form_id, $args) {
   $forms = array();
-  if (is_object($args[0]) && isset($args[0]->type)) {
+  if (isset($args[0]) && isset($args[0]->nid) && isset($args[0]->type)) {
     $product = $args[0];
     if (in_array($product->type, array_keys(uc_product_node_info()))) {
       $forms['uc_product_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_add_to_cart_form');
@@ -816,7 +816,7 @@ function uc_product_preprocess_node(&$variables) {
  *
  * @see uc_product_save_continue_submit()
  */
-function uc_product_form_alter(&$form, &$form_state, $form_id) {
+function uc_product_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'search_form' && arg(0) == 'admin' && arg(1) == 'store' && arg(2) == 'products' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
@@ -1570,7 +1570,8 @@ function theme_uc_product_dimensions($length, $width, $height, $units = NULL, $t
 }
 
 /**
- * Format a product's images with imagecache and Thickbox.
+ * Format a product's images with imagecache and an image widget
+ * (Colorbox, Thickbox, or Lightbox2).
  *
  * @ingroup themeable
  */
@@ -1740,9 +1741,9 @@ function uc_product_get_cost($node_id) {
  *   The imagecache preset used to format the image. 'product' by default.
  * @return
  *   An HTML img. When $format is not 'product', the image is a link to the
- *   'product_full' preset if a JavaScript display widget is available (Thickbox
- *   and Lightbox2 are possible). For other values of $format, the image links
- *   to the node page.
+ *   'product_full' preset if a JavaScript display widget is available
+ *   (Colorbox, Thickbox, and Lightbox2 are possible). For other values
+ *   of $format, the image links to the node page.
  */
 function uc_product_get_picture($node_id, $format = 'product') {
   $output = '';
@@ -1931,17 +1932,16 @@ function uc_product_feature_save($data) {
     }
   }
 
-  // First attempt to update an existing row.
-  db_query("UPDATE {uc_product_features} SET description = '%s' WHERE pfid = %d", $data['description'], intval($data['pfid']));
-
-  // Otherwise insert this feature as a new row.
-  if (db_affected_rows() == 0) {
+  if(!empty($data['pfid']) && db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE pfid = %d", intval($data['pfid'])))) {
+    // First attempt to update an existing row.
+    db_query("UPDATE {uc_product_features} SET description = '%s' WHERE pfid = %d", $data['description'], intval($data['pfid']));
+    drupal_set_message(t('The product feature has been updated.'));
+  }
+  else {
+    // Otherwise insert this feature as a new row.
     db_query("INSERT INTO {uc_product_features} (nid, fid, description) VALUES (%d, '%s', '%s')",
              $data['nid'], $data['fid'], $data['description']);
     drupal_set_message(t('The product feature has been added.'));
-  }
-  else {
-    drupal_set_message(t('The product feature has been updated.'));
   }
 
   return 'node/'. $data['nid'] .'/edit/features';
@@ -2114,4 +2114,3 @@ function uc_product_views_api() {
     'path' => drupal_get_path('module', 'uc_product') .'/views',
   );
 }
-

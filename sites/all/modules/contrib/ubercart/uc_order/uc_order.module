@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_order.module,v 1.12.2.36 2009/11/18 22:24:02 islandusurper Exp $
+// $Id: uc_order.module,v 1.12.2.40 2010/08/11 15:10:46 islandusurper Exp $
 
 /**
  * @file
@@ -317,6 +317,11 @@ function uc_order_init() {
  */
 function uc_order_theme() {
   return array(
+    'uc_order' => array(
+      'template' => 'uc_order',
+      'path' => drupal_get_path('module', 'uc_order') .'/templates',
+      'arguments' => array('order' => NULL, 'op' => 'view', 'template' => 'customer'),
+    ),
     'uc_order_state_table' => array(
       'arguments' => array('form' => NULL),
     ),
@@ -520,7 +525,7 @@ function uc_order_mail($key, &$message, $params) {
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
       $message['subject'] = t('Your Order Invoice', array(), $langcode);
       $message['from'] = uc_store_email_from();
-      $message['body'][] = uc_order_load_invoice($params['order'], 'admin-mail', variable_get('uc_cust_order_invoice_template', 'customer'));
+      $message['body'][] = theme('uc_order', $params['order'], 'admin-mail', variable_get('uc_cust_order_invoice_template', 'customer'));
       break;
 
     // Setup a custom e-mail defined by an action on a predicate.
@@ -709,6 +714,13 @@ function uc_order_uc_message() {
   return $messages;
 }
 
+/**
+ * Implementation of hook_uc_invoice_templates().
+ */
+function uc_order_uc_invoice_templates() {
+  return array('admin', 'customer');
+}
+
 /*******************************************************************************
  * Callback Functions, Forms, and Tables
  ******************************************************************************/
@@ -805,7 +817,7 @@ function uc_order_search_form() {
   $form['search']['table1'] = array('#value' => '<table><tbody style="border: 0em;"><tr><td colspan="4">');
 
   $form['search']['desc'] = array(
-    '#value' => '<div>'. t("Search for customers based on any of the following fields.  Use * as a wildcard to match any character.<br/>For example, searching by last name for 's*' will return all customers whose last name starts with an s.<br/>(<em>Leave a field empty to ignore it in the search.</em>)") .'</div>',
+    '#value' => '<div>'. t("Search for customers based on any of the following fields.  Use * as a wildcard to match any character.<br />For example, searching by last name for 's*' will return all customers whose last name starts with an s.<br />(<em>Leave a field empty to ignore it in the search.</em>)") .'</div>',
   );
 
   $form['search']['table2'] = array('#value' => '</td></tr><tr><td>');
@@ -1242,7 +1254,7 @@ function uc_order_load_line_items($order, $stored) {
               'type' => $type['id'],
               'title' => $line['title'],
               'amount' => $line['amount'],
-              'weight' => !isset($line['weight']) ? $line['weight'] : $type['weight'],
+              'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
               'data' => $line['data'],
             );
           }
@@ -1489,9 +1501,12 @@ function uc_order_is_shippable($order) {
     // See if any other modules have a say in the matter...
     foreach (module_list() as $module) {
       $function = $module .'_cart_item';
-      if (function_exists($function) && $function('can_ship', $product)) {
-        // $product must be passed by reference.
-        $result[] = TRUE;
+      if (function_exists($function)) {
+        // $product must be passed by reference to hook_cart_item.
+        $can_ship = $function('can_ship', $product);
+        if (!is_null($can_ship)) {
+          $result[] = $can_ship;
+        }
       }
     }
 
@@ -1521,94 +1536,85 @@ function _get_order_screen_titles() {
 }
 
 /**
- * Load a formatted invoice with an order's data.
+ * Preprocess a formatted invoice with an order's data.
  */
-function uc_order_load_invoice($order, $op = 'view', $template = 'customer') {
-  static $invoice;
+function template_preprocess_uc_order(&$variables) {
+  $variables['thank_you_message'] = FALSE;
 
-  if (isset($invoice[$order->order_id][$template])) {
-    return $invoice[$order->order_id][$template];
+  switch ($variables['op']) {
+    case 'checkout-mail':
+      $variables['thank_you_message'] = TRUE;
+    case 'admin-mail':
+      $variables['help_text'] = TRUE;
+      $variables['email_text'] = TRUE;
+      $variables['store_footer'] = TRUE;
+    case 'view':
+    case 'print':
+      $variables['business_header'] = TRUE;
+      $variables['shipping_method'] = TRUE;
+      break;
   }
 
-  $thank_you_message = FALSE;
+  $variables['products'] = $variables['order']->products;
+  if (!is_array($variables['products'])) {
+    $variables['products'] = array();
+  }
 
-  $file = drupal_get_path('module', 'uc_order') .'/templates/'. $template .'.itpl.php';
-  if (file_exists($file)) {
-    switch ($op) {
-      case 'checkout-mail':
-        $thank_you_message = TRUE;
-      case 'admin-mail':
-        $help_text = TRUE;
-        $email_text = TRUE;
-        $store_footer = TRUE;
-      case 'view':
-      case 'print':
-        $business_header = TRUE;
-        $shipping_method = TRUE;
-        break;
-    }
-
-    $products = $order->products;
-    if (!is_array($products)) {
-      $products = array();
-    }
-
-    $line_items = $order->line_items;
-    $items = _line_item_list();
-    foreach ($items as $item) {
-      if (isset($item['display_only']) && $item['display_only'] == TRUE) {
-        $result = $item['callback']('display', $order);
-        if (is_array($result)) {
-          foreach ($result as $line) {
-            $line_items[] = array(
-              'line_item_id' => $line['id'],
-              'title' => $line['title'],
-              'amount' => $line['amount'],
-              'weight' => $item['weight'],
-              'data' => $item['data'],
-            );
-          }
+  $variables['line_items'] = $variables['order']->line_items;
+  $items = _line_item_list();
+  foreach ($items as $item) {
+    if (isset($item['display_only']) && $item['display_only'] == TRUE) {
+      $result = $item['callback']('display', $variables['order']);
+      if (is_array($result)) {
+        foreach ($result as $line) {
+          $variables['line_items'][] = array(
+            'line_item_id' => $line['id'],
+            'title' => $line['title'],
+            'amount' => $line['amount'],
+            'weight' => $item['weight'],
+            'data' => $item['data'],
+          );
         }
       }
     }
-    if (!is_array($line_items)) {
-      $line_items = array();
-    }
-    usort($line_items, 'uc_weight_sort');
+  }
+  if (!is_array($variables['line_items'])) {
+    $variables['line_items'] = array();
+  }
+  usort($variables['line_items'], 'uc_weight_sort');
 
-    ob_start();
-    require($file);
-    $output = ob_get_contents();
-    ob_end_clean();
+  $types = array(
+    'order' => $variables['order'],
+  );
+
+  $full = new stdClass();
+  $full->tokens = $full->values = array();
+  foreach ($types as $type => $object) {
+    $temp = token_get_values($type, $object, FALSE, $options);
+    $full->tokens = array_merge($full->tokens, $temp->tokens);
+    $full->values = array_merge($full->values, $temp->values);
   }
 
-  $output = token_replace($output, 'global');
-  $output = token_replace($output, 'order', $order);
+  foreach ($full->tokens as $key => $token) {
+    $value = $full->values[$key];
+    $variables[str_replace('-', '_', $token)] = $value;
+  }
 
-  $invoice[$order->order_id][$template] = $output;
-  return $output;
+  // Add template file suggestions, default to customer template.
+  $variables['template_files'] = array(
+    'uc_order-customer',
+    'uc_order-'. $variables['template'],
+  );
 }
 
 /**
  * Return an array of invoice templates found in ubercart/uc_order/templates.
  */
 function uc_invoice_template_list() {
-  static $templates = array();
+  $templates = drupal_map_assoc(module_invoke_all('uc_invoice_templates'));
 
-  // If the template list hasn't already been loaded...
-  if (empty($templates)) {
-    // Get the path to the templates directory.
-    $dir = drupal_get_path('module', 'uc_order') .'/templates';
-
-    // Loop through all the files found in the directory.
-    foreach (file_scan_directory($dir, '.*\.itpl\.php', array('.', '..', 'CVS'), 0, FALSE) as $file) {
-      // Add them by name to the templates array, trimming off the extension.
-      $templates[] = substr($file->name, 0, strlen($file->name) - 5);
-    }
-
-    // Sort the template names alphabetically.
-    sort($templates);
-  }
+  // Sort the template names alphabetically.
+  sort($templates);
 
   return $templates;
 }

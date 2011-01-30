@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_stock.views.inc,v 1.1.2.1 2009/07/29 19:54:20 islandusurper Exp $
+// $Id: uc_stock.views.inc,v 1.1.2.2 2010/07/12 22:53:54 tr Exp $
 
 /**
  * @file
@@ -107,4 +107,3 @@ function uc_stock_views_handlers() {
     ),
   );
 }
-

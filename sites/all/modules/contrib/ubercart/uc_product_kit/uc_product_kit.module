@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_product_kit.module,v 1.11.2.27 2009/10/21 19:40:27 islandusurper Exp $
+// $Id: uc_product_kit.module,v 1.11.2.32 2010/07/03 00:37:16 tr Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function uc_product_kit_menu() {
  * Implementation of hook_perm().
  */
 function uc_product_kit_perm() {
-  return array('administer product kits');
+  return array('administer product kits', 'create product kits', 'edit own product kits', 'edit all product kits');
 }
 
 /**
@@ -49,56 +49,22 @@ function uc_product_kit_perm() {
 function uc_product_kit_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      return user_access('create products');
+      return user_access('create product kits');
     case 'update':
     case 'delete':
       if ($account->uid == $node->uid) {
-        return user_access('edit own products');
+        return user_access('edit own product kits');
       }
       else {
-        return user_access('edit products');
+        return user_access('edit all product kits');
       }
   }
 }
 
 /**
- * Implementation of hook_enable().
+ * Implementation of hook_form_alter().
  */
-function uc_product_kit_enable() {
-  // For some time in Drupal 5, CCK would delete its field data if a node
-  // type was unavailable because its module was disabled. This function
-  // worked around that by giving the product classes to node.module when
-  // uc_product_kit was disabled. This is no longer necessary as of CCK
-  // 5.x-1.9, but the workaround was left in to prevent accidents. This block
-  // of code is here to reclaim the product kit nodes after an upgrade to
-  // Drupal 6, and then should not be used again as the corresponding code in
-  // uc_product_kit_disable() was removed.
-  if (variable_get('uc_product_kit_enable_nodes', TRUE)) {
-    $node_type = node_get_types('type', 'product_kit');
-    if ($node_type->module == 'node') {
-      $node_type->module = 'uc_product_kit';
-      $node_type->custom = 0;
-      node_type_save($node_type);
-    }
-    variable_set('uc_product_kit_enable_nodes', FALSE);
-  }
-
-  // Hack the product kit node type into the catalog if this module is enabled
-  // some time after uc_catalog.
-  if (module_exists('uc_catalog') && $vid = variable_get('uc_catalog_vid', 0)) {
-    $vocab = taxonomy_vocabulary_load($vid);
-    if (!isset($vocab->nodes['product_kit'])) {
-      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, 'product_kit');
-    }
-  }
-
-  // Add field_image_cache to product kits.
-  if (module_exists('imagefield')) {
-    uc_product_add_default_image_field('product_kit');
-  }
-}
-
-function uc_product_kit_form_alter(&$form, &$form_state, $form_id) {
+function uc_product_kit_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_delete_confirm' && uc_product_is_product((integer)$form['nid']['#value'])) {
     $kits = 0;
     $result = db_query("SELECT k.nid FROM {node} AS n JOIN {uc_product_kits} AS k ON n.vid = k.vid WHERE k.vid IN (SELECT DISTINCT vid FROM {uc_product_kits} WHERE product_id = %d) GROUP BY k.nid HAVING COUNT(product_id) = 1", $form['nid']['#value']);
@@ -343,7 +309,7 @@ function uc_product_kit_update(&$node) {
       db_query("INSERT INTO {uc_products} (vid, nid, model, list_price, cost, sell_price, weight, weight_units, default_qty, unique_hash, ordering, shippable) VALUES (%d, %d, '%s', %f, %f, %f, %f, '%s', %d, '%s', %d, %d)",
         $obj->vid, $obj->nid, $obj->model, $obj->list_price, $obj->cost, $obj->sell_price, $obj->weight, $obj->weight_units, $obj->default_qty,
         md5($obj->vid . $obj->nid . $obj->model . $obj->list_price . $obj->cost . $obj->sell_price . $obj->weight . $obj->weight_units . $obj->default_qty . $obj->ordering . $obj->shippable . time()),
-        $obj->ordering, $boj->shippable
+        $obj->ordering, $obj->shippable
       );
     }
   }
@@ -449,7 +415,7 @@ function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
  */
 function uc_product_kit_forms($form_id, $args) {
   $forms = array();
-  if (is_object($args[0]) && isset($args[0]->type)) {
+  if (isset($args[0]) && isset($args[0]->nid) && isset($args[0]->type)) {
     $product = $args[0];
     if ($product->type == 'product_kit') {
       $forms['uc_product_kit_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
@@ -1054,6 +1020,7 @@ function uc_product_kit_order_product_alter(&$product, $order) {
   // Don't save the base kit node, though.
   $product->skip_save = TRUE;
 }
+
 /**
  * Implementation of hook_cart_display().
  *

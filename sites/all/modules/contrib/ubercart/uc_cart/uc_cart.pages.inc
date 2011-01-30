@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart.pages.inc,v 1.1.2.20 2009/10/20 20:58:07 islandusurper Exp $
+// $Id: uc_cart.pages.inc,v 1.1.2.21 2010/02/24 04:42:09 tr Exp $
 
 /**
  * @file
@@ -548,7 +548,7 @@ function uc_cart_checkout_complete() {
 
   $page = variable_get('uc_cart_checkout_complete_page', '');
   if (!empty($page)) {
-    drupal_goto(variable_get('uc_cart_checkout_complete_page', ''));
+    drupal_goto($page);
   }
 
   return $output;

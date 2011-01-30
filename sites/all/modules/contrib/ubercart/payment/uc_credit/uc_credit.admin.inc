@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_credit.admin.inc,v 1.1.2.5 2009/08/17 21:27:56 islandusurper Exp $
+// $Id: uc_credit.admin.inc,v 1.1.2.6 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -335,4 +335,3 @@ function uc_credit_terminal_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'];
 }
-

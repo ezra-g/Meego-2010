@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_google_checkout.admin.inc,v 1.1.2.8 2009/08/17 21:27:58 islandusurper Exp $
+// $Id: uc_google_checkout.admin.inc,v 1.1.2.9 2010/07/12 01:57:44 tr Exp $
 
 /**
  * @file
@@ -436,4 +436,3 @@ function uc_google_checkout_terminal_form_submit($form, &$form_state) {
     $form_state['redirect'] = uc_google_checkout_refund($form_state['values']['order_id'], $form_state['values']['amount'], $form_state['values']['reason'], $form_state['values']['comment']);
   }
 }
-

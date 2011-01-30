@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_weightquote.admin.inc,v 1.1.2.7 2009/09/11 19:04:56 islandusurper Exp $
+// $Id: uc_weightquote.admin.inc,v 1.1.2.8 2010/07/12 01:57:35 tr Exp $
 
 /**
  * @file
@@ -190,4 +190,3 @@ function uc_weightquote_admin_method_confirm_delete_submit($form, &$form_state) 
   drupal_set_message(t('Weight quote shipping method deleted.'));
   $form_state['redirect'] = 'admin/store/settings/quotes/methods/weightquote';
 }
-

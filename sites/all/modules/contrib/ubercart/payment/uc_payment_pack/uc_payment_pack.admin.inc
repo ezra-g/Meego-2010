@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_payment_pack.admin.inc,v 1.1.2.7 2009/08/17 21:27:57 islandusurper Exp $
+// $Id: uc_payment_pack.admin.inc,v 1.1.2.8 2010/07/12 01:57:44 tr Exp $
 
 /**
  * @file
@@ -96,4 +96,3 @@ function uc_payment_pack_receive_check_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'];
 }
-

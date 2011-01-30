@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart_links.install,v 1.2.2.6 2009/07/21 14:37:19 islandusurper Exp $
+// $Id: uc_cart_links.install,v 1.2.2.8 2010/08/11 17:52:20 islandusurper Exp $
 
 /**
  * @file
@@ -11,26 +11,26 @@
  */
 function uc_cart_links_schema() {
   $schema['uc_cart_link_clicks'] = array(
-    'description' => t('A table containing tracking information for cart links, including the number of times they were clicked and the time of the last click.'),
+    'description' => 'Stores information for cart links.',
     'fields' => array(
       'cart_link_id' => array(
+        'description' => 'The cart link identifier.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '0',
-        'description' => t('The cart link identifier.'),
       ),
       'clicks' => array(
+        'description' => 'The number of times this cart link was clicked.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The number of times this cart link was clicked.'),
       ),
       'last_click' => array(
+        'description' => 'The time of the last click on this cart link, stored as a UNIX timestamp.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The time of the last click on this cart link, stored as a UNIX timestamp.'),
       ),
     ),
     'primary key' => array(
@@ -56,4 +56,13 @@ function uc_cart_links_uninstall() {
   drupal_uninstall_schema('uc_cart_links');
   db_query("DELETE FROM {variable} WHERE name LIKE 'uc_cart_links_%%'");
   cache_clear_all('variables', 'cache');
+}
+
+/**
+ * Remove obsolete variable.
+ */
+function uc_cart_links_update_6001() {
+  variable_del('uc_cart_links_empty');
+
+  return array();
 }

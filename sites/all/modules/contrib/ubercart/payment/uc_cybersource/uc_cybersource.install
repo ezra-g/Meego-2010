@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cybersource.install,v 1.1.2.5 2009/01/19 20:31:21 islandusurper Exp $
+// $Id: uc_cybersource.install,v 1.1.2.6 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -69,4 +69,3 @@ function uc_cybersource_update_1() {
 
   return array();
 }
-

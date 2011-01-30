@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_order.order_pane.inc,v 1.1.2.20 2009/11/05 15:21:54 islandusurper Exp $
+// $Id: uc_order.order_pane.inc,v 1.1.2.21 2010/01/04 15:15:07 islandusurper Exp $
 
 /**
  * @file
@@ -720,7 +720,7 @@ function op_products_view_table($order) {
   $table['#columns']['product'] = array(
     'cell' => array(
       'data' => t('Product'),
-      'width' => '80%',
+      'class' => 'header-wide',
     ),
     'weight' => 1,
   );
@@ -836,7 +836,7 @@ function op_products_customer_table($order) {
   $table['#columns']['product'] = array(
     'cell' => array(
       'data' => t('Product'),
-      'width' => '80%',
+      'class' => 'header-wide',
     ),
     'weight' => 1,
   );

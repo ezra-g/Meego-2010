@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_google_checkout.module,v 1.1.2.15 2009/09/21 14:34:48 islandusurper Exp $
+// $Id: uc_google_checkout.module,v 1.1.2.16 2010/01/27 22:23:32 islandusurper Exp $
 
 /**
  * @file
@@ -116,7 +116,7 @@ function uc_google_checkout_theme() {
   );
 }
 
-function uc_google_checkout_form_alter(&$form, &$form_state, $form_id) {
+function uc_google_checkout_form_alter(&$form, $form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
     if (is_object($node) && $form_id == $node->type .'_node_form' && uc_product_is_product($node->type)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_stock.admin.inc,v 1.1.2.6 2009/07/21 14:37:17 islandusurper Exp $
+// $Id: uc_stock.admin.inc,v 1.1.2.8 2010/07/12 01:28:19 tr Exp $
 
 /**
  * @file
@@ -215,7 +215,7 @@ function uc_stock_edit_form($form_state, $node) {
  */
 function theme_uc_stock_edit_form($form) {
   $header = array(
-    array('data' => t('Active')),
+    array('data' => '&nbsp;&nbsp;'. t('Active')) + theme('table_select_header_cell'),
     array('data' => t('SKU')),
     array('data' => t('Stock')),
     array('data' => t('Threshold')),
@@ -251,4 +251,3 @@ function uc_stock_edit_form_submit($form, &$form_state) {
 
   drupal_set_message(t('Stock settings saved.'));
 }
-

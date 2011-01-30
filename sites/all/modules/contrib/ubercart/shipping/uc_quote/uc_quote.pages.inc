@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_quote.pages.inc,v 1.1.2.8 2009/09/21 14:34:47 islandusurper Exp $
+// $Id: uc_quote.pages.inc,v 1.1.2.9 2010/07/12 01:57:35 tr Exp $
 
 /**
  * @file
@@ -159,4 +159,3 @@ function _uc_quote_assemble_quotes($order) {
   }
   return $quote_data;
 }
-

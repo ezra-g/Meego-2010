@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_catalog.admin.inc,v 1.1.2.8 2009/07/21 14:37:21 islandusurper Exp $
+// $Id: uc_catalog.admin.inc,v 1.1.2.9 2010/07/12 01:32:29 tr Exp $
 
 /**
  * @file
@@ -243,4 +243,3 @@ function uc_catalog_orphaned_products() {
 
   return $output;
 }
-

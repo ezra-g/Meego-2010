@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_tax_report.module,v 1.1.2.8 2009/08/17 21:27:54 islandusurper Exp $
+// $Id: uc_tax_report.module,v 1.1.2.9 2010/07/12 01:28:19 tr Exp $
 
 /**
  * @file
@@ -275,5 +275,3 @@ function uc_tax_report_params_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/reports/tax/'. implode('/', $args);
 }
-
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_ups.module,v 1.5.2.19 2009/11/18 20:55:13 islandusurper Exp $
+// $Id: uc_ups.module,v 1.5.2.24 2010/02/08 15:29:30 islandusurper Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function uc_ups_theme() {
  * @see uc_product_form()
  * @see uc_ups_product_alter_validate()
  */
-function uc_ups_form_alter(&$form, &$form_state, $form_id) {
+function uc_ups_form_alter(&$form, $form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
     $enabled = variable_get('uc_quote_enabled', array());
@@ -359,7 +359,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
           }
           $package_schema .= "<Dimensions>";
             $package_schema .= "<UnitOfMeasurement>";
-            $conversion = uc_weight_conversion($package->length_units, variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')));
+            $conversion = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')));
             $package_schema .= "<Code>". strtoupper(variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'))) ."</Code>";
             $package_schema .= "</UnitOfMeasurement>";
             $package_schema .= "<Length>". number_format($package->length * $conversion, 2, '.', '') ."</Length>";
@@ -537,7 +537,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
           }
           $package_schema .= "<Dimensions>";
             $package_schema .= "<UnitOfMeasurement>";
-            $conversion = constant(strtoupper($package->length_units) .'_TO_'. strtoupper(variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'))));
+            $conversion = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')));
             $package_schema .= "<Code>". strtoupper(variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'))) ."</Code>";
             $package_schema .= "</UnitOfMeasurement>";
             $package_schema .= "<Length>". (floor($package->length * $conversion) + 1) ."</Length>";
@@ -568,7 +568,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         $package_schema .= "<PackageServiceOptions>";
           $package_schema .= "<InsuredValue>";
             $package_schema .= "<CurrencyCode>". variable_get('uc_currency_code', 'USD') ."</CurrencyCode>";
-            $package_schema .= "<MonetaryValue>". number_format($package->price, 2, '.', '') ."</MonetaryValue>";
+            $package_schema .= "<MonetaryValue>". number_format($package->value, 2, '.', '') ."</MonetaryValue>";
           $package_schema .= "</InsuredValue>";
         $package_schema .= "</PackageServiceOptions>";
       $package_schema .= "</Package>";
@@ -730,7 +730,7 @@ function uc_ups_quote($products, $details) {
       $package->weight += $weight;
       $package->price += $product->price * $product->qty;
 
-      $conversion = uc_weight_conversion($product->length_units, 'in');
+      $conversion = uc_length_conversion($product->length_units, 'in');
       $package->length = max($product->length * $conversion, $package->length);
       $package->width = max($product->width * $conversion, $package->width);
       $package->height = max($product->height * $conversion, $package->height);
@@ -985,17 +985,25 @@ function uc_ups_fulfill_order($form_state, $order, $package_ids) {
     $form['destination'][$field]['#required'] = TRUE;
   }
 
-  $ups_services = _uc_ups_service_list();
-  $services = array_filter(variable_get('uc_ups_services', array()));
-  foreach ($services as $ups_id => $service) {
-    $services[$ups_id] = $ups_services[$ups_id];
+  $services = _uc_ups_service_list();
+  $default_service = '';
+  $method = $order->quote['method'];
+  if ($method == 'ups') {
+    $default_service = $order->quote['accessorials'];
+    $method = $services[$default_service];
   }
-  if (count($services)) {
-    $form['service'] = array('#type' => 'select',
-      '#title' => t('UPS service'),
-      '#options' => $services,
-    );
-  }
+
+  // Inform user of customer's shipping choice
+  $form['shipping_choice'] = array(
+    '#type' => 'markup',
+    '#value' => t('Customer selected @method as the shipping method and paid @rate', array('@method' => $method, '@rate' => uc_currency_format($order->quote['rate']))),
+  );
+
+  $form['service'] = array('#type' => 'select',
+    '#title' => t('UPS service'),
+    '#options' => $services,
+    '#default_value' => $default_service,
+  );
   $today = getdate();
   $form['ship_date'] = array('#type' => 'date',
     '#title' => t('Ship date'),
@@ -1094,45 +1102,6 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
  */
 function uc_ups_fulfill_order_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'] .'/shipments/ups';
-}
-
-/**
- * Construct an XML label and pickup request.
- *
- * @param $digest
- *   Base-64 encoded shipment request.
- * @param $order_id
- *   The order id of the shipment.
- * @param $packages
- *   An array of package ids to be shipped.
- * @return
- *   ShipmentAcceptRequest XML document to send to UPS.
- */
-function uc_ups_request_pickup($digest, $order_id = 0, $packages = array()) {
-  $packages = (array)$packages;
-
-  $schema = uc_ups_access_request();
-  $schema .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<ShipmentAcceptRequest>
-  <Request>
-    <RequestAction>ShipAccept</RequestAction>";
-    if ($order_id || count($packages)) {
-      $schema .= "\n<TransactionReference>
-      <CustomerContext>";
-      if ($order_id) {
-        $schema .= "<OrderId>". $order_id ."</OrderId>\n";
-      }
-      foreach ($packages as $pkg_id) {
-        $schema .= "<PackageId>". $pkg_id ."</PackageId>\n";
-      }
-      $schema .= "</CustomerContext>\n</TransactionReference>\n";
-    }
-  $schema .= "  </Request>
-  <ShipmentDigest>". $digest ."</ShipmentDigest>
-</ShipmentAcceptRequest>";
-
-  //drupal_set_message('<pre>'. htmlentities($schema) .'</pre>');
-  return $schema;
 }
 
 /**

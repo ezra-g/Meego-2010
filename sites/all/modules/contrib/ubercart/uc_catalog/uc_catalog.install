@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_catalog.install,v 1.9.2.9 2009/07/21 14:37:21 islandusurper Exp $
+// $Id: uc_catalog.install,v 1.9.2.10 2010/03/19 21:27:18 tr Exp $
 
 /**
  * @file
@@ -13,38 +13,45 @@ function uc_catalog_schema() {
   $schema = array();
 
   $schema['uc_catalog_images'] = array(
+    'description' => 'Provides a relation between a catalog taxonomy term in {term_data} and an image in the {files} table.',
     'fields' => array(
       'fid' => array(
+        'description' => 'Primary key: The {files}.fid. of the file',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'tid' => array(
+        'description' => 'The {term_data}.tid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'filename' => array(
+        'description' => 'The {files}.filename of the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'filepath' => array(
+        'description' => 'The {files}.filepath of the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'filemime' => array(
+        'description' => 'The {files}.filemime of the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'filesize' => array(
+        'description' => 'The {files}.filesize of the file.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

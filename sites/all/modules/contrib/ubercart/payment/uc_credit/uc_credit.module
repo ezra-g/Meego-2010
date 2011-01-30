@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_credit.module,v 1.5.2.19 2009/10/20 20:58:08 islandusurper Exp $
+// $Id: uc_credit.module,v 1.5.2.26 2010/07/09 19:51:32 islandusurper Exp $
 
 /**
  * @file
@@ -92,14 +92,18 @@ function uc_credit_init() {
 /**
  * Implementation of hook_form_alter().
  */
-function uc_credit_form_alter(&$form, &$form_state, $form_id) {
+function uc_credit_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
     case 'uc_payment_methods_form':
-      if (empty($_POST) && uc_credit_encryption_key() === FALSE) {
-        drupal_set_message(t('Credit card encryption must be configured to accept credit card payments.'), 'error');
+      if (user_access('administer credit cards')) {
+        if (empty($_POST) && uc_credit_encryption_key() === FALSE) {
+          // Report error and expand fieldset so the problem is easy to spot
+          form_set_error('uc_credit_encryption_path', t('Credit card encryption must be configured to accept credit card payments.'));
+          $form['method_credit']['#collapsed'] = FALSE;
+        }
+        $form['#validate'][] = 'uc_credit_settings_form_validate';
+        $form['#submit'][] = 'uc_credit_settings_form_submit';
       }
-      $form['#validate'][] = 'uc_credit_settings_form_validate';
-      $form['#submit'][] = 'uc_credit_settings_form_submit';
       break;
 
     case 'uc_cart_checkout_form':
@@ -163,11 +167,6 @@ function uc_credit_form_alter(&$form, &$form_state, $form_id) {
       foreach (element_children($form['gateways']) as $key) {
         // Get the transaction types associated with this gateway.
         $gateway_types = uc_credit_gateway_txn_types($key);
-
-        // Default to authorization plus capture if none are specified.
-        if (empty($types) && !is_null(_payment_gateway_data($key, 'credit'))) {
-          $types = array(UC_CREDIT_AUTH_CAPTURE);
-        }
 
         // Loop through all the available transaction types.
         $options = array();
@@ -376,7 +375,7 @@ function uc_credit_payment_method() {
   $cc_types = array('visa', 'mastercard', 'discover', 'amex');
   foreach ($cc_types as $type) {
     if (variable_get('uc_credit_'. $type, TRUE)) {
-      $title .= ' <img src="'. $path .'/images/'. $type .'.gif" style="position: relative; top: 5px;">';
+      $title .= ' <img src="'. $path .'/images/'. $type .'.gif" style="position: relative; top: 5px;" />';
     }
   }
   $methods[] = array(
@@ -711,7 +710,7 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
       $form['cc_clear'] = array(
         '#type' => 'fieldset',
         '#title' => t('Debug mode data clearing'),
-        '#description' => t('Specify below the status and age of orders whose credit card details will be removed.  This setting only applies when operating in debug mode.  When not in debug mode, no credit card information except the last 4 digits of the card number will be stored.', array('!url' => url('admin/store/settings/cart/edit'))),
+        '#description' => t('Specify below the status and age of orders whose credit card details will be removed.  This setting only applies when operating in debug mode.  When not in debug mode, no credit card information except the last 4 digits of the card number will be stored. <strong>Cron must be running for this feature to work.</strong>', array('!url' => url('admin/store/settings/cart/edit'))),
         '#collapsible' => FALSE,
       );
       foreach (uc_order_status_list() as $status) {
@@ -1074,7 +1073,7 @@ function theme_uc_payment_method_credit_form($form) {
     $path = base_path() . drupal_get_path('module', 'uc_credit');
     $output = '<table class="inline-pane-table" cellpadding="2">';
     if (strlen($form['cc_policy']['#value']) > 0) {
-      $output .= '<tr><td colspan="2">'. $form['cc_policy']['#value']
+      $output .= '<tr><td colspan="2" class="description">'. $form['cc_policy']['#value']
                 .'</td></tr>';
     }
     if (variable_get('uc_credit_type_enabled', FALSE)) {
@@ -1104,7 +1103,7 @@ function theme_uc_payment_method_credit_form($form) {
     if (variable_get('uc_credit_cvv_enabled', TRUE)) {
       $form['cc_cvv']['#title'] = '';
       $output .= '<tr><td class="field-label">'. t('CVV:') .'</td><td>'. drupal_render($form['cc_cvv'])
-                .' <img src="'. $path .'/images/info.png" onclick="cvv_info_popup();" style="cursor: pointer; position: relative; top: 3px;"> <a style="cursor: pointer; font-weight: normal;" onclick="cvv_info_popup();">'
+                .' <img src="'. $path .'/images/info.png" onclick="cvv_info_popup();" style="cursor: pointer; position: relative; top: 3px;" /> <a style="cursor: pointer; font-weight: normal;" onclick="cvv_info_popup();">'
                 . t("What's the CVV?") .'</a></td></tr>';
     }
     if (variable_get('uc_credit_bank_enabled', FALSE)) {

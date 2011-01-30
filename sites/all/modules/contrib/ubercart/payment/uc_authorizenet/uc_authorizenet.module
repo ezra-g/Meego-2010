@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_authorizenet.module,v 1.4.2.12 2009/10/20 20:58:08 islandusurper Exp $
+// $Id: uc_authorizenet.module,v 1.4.2.15 2010/04/09 05:35:46 tr Exp $
 
 /**
  * @file
@@ -8,6 +8,8 @@
  * Development sponsored by Digital Dollhouse - http://www.digitaldollhouse.com
  */
 
+define('UC_AUTHORIZENET_TEST_GATEWAY_URL', 'https://test.authorize.net/gateway/transact.dll');
+define('UC_AUTHORIZENET_LIVE_GATEWAY_URL', 'https://secure.authorize.net/gateway/transact.dll');
 
 /**
  * Implementation of hook_menu().
@@ -92,10 +94,19 @@ function uc_authorizenet_payment_gateway() {
 function uc_authorizenet_settings_form() {
   $login_data = _uc_authorizenet_login_data();
 
+  // Allow admin to set duplicate window
+  $form['uc_authnet_duplicate_window'] = array(
+    '#type' => 'select',
+    '#title' => t('Duplicate window'),
+    '#description' => t('Blocks submission of duplicate transactions within the specified window.  Defaults to 120 seconds.'),
+    '#default_value' => variable_get('uc_authnet_duplicate_window', 120),
+    '#options' => drupal_map_assoc(array(0, 15, 30, 45, 60, 75, 90, 105, 120)),
+  );
+
   $form['api_id_key'] = array(
     '#type' => 'fieldset',
     '#title' => t('API Login ID and Transaction Key'),
-    '#description' => t('This information is required for Ubercart to interact with your payment gateway account.  It is different from your login ID and password and may be found through your account settings page.'),
+    '#description' => t('This information is required for Ubercart to interact with your payment gateway account.  It is different from your login ID and password and may be found through your account settings page.  Do not change the gateway URLs unless you are using this module with an Authorize.net-compatible gateway that requires different URLs.'),
   );
   $form['api_id_key']['uc_authnet_api_login_id'] = array(
     '#type' => 'textfield',
@@ -107,6 +118,18 @@ function uc_authorizenet_settings_form() {
     '#title' => t('Transaction Key'),
     '#default_value' => variable_get('uc_authnet_api_transaction_key', ''),
   );
+  $form['api_id_key']['uc_authnet_api_test_gateway_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Authorize.net Test Gateway URL'),
+    '#default_value' => variable_get('uc_authnet_api_test_gateway_url',
+                                     UC_AUTHORIZENET_TEST_GATEWAY_URL),
+  );
+  $form['api_id_key']['uc_authnet_api_live_gateway_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Authorize.net Live Gateway URL'),
+    '#default_value' => variable_get('uc_authnet_api_live_gateway_url',
+                                     UC_AUTHORIZENET_LIVE_GATEWAY_URL),
+  );
 
   $form['aim_settings'] = array(
     '#type' => 'fieldset',
@@ -116,7 +139,7 @@ function uc_authorizenet_settings_form() {
   $form['aim_settings']['uc_authnet_aim_txn_mode'] = array(
     '#type' => 'radios',
     '#title' => t('Transaction mode'),
-    '#description' => t('Only specify a developer test account if you login to your account through https://test.authorize.net.<br/>Adjust to live transactions when you are ready to start processing real payments.'),
+    '#description' => t('Only specify a developer test account if you login to your account through https://test.authorize.net.<br />Adjust to live transactions when you are ready to start processing real payments.'),
     '#options' => array(
       'live' => t('Live transactions in a live account'),
       'live_test' => t('Test transactions in a live account'),
@@ -180,7 +203,7 @@ function uc_authorizenet_settings_form() {
   $form['cim_settings']['uc_authnet_cim_mode'] = array(
     '#type' => 'radios',
     '#title' => t('Transaction mode'),
-    '#description' => t('Only specify a developer test account if you login to your account through https://test.authorize.net.<br/>Adjust to live transactions when you are ready to start processing real payments.'),
+    '#description' => t('Only specify a developer test account if you login to your account through https://test.authorize.net.<br />Adjust to live transactions when you are ready to start processing real payments.'),
     '#options' => array(
       'production' => t('Production'),
       'developer' => t('Developer test'),
@@ -463,7 +486,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     // 'x_trans_id' => '',
     // 'x_auth_code' => '',
     'x_test_request' => variable_get('uc_authnet_aim_txn_mode', 'live_test') == 'live_test' ? 'TRUE' : 'FALSE',
-    // 'x_duplicate_window' => '120',
+    'x_duplicate_window' => variable_get('uc_authnet_duplicate_window', 120),
 
     // Order Information
     'x_invoice_num' => $order->order_id,
@@ -508,10 +531,12 @@ function _uc_authorizenet_charge($order, $amount, $data) {
 
   // Determine the correct URL based on the transaction mode.
   if (variable_get('uc_authnet_aim_txn_mode', 'live_test') == 'developer_test') {
-    $post_url = 'https://test.authorize.net/gateway/transact.dll';
+    $post_url = variable_get('uc_authnet_api_test_gateway_url',
+                             UC_AUTHORIZENET_TEST_GATEWAY_URL);
   }
   else {
-    $post_url = 'https://secure.authorize.net/gateway/transact.dll';
+    $post_url = variable_get('uc_authnet_api_live_gateway_url',
+                             UC_AUTHORIZENET_LIVE_GATEWAY_URL);
   }
 
   // Translate the data array into a string we can POST.

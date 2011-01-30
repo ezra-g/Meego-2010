@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart.module,v 1.15.2.31 2009/11/02 22:04:08 islandusurper Exp $
+// $Id: uc_cart.module,v 1.15.2.36 2010/08/11 15:09:54 islandusurper Exp $
 
 /**
  * @file
@@ -207,21 +207,21 @@ function uc_cart_theme() {
     'uc_cart_block_title' => array(
       'arguments' => array('title' => NULL, 'icon_class' => FALSE, 'collapsible' => FALSE),
     ),
-    'uc_cart_block_title_icon' => array(
-      'arguments' => array(),
-    ),
-    'uc_cart_block_content_cachable' => array(
-      'arguments' => array(),
-    ),
-    'uc_cart_block_content' => array(
-      'arguments' => array(),
-    ),
-    'uc_cart_block_items' => array(
-      'arguments' => array(),
-    ),
-    'uc_cart_block_summary' => array(
-      'arguments' => array(),
-    ),
+     'uc_cart_block_title_icon' => array(
+      'arguments' => array('icon_class' => NULL),
+     ),
+     'uc_cart_block_content_cachable' => array(
+       'arguments' => array(),
+     ),
+     'uc_cart_block_content' => array(
+      'arguments' => array('help_text' => NULL, 'items' => NULL, 'item_count' => NULL, 'item_text' => NULL, 'total' => NULL, 'summary_links' => NULL),
+     ),
+     'uc_cart_block_items' => array(
+      'arguments' => array('items' => NULL),
+     ),
+     'uc_cart_block_summary' => array(
+      'arguments' => array('item_count' => NULL, 'item_text' => NULL, 'total' => NULL, 'summary_links' => NULL),
+     ),
     'uc_empty_cart' => array(
       'arguments' => array(),
     ),
@@ -895,6 +895,9 @@ function uc_cart_login_update($uid) {
       uc_cart_add_item($item->nid, $item->qty, $item->data, $uid, FALSE, FALSE, FALSE);
     }
 
+    // Unset the anonymous cart ID, it's no longer needed
+    unset($_SESSION['uc_cart_id']);
+
     // Rebuild the cart item cache.
     uc_cart_get_contents($uid, 'rebuild');
   }
@@ -1259,20 +1262,21 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     }
   }
 
-  $output = '<p>'. check_markup(variable_get('uc_msg_order_submit', uc_get_message('completion_message')),
-                         variable_get('uc_msg_order_submit_format', FILTER_FORMAT_DEFAULT), FALSE) .'</p>';
-  $show_message = check_markup(variable_get('uc_msg_order_'. $message_type, uc_get_message('completion_'. $message_type)), variable_get('uc_msg_order_'. $message_type .'_format', FILTER_FORMAT_DEFAULT), FALSE);
-
-  if ($show_message != '') {
+  $messages['uc_msg_order_submit_format'] = variable_get('uc_msg_order_submit', uc_get_message('completion_message'));
+  $message = variable_get('uc_msg_order_'.$message_type, uc_get_message('completion_'.$message_type));
+  if ($message != '') {
     $variables['!new_username'] = check_plain($_SESSION['new_user']['name']);
     $variables['!new_password'] = check_plain($_SESSION['new_user']['pass']);
-    $output .= '<p>'. strtr($show_message, $variables) .'</p>';
+    $messages['uc_msg_order_'.$message_type.'_format'] = strtr($message, $variables);
   }
-  $output .= '<p>'. check_markup(variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping')),
-                      variable_get('uc_msg_continue_shopping_format', FILTER_FORMAT_DEFAULT),
-                      FALSE) .'</p>';
+  $messages['uc_msg_continue_shopping_format'] = variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping'));
 
-  $output_message = token_replace_multiple($output, array('global' => NULL, 'order' => $order));
+  $output_message = '';
+  foreach ($messages as $format => $message) {
+    $message = token_replace_multiple($message, array('global' => NULL, 'order' => $order));
+    $message = check_markup($message, variable_get($format, FILTER_FORMAT_DEFAULT), FALSE);
+    $output_message .= $message;
+  }
   $themed_output = theme('uc_cart_complete_sale', $output_message);
 
   // Move an order's status from "In Checkout" to "Pending"
@@ -1306,18 +1310,23 @@ function theme_uc_cart_complete_sale($message) {
 
 /**
  * Return the unique cart_id of the user.
+ *
+ * @param $create
+ * Toggle auto creation of cart id.
+ * @return
+ * Cart id. If $create is FALSE will return FALSE if there is no cart id.
  */
-function uc_cart_get_id() {
+function uc_cart_get_id($create = TRUE) {
   global $user;
 
   if ($user->uid) {
     return $user->uid;
   }
-  elseif (!isset($_SESSION['uc_cart_id'])) {
+  elseif (!isset($_SESSION['uc_cart_id']) && $create) {
     $_SESSION['uc_cart_id'] = md5(uniqid(rand(), TRUE));
   }
 
-  return $_SESSION['uc_cart_id'];
+  return isset($_SESSION['uc_cart_id']) ? $_SESSION['uc_cart_id'] : FALSE;
 }
 
 /**
@@ -1328,7 +1337,13 @@ function uc_cart_get_id() {
  */
 function uc_cart_get_contents($cid = NULL, $action = NULL) {
   static $items = array();
-  $cid = $cid ? $cid : uc_cart_get_id();
+
+  $cid = $cid ? $cid : uc_cart_get_id(FALSE);
+
+  // If we didn't get a cid, return empty.
+  if (!$cid) {
+    return array();
+  }
 
   if ($action == 'rebuild') {
     unset($items[$cid]);
@@ -1367,6 +1382,13 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
 
     // Allow other modules a chance to alter the fully loaded cart object.
     drupal_alter('uc_cart', $items[$cid]);
+
+    // When there are no longer any items in the cart, the anonymous cart ID is no longer required.
+    // To guard against unsetting the session ID in the middle of an uc_cart_add_item() call, we only do this on rebuild
+    // See issue 858816 for details.
+    if ($action == 'rebuild' && empty($items[$cid]) && isset($_SESSION['uc_cart_id']) && $_SESSION['uc_cart_id'] == $cid) {
+      unset($_SESSION['uc_cart_id']);
+    }
   }
 
   return $items[$cid];
@@ -1387,14 +1409,17 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
  *   An integer representing the total number of items in the cart.
  */
 function uc_cart_get_total_qty($cid = NULL) {
-  if (empty($cid)) {
-    $cid = uc_cart_get_id();
-  }
 
   $qty = 0;
 
-  foreach (uc_cart_get_contents($cid) as $item) {
-    $qty += $item->qty;
+  if (empty($cid)) {
+    $cid = uc_cart_get_id(FALSE);
+  }
+
+  if ($cid) {
+    foreach (uc_cart_get_contents($cid) as $item) {
+      $qty += $item->qty;
+    }
   }
 
   return $qty;
@@ -1622,6 +1647,10 @@ function uc_cart_cart_pane_list($items, $action = NULL) {
   }
 
   $panes = module_invoke_all('cart_pane', $items);
+
+  // Allow other modules to alter the panes.
+  drupal_alter('cart_pane', $panes, $items);
+
   if (!is_array($panes) || count($panes) == 0) {
     return array();
   }

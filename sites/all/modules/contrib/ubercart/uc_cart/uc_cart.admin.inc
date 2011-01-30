@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart.admin.inc,v 1.1.2.16 2009/09/23 15:45:56 islandusurper Exp $
+// $Id: uc_cart.admin.inc,v 1.1.2.18 2010/06/05 18:53:14 tr Exp $
 
 /**
  * @file
@@ -98,7 +98,7 @@ function uc_cart_cart_settings_form() {
   $form['anonymous'] = array(
     '#type' => 'fieldset',
     '#title' => t('Anonymous cart duration'),
-    '#description' => t('Set the length of time products remain in the cart for customers who <strong>have not</strong> logged in.'),
+    '#description' => t('Set the length of time products remain in the cart for customers who <strong>have not</strong> logged in. Cron must be running for this feature to work.'),
     '#summary' => format_plural(variable_get('uc_cart_anon_duration', '4'), 'Anonymous cart duration is 1 @unit.', 'Anonymous cart duration is @count @units.', array('@unit' => $durations['singular'][variable_get('uc_cart_anon_unit', 'hours')], '@units' => $durations['plural'][variable_get('uc_cart_anon_unit', 'hours')])),
   );
   $form['anonymous']['uc_cart_anon_duration'] = array(
@@ -127,7 +127,7 @@ function uc_cart_cart_settings_form() {
   $form['authenticated'] = array(
     '#type' => 'fieldset',
     '#title' => t('Authenticated cart duration'),
-    '#description' => t('Set the length of time products remain in the cart for customers who <strong>have</strong> logged in.'),
+    '#description' => t('Set the length of time products remain in the cart for customers who <strong>have</strong> logged in. Cron must be running for this feature to work.'),
     '#summary' => format_plural(variable_get('uc_cart_auth_duration', '1'), 'Authenticated cart duration is 1 @unit.', 'Authenticated cart duration is @count @units.', array('@unit' => $durations['singular'][variable_get('uc_cart_auth_unit', 'years')], '@units' => $durations['plural'][variable_get('uc_cart_auth_unit', 'years')])),
   );
   $form['authenticated']['uc_cart_auth_duration'] = array(
@@ -259,7 +259,7 @@ function uc_cart_cart_panes_form() {
  */
 function uc_cart_block_edit_info() {
   $output = t('Drupal handles all the block settings forms automatically.') .'<p>'
-          . t('<a href="!url">Click here</a> to goto the shopping cart block configuration page.',
+          . t('<a href="!url">Click here</a> to go to the shopping cart block configuration page.',
               array('!url' => url('admin/build/block/configure/uc_cart/0')));
 
   return $output;

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_attribute.admin.inc,v 1.1.2.24 2009/10/20 20:58:06 islandusurper Exp $
+// $Id: uc_attribute.admin.inc,v 1.1.2.27 2010/07/12 01:33:31 tr Exp $
 
 /**
  * @file
@@ -189,7 +189,7 @@ function uc_attribute_admin_settings() {
       'adjustment' => t('Display price adjustment'),
       'total' => t('Display total price'),
     ),
-    '#description' => t('Formats the price in the attribute selection form when the customer adds a product to their cart. The total price will only be displayed on products with only one price affecting attribute.'),
+    '#description' => t('Determines how price variations are displayed to the customer.  Prices may be displayed directly next to each attribute option in the attribute selection form either as a total price for the product with that option or as an adjustment (+ or -) showing how that option affects the product base price.  However, the total price will not be displayed if a product has more than one attribute that can affect the price.'),
   );
 
   return system_settings_form($form);
@@ -1042,7 +1042,7 @@ function uc_product_adjustments_form($form_state, $node) {
   $query_from = " FROM";
   $query_where = " WHERE";
   $query_order = " ORDER BY";
-  $result = db_query("SELECT pa.nid, pa.aid, pa.ordering, pa.display, a.name, a.ordering, ao.aid, COUNT(po.oid) FROM {uc_product_attributes} AS pa LEFT JOIN {uc_attributes} AS a ON pa.aid = a.aid LEFT JOIN {uc_attribute_options} AS ao ON a.aid = ao.aid LEFT JOIN {uc_product_options} AS po ON ao.oid = po.oid AND po.nid = %d WHERE pa.nid = %d AND pa.display <> 3 GROUP BY ao.aid, pa.aid, a.name, pa.ordering, a.ordering, pa.nid HAVING count(po.oid) > 0 ORDER BY pa.ordering, a.ordering", $nid, $nid);
+  $result = db_query("SELECT pa.nid, pa.aid, pa.ordering, pa.display, a.name, a.ordering, ao.aid, COUNT(po.oid) FROM {uc_product_attributes} AS pa LEFT JOIN {uc_attributes} AS a ON pa.aid = a.aid LEFT JOIN {uc_attribute_options} AS ao ON a.aid = ao.aid LEFT JOIN {uc_product_options} AS po ON ao.oid = po.oid AND po.nid = %d WHERE pa.nid = %d AND pa.display <> 3 GROUP BY ao.aid, pa.aid, pa.display, a.name, pa.ordering, a.ordering, pa.nid HAVING count(po.oid) > 0 ORDER BY pa.ordering, a.ordering", $nid, $nid);
   $i = 1;
   $attribute_names = '';
   $full_attributes = array();
@@ -1186,4 +1186,3 @@ function uc_product_adjustments_form_submit($form, &$form_state) {
   }
   $form_state['redirect'] = $goto;
 }
-

@@ -1,12 +1,12 @@
 <?php
-// $Id: tanzania_834_1.cif,v 1.1.2.1 2009/07/29 19:54:17 islandusurper Exp $ 1.0.0
+// $Id: tanzania_834_1.cif,v 1.1.2.3 2010/04/14 05:18:19 tr Exp $ 1.0.0
 
 /**
  * First implement hook_install() using the name of the country as the base of
  * the function name.
  */
 function tanzania_install() {
-  db_query("INSERT INTO {uc_countries} VALUES (834, 'Tanzania', 'TZ', 'TZA', 1)");
+  db_query("INSERT INTO {uc_countries} (country_id, country_name, country_iso_code_2, country_iso_code_3, version) VALUES (834, 'Tanzania', 'TZ', 'TZA', 1)");
 
   // Make the entries in the zones table.
   $zones = array(
@@ -42,7 +42,7 @@ function tanzania_install() {
     array(834, '07', 'Zanzibar North'),
     array(834, '11', 'Zanzibar South'),
     array(834, '15', 'Zanzibar West'),
-        );
+  );
 
   foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
@@ -52,4 +52,3 @@ function tanzania_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

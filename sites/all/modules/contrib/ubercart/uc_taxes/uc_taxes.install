@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_taxes.install,v 1.10.2.8 2009/07/21 14:37:19 islandusurper Exp $
+// $Id: uc_taxes.install,v 1.10.2.9 2010/03/19 21:27:18 tr Exp $
 
 /**
  * @file
@@ -13,24 +13,29 @@ function uc_taxes_schema() {
   $schema = array();
 
   $schema['uc_taxes'] = array(
+    'description' => 'Stores tax information.',
     'fields' => array(
       'id' => array(
+        'description' => 'Primary key: Unique tax rate id.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'name' => array(
+        'description' => 'The tax rate name.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'rate' => array(
+        'description' => 'The tax rate multiplier.',
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0.0,
       ),
       'shippable' => array(
+        'description' => 'Flag that describes how this rate applies to shippable and non-shippable products. 0 => Disregard shipability. 1 => Apply tax to shippable products only.',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -38,16 +43,17 @@ function uc_taxes_schema() {
         'default' => 0,
       ),
       'taxed_product_types' => array(
-        'description' => t('Serialized array of node types to be taxed.'),
+        'description' => 'Serialized array of node types to be taxed.',
         'type' => 'text',
         'serialize' => TRUE,
       ),
       'taxed_line_items' => array(
-        'description' => t('Serialized array of line item types to be taxed.'),
+        'description' => 'Serialized array of line item types to be taxed.',
         'type' => 'text',
         'serialize' => TRUE,
       ),
       'weight' => array(
+        'description' => 'The weight of this tax rate in relation to other rates.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,

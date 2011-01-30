@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart_links.admin.inc,v 1.1.2.4 2009/07/21 14:37:19 islandusurper Exp $
+// $Id: uc_cart_links.admin.inc,v 1.1.2.5 2010/08/11 17:52:20 islandusurper Exp $
 
 /**
  * @file
@@ -33,11 +33,6 @@ function uc_cart_links_settings_form() {
     '#title' => t('Cart links messages'),
     '#description' => t('Enter in messages available to the cart links API for display through a link. Separate messages with a line break.<br />Messages should have a numeric key and text value. Example: 1337|Message text.'),
     '#default_value' => variable_get('uc_cart_links_messages', ''),
-  );
-  $form['uc_cart_links_empty'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Allow cart links to empty customer carts.'),
-    '#default_value' => variable_get('uc_cart_links_empty', TRUE),
   );
   $form['uc_cart_links_restrictions'] = array(
     '#type' => 'textarea',

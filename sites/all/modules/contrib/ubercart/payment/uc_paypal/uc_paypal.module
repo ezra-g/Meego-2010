@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_paypal.module,v 1.5.2.19 2009/11/18 21:08:06 islandusurper Exp $
+// $Id: uc_paypal.module,v 1.5.2.26 2010/08/11 17:52:20 islandusurper Exp $
 
 /**
  * @file
@@ -101,7 +101,7 @@ function uc_paypal_init() {
  * Implementation of hook_form_alter().
  * Notice how we alter the checkout review form to post the order to PayPal.
  */
-function uc_paypal_form_alter(&$form, &$form_state, $form_id) {
+function uc_paypal_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'uc_cart_checkout_review_form' && ($order_id = intval($_SESSION['cart_order'])) > 0) {
     $order = uc_order_load($order_id);
 
@@ -162,15 +162,15 @@ function uc_paypal_payment_gateway() {
  */
 function uc_paypal_payment_method() {
   $path = base_path() . drupal_get_path('module', 'uc_credit');
-  $title1 = '<img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" style="position: relative; top: 5px; margin-right: 4px;">'
+  $title1 = '<img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" style="position: relative; top: 5px; margin-right: 4px;" />'
          . t('PayPal - pay without sharing your financial information.');
   $title2 = '<br /><span id="paypal-includes" style="padding-left: 5.5em;">'
           . t('<b>Includes:</b>');
   $cc_types = array('visa', 'mastercard', 'discover', 'amex', 'echeck');
   foreach ($cc_types as $type) {
-    $title2 .= ' <img src="'. $path .'/images/'. $type .'.gif" style="position: relative; top: 5px;">';
+    $title2 .= ' <img src="'. $path .'/images/'. $type .'.gif" style="position: relative; top: 5px;" />';
   }
-  $title2 .= ' <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" style="position: relative; top: 5px; margin-right: 4px;"></span>';
+  $title2 .= ' <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" style="position: relative; top: 5px; margin-right: 4px;" /></span>';
 
   $methods[] = array(
     'id' => 'paypal_wps',
@@ -230,6 +230,12 @@ function uc_paypal_wpp_settings_form() {
     '#description' => t('These settings are specifically for the alternate checkout system offered by Express Checkout.<br />To enable this on your site, you must enable the corresponding cart pane in the <em>Cart settings</em> menu.'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+  );
+  $form['paypal_wpp']['ec']['uc_paypal_wps_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('PayPal e-mail address'),
+    '#description' => t('The e-mail address you use for the PayPal account you want to receive payments.'),
+    '#default_value' => variable_get('uc_paypal_wps_email', ''),
   );
   $form['paypal_wpp']['ec']['uc_paypal_ec_rqconfirmed_addr'] = array(
     '#type' => 'checkbox',
@@ -1000,19 +1006,39 @@ function uc_paypal_wps_form($form_state, $order) {
     '#value' => variable_get('uc_paypal_wps_checkout_button', t('Submit Order')),
   );
 
+  foreach (module_implements('order') as $module) {
+    $result = module_invoke($module, 'order', 'submit', $order, NULL);
+    $msg_type = 'status';
+    if ($result[0]['pass'] === FALSE) {
+      $error = TRUE;
+      $msg_type = 'error';
+    }
+    if (!empty($result[0]['message'])) {
+      drupal_set_message($result[0]['message'], $msg_type);
+    }
+    if ($error) {
+      $_SESSION['do_review'] = TRUE;
+      drupal_goto('cart/checkout/review');
+    }
+  }
+
   return $form;
 }
 
 // Sends a request to PayPal and returns a response array.
 function uc_paypal_api_request($request, $server) {
-  $request['USER'] = variable_get('uc_paypal_api_username', '');
-  $request['PWD'] = variable_get('uc_paypal_api_password', '');
-  $request['VERSION'] = '3.0';
-  $request['SIGNATURE'] = variable_get('uc_paypal_api_signature', '');
+  // We use $request += to add API credentials so that
+  // if a key already exists, it will not be overridden
+  $request += array(
+    'USER' => variable_get('uc_paypal_api_username', ''),
+    'PWD' => variable_get('uc_paypal_api_password', ''),
+    'VERSION' => '3.0',
+    'SIGNATURE' => variable_get('uc_paypal_api_signature', ''),
+  );
 
   $data = '';
   foreach ($request as $key => $value) {
-    $data .= $key .'='. urlencode(ereg_replace(',', '', $value)) .'&';
+    $data .= $key .'='. urlencode(str_replace(',', '', $value)) .'&';
   }
   $data = substr($data, 0, -1);
 
@@ -1214,5 +1240,5 @@ function _uc_paypal_reversal_message($reason) {
 
 // Returns an array of possible currency codes.
 function _uc_paypal_currency_array() {
-  return drupal_map_assoc(array('AUD', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'USD'));
+  return drupal_map_assoc(array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'));
 }

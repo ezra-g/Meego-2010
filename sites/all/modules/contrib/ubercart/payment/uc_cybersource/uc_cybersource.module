@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cybersource.module,v 1.4.2.9 2009/08/17 21:27:54 islandusurper Exp $
+// $Id: uc_cybersource.module,v 1.4.2.13 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function uc_cybersource_receipt_access() {
 /**
  * Implementation of hook_form_alter().
  */
-function uc_cybersource_form_alter(&$form, &$form_state, $form_id) {
+function uc_cybersource_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'uc_payment_gateways_form') {
     $form['#submit'][] = 'uc_cybersource_payment_gateway_settings_submit';
   }
@@ -347,7 +347,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
 
   $data = '';
   while (list($key, $value) = each($request)) {
-    $data .= $key .'='. urlencode(ereg_replace(',', '', $value)) .'&';
+    $data .= $key .'='. urlencode(str_replace(',', '', $value)) .'&';
   }
   $data = substr($data, 0, -1);
 
@@ -553,7 +553,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
 
     // Separately add products and line item into the request items object if
     // we're charging the full order total.
-    if ($amount == $order->order_total) {
+    if (round($amount, 2) == round($order->order_total, 2)) {
       $request->item = array();
       $counter = 0;
 
@@ -619,7 +619,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       $p_comment .= t(', AVS: @avs', array('@avs' => $reply->ccAuthReply->avsCode));
     }
     if (!empty($reply->ccAuthReply->cvCode)) {
-      $o_comment .= '<br />'. t('<b>CVV:</b> @cvv', array('!cvv' => _parse_cs_cvv_code($reply->ccAuthReply->cvCode)));
+      $o_comment .= '<br />'. t('<b>CVV:</b> @cvv', array('@cvv' => _parse_cs_cvv_code($reply->ccAuthReply->cvCode)));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $reply->ccAuthReply->cvCode));
     }
     uc_order_comment_save($order->order_id, $user->uid, $o_comment, 'admin');
@@ -1163,4 +1163,3 @@ function _parse_cs_cvv_code($code) {
       return t('No result code returned by processor.');
   }
 }
-

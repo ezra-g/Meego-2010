@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_quote.admin.inc,v 1.1.2.10 2009/07/21 14:51:23 islandusurper Exp $
+// $Id: uc_quote.admin.inc,v 1.1.2.11 2010/07/12 01:57:35 tr Exp $
 
 /**
  * @file
@@ -305,4 +305,3 @@ function uc_quote_method_settings_submit($form, &$form_state) {
   variable_set('uc_store_shipping_type', $form_state['values']['uc_store_shipping_type']);
   drupal_set_message(t('The configuration options have been saved.'));
 }
-

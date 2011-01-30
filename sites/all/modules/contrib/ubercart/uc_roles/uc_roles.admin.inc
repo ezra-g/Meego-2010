@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_roles.admin.inc,v 1.1.2.5 2009/07/21 14:37:19 islandusurper Exp $
+// $Id: uc_roles.admin.inc,v 1.1.2.7 2010/07/16 15:44:54 islandusurper Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function uc_roles_expiration() {
   // Stick the expirations into the form.
   while ($row = db_fetch_object($result)) {
     $form['name'][$row->uid .' '. $row->rid] = array('#value' => theme('username', $row));
-    $form['role'][$row->uid .' '. $row->rid] = array('#value' => _uc_roles_get_name($row->rid));
+    $form['role'][$row->uid .' '. $row->rid] = array('#value' => check_plain(_uc_roles_get_name($row->rid)));
     $form['expiration'][$row->uid .' '. $row->rid] = array('#value' => format_date($row->expiration, 'small'));
     $form['operations'][$row->uid .' '. $row->rid] = array('#value' => l(t('delete'), 'admin/user/user/expiration/delete/'. $row->uid .'/'. $row->rid) .' '. l(t('edit'), 'user/'. $row->uid .'/edit', array('fragment' => 'role-expiration-'. $row->rid, 'query' => 'destination=admin%2Fuser%2Fuser%2Fexpiration')));
   }
@@ -113,4 +113,3 @@ function uc_roles_deletion_form_submit($form, &$form_state) {
 
   drupal_goto('admin/user/user/expiration');
 }
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_authorizenet.install,v 1.1.2.7 2009/02/24 15:35:50 islandusurper Exp $
+// $Id: uc_authorizenet.install,v 1.1.2.8 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -90,4 +90,3 @@ function uc_authorizenet_update_3() {
 
   return array();
 }
-

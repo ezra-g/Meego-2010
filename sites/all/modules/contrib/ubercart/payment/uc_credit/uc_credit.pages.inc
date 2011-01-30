@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_credit.pages.inc,v 1.1.2.2 2008/11/07 21:13:23 islandusurper Exp $
+// $Id: uc_credit.pages.inc,v 1.1.2.3 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -36,4 +36,3 @@ function uc_credit_cvv_info() {
   print $output;
   exit();
 }
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_reports.module,v 1.11.2.12 2009/09/23 15:45:57 islandusurper Exp $
+// $Id: uc_reports.module,v 1.11.2.15 2010/07/12 01:30:44 tr Exp $
 
 /**
  * @file
@@ -65,14 +65,14 @@ function uc_reports_help($path, $arg) {
         break;
     }
     if (strpos($path, 'admin/store/reports/sales/year') === 0) {
-      $year = (is_null($_GET['year'])) ? format_date(time(), 'custom', "Y") : $_GET['year'];
+      $year = $arg[5] ? $arg[5] : format_date(time(), 'custom', "Y");
       $output .= t('This is the monthly break down of sales for the year @year. Clicking on each link will take you to a list of orders during that month.', array('@year' => $year));
     }
     $output .= '</p>';
 
     // Include the statuses/offset as needed.
     if ($include_offset) {
-      $output .= "<p>". t('All sales reports are <b>GMT !offset</b> (Default site timezone)', array('!offset' => variable_get('date_default_timezone', 0) / 36)) ."</p>";
+      $output .= "<p>". t('All sales reports are <b>GMT !offset</b> (Default site timezone)', array('!offset' => sprintf('%+05d', variable_get('date_default_timezone', 0) / 36))) ."</p>";
     }
     if ($include_statuses) {
       $statuses = array();
@@ -405,4 +405,3 @@ function _uc_reports_end_interval($time, $interval = 'month') {
 
   return $temp;
 }
-

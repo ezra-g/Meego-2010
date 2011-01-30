@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_attribute.install,v 1.10.2.10 2009/09/23 15:45:57 islandusurper Exp $
+// $Id: uc_attribute.install,v 1.10.2.12 2010/03/19 21:27:17 tr Exp $
 
 /**
  * @file
@@ -13,37 +13,37 @@ function uc_attribute_schema() {
   $schema = array();
 
   $schema['uc_attributes'] = array(
-    'description' => t('Attributes: the decisions that need to be made about products.'),
+    'description' => 'Attributes: the decisions that need to be made about products.',
     'fields' => array(
       'aid' => array(
-        'description' => t('Primary identifier for attributes.'),
+        'description' => 'Primary key: attribute ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'name' => array(
-        'description' => t('Name of the attribute'),
+        'description' => 'Name of the attribute.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'label' => array(
-        'description' => t('Label to use when attribute is displayed'),
+        'description' => 'Label to use when attribute is displayed.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'ordering' => array(
-        'description' => t('Determines the list position of attributes.'),
+        'description' => 'Determines the list position of attributes.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'required' => array(
-        'description' => t("Flag that, if set, requires a user response for attributes (disables default options)."),
+        'description' => 'Flag that, if set, requires a user response for attributes (disables default options).',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -51,7 +51,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'display' => array(
-        'description' => t('Display type of the attribute options: 0 -- text fields, 1 -- select box (default), 2 -- radio buttons'),
+        'description' => 'Display type of the attribute options: 0 => text fields, 1 => select box (default), 2 => radio buttons.',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -59,7 +59,7 @@ function uc_attribute_schema() {
         'default' => 1,
       ),
       'description' => array(
-        'description' => t('Description of the attribute.'),
+        'description' => 'Description of the attribute.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -70,30 +70,30 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_attribute_options'] = array(
-    'description' => t('The available choices for each attribute.'),
+    'description' => 'The available choices for each attribute.',
     'fields' => array(
       'aid' => array(
-        'description' => t('The attribute ID.'),
+        'description' => 'The {uc_attributes}.aid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'oid' => array(
-        'description' => t('The option ID.'),
+        'description' => 'Primary key: the option ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'name' => array(
-        'description' => t('The name of the option.'),
+        'description' => 'The name of the option.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'cost' => array(
-        'description' => t("The adjustment to a product's cost with the chosen option."),
+        'description' => "The adjustment to a product's cost with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -101,7 +101,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'price' => array(
-        'description' => t("The adjustment to a product's price with the chosen option."),
+        'description' => "The adjustment to a product's price with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -109,13 +109,13 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'weight' => array(
-        'description' => t("The adjustment to a product's physical weight with the chosen option."),
+        'description' => "The adjustment to a product's physical weight with the chosen option.",
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0,
       ),
       'ordering' => array(
-        'description' => t('Affects the list position of the options.'),
+        'description' => 'Affects the list position of the options.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
@@ -126,45 +126,45 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_class_attributes'] = array(
-    'description' => t('Attributes copied to a product of a certain class when it is created.'),
+    'description' => 'Attributes copied to a product of a certain class when it is created.',
     'fields' => array(
       'pcid' => array(
-        'description' => t('The product node type.'),
+        'description' => 'Primary key: the product {node}.type.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'aid' => array(
-        'description' => t('Primary identifier for attributes.'),
+        'description' => 'The {uc_attributes}.aid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'label' => array(
-        'description' => t('Label to use when attribute is displayed'),
+        'description' => 'Label to use when attribute is displayed.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'ordering' => array(
-        'description' => t('Determines the list position of attributes.'),
+        'description' => 'Determines the list position of attributes.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'default_option' => array(
-        'description' => t('The default value of the attribute field on the add to cart form.'),
+        'description' => 'The default value of the attribute field on the add to cart form.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'required' => array(
-        'description' => t("Flag that, if set, requires a user response for attributes (disables default options)."),
+        'description' => "A flag indicating that, if set, requires a user response for attributes (disables default options).",
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -172,7 +172,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'display' => array(
-        'description' => t('Display type of the attribute options: 0 -- text fields, 1 -- select box (default), 2 -- radio buttons'),
+        'description' => 'Display type of the attribute options: 0 => text fields, 1 => select box (default), 2 => radio buttons',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -184,24 +184,24 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_class_attribute_options'] = array(
-    'description' => t('The available choices for each attribute.'),
+    'description' => 'The available choices for each attribute.',
     'fields' => array(
       'pcid' => array(
-        'description' => t('The product node type.'),
+        'description' => 'Primary key: the product {node}.type.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'oid' => array(
-        'description' => t('The option ID.'),
+        'description' => 'The {uc_attribute_options}.oid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'cost' => array(
-        'description' => t("The adjustment to a product's cost with the chosen option."),
+        'description' => "The adjustment to a product's cost with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -209,7 +209,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'price' => array(
-        'description' => t("The adjustment to a product's price with the chosen option."),
+        'description' => "The adjustment to a product's price with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -217,13 +217,13 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'weight' => array(
-        'description' => t("The adjustment to a product's physical weight with the chosen option."),
+        'description' => "The adjustment to a product's physical weight with the chosen option.",
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0,
       ),
       'ordering' => array(
-        'description' => t('Affects the list position of the options.'),
+        'description' => 'Affects the list position of the options.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
@@ -234,45 +234,45 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_product_attributes'] = array(
-    'description' => t('Attributes copied to a product.'),
+    'description' => 'Attributes copied to a product.',
     'fields' => array(
       'nid' => array(
-        'description' => t('The product node ID.'),
+        'description' => 'The product {node}.nid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'aid' => array(
-        'description' => t('Primary identifier for attributes.'),
+        'description' => 'The {uc_attributes}.aid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'label' => array(
-        'description' => t('Label to use when attribute is displayed'),
+        'description' => 'Label to use when attribute is displayed',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'ordering' => array(
-        'description' => t('Determines the list position of attributes.'),
+        'description' => 'Determines the list position of attributes.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'default_option' => array(
-        'description' => t('The default value of the attribute field on the add to cart form.'),
+        'description' => 'The default value of the attribute field on the add to cart form.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'required' => array(
-        'description' => t("Flag that, if set, requires a user response for attributes (disables default options)."),
+        'description' => "Flag that, if set, requires a user response for attributes (disables default options).",
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -280,7 +280,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'display' => array(
-        'description' => t('Display type of the attribute options: 0 -- text fields, 1 -- select box (default), 2 -- radio buttons'),
+        'description' => 'Display type of the attribute options: 0 -- text fields, 1 -- select box (default), 2 -- radio buttons',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -292,24 +292,24 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_product_options'] = array(
-    'description' => t('The available choices for each attribute.'),
+    'description' => 'The available choices for each attribute.',
     'fields' => array(
       'nid' => array(
-        'description' => t('The product node ID.'),
+        'description' => 'The product {node}.nid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'oid' => array(
-        'description' => t('The option ID.'),
+        'description' => 'The {uc_attribute_options}.oid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'cost' => array(
-        'description' => t("The adjustment to a product's cost with the chosen option."),
+        'description' => "The adjustment to a product's cost with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -317,7 +317,7 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'price' => array(
-        'description' => t("The adjustment to a product's price with the chosen option."),
+        'description' => "The adjustment to a product's price with the chosen option.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -325,13 +325,13 @@ function uc_attribute_schema() {
         'default' => 0,
       ),
       'weight' => array(
-        'description' => t("The adjustment to a product's physical weight with the chosen option."),
+        'description' => "The adjustment to a product's physical weight with the chosen option.",
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0,
       ),
       'ordering' => array(
-        'description' => t('Affects the list position of the options.'),
+        'description' => 'Affects the list position of the options.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
@@ -342,24 +342,24 @@ function uc_attribute_schema() {
   );
 
   $schema['uc_product_adjustments'] = array(
-    'description' => t("Changes to a product's SKU based on the possible combination of chosen options."),
+    'description' => "Changes to a product's SKU based on the possible combination of chosen options.",
     'fields' => array(
       'nid' => array(
-        'description' => t('The product node ID.'),
+        'description' => 'The product {node}.nid.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'combination' => array(
-        'description' => t('A serialized array whose keys are attribute IDs and values are option IDs.'),
+        'description' => 'A serialized array whose keys are attribute IDs and values are option IDs.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'model' => array(
-        'description' => t('The SKU representing the product with the combination of options.'),
+        'description' => 'The SKU representing the product with the combination of options.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -695,7 +695,7 @@ function uc_attribute_update_6004() {
   while($row = db_fetch_object($result)) {
     $combination = unserialize($row->combination);
     ksort($combination);
-    db_query('UPDATE {uc_product_adjustments} SET combination = "%s" WHERE nid = %d AND model = "%s"', serialize($combination), $row->nid, $row->model);
+    db_query("UPDATE {uc_product_adjustments} SET combination = '%s' WHERE nid = %d AND model = '%s'", serialize($combination), $row->nid, $row->model);
     $changes++;
   }
 

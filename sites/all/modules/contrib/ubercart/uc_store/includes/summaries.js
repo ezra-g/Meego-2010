@@ -1,4 +1,4 @@
-// $Id: summaries.js,v 1.1.2.5 2009/07/21 14:37:21 islandusurper Exp $
+// $Id: summaries.js,v 1.1.2.6 2010/07/12 22:51:30 tr Exp $
 
 /**
  * @file
@@ -15,4 +15,3 @@ Drupal.behaviors.summaryOnclick = function(context) {
     window.location = this.id;
   });
 }
-

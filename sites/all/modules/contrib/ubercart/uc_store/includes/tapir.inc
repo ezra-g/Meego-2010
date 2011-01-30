@@ -1,5 +1,5 @@
 <?php
-// $Id: tapir.inc,v 1.1.2.10 2009/07/21 14:37:21 islandusurper Exp $
+// $Id: tapir.inc,v 1.1.2.11 2010/07/12 22:51:30 tr Exp $
 
 /**
  * @file
@@ -152,4 +152,3 @@ function tapirsort_sql($columns) {
   // Return the result of a tablesort on our header.
   return tablesort_sql($header);
 }
-

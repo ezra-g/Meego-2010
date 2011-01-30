@@ -1,5 +1,5 @@
 <?php
-// $Id: ca.admin.inc,v 1.1.2.16 2009/07/21 14:37:19 islandusurper Exp $
+// $Id: ca.admin.inc,v 1.1.2.17 2010/03/13 18:22:26 tr Exp $
 
 /**
  * @file
@@ -641,16 +641,16 @@ function ca_conditions_form($form_state, $pid, $title = TRUE) {
   // structure of a predicate's #conditions array.
   $form['conditions']['#tree'] = TRUE;
 
-  $form['add_condition_group'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add condition group'),
-    '#submit' => array('ca_conditions_form_add_condition_group_submit'),
-  );
-
   $form['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save changes'),
     '#submit' => array('ca_conditions_form_save_changes_submit'),
+  );
+
+  $form['add_condition_group'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add condition group'),
+    '#submit' => array('ca_conditions_form_add_condition_group_submit'),
   );
 
   filter_configure_form($form);

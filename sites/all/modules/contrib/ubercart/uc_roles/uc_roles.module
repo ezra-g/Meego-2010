@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_roles.module,v 1.2.2.20 2009/09/21 14:34:49 islandusurper Exp $
+// $Id: uc_roles.module,v 1.2.2.24 2010/07/16 15:44:54 islandusurper Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function uc_roles_cron() {
 
     // Cleanup if this role was deleted off the user already.
     if (!in_array($expiration->rid, array_keys($account->roles))) {
-      uc_roles_delete($account->uid, $expiration->rid);
+      uc_roles_delete($account, $expiration->rid);
     }
 
     // Role expired.
@@ -170,7 +170,7 @@ function uc_roles_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
  * Implementation of hook_user_delete().
  */
 function uc_roles_user_delete(&$account) {
-  uc_roles_delete($account->uid);
+  uc_roles_delete($account);
 }
 
 /**
@@ -323,14 +323,14 @@ function theme_uc_roles_user_expiration($form) {
 
     $rows[] = array(
       array('data' => drupal_render($data['remove'])),
-      array('data' => $data['name']['#value']),
+      array('data' => check_plain($data['name']['#value'])),
       array('data' => format_date($data['expiration']['#value'], 'small')),
 
       // Options to adjust the expiration.
       array('data' => '<a name="role-expiration-'. $rid .'">'.
                       '<div class="expiration">'.
                         drupal_render($data['polarity']) . drupal_render($data['qty']) . drupal_render($data['granularity']) .
-                      '</div>'),
+                      '</div></a>'),
     );
   }
 
@@ -454,7 +454,7 @@ function uc_roles_user_view(&$edit, &$account) {
 
   $expirations = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = %d", $account->uid);
   while ($expiration = db_fetch_object($expirations)) {
-    $substitution = array('!role_name' => _uc_roles_get_name($expiration->rid), '!date' => format_date($expiration->expiration, 'small'));
+    $substitution = array('!role_name' => check_plain(_uc_roles_get_name($expiration->rid)), '!date' => format_date($expiration->expiration, 'small'));
     $form[$expiration->rid] = array(
       '#type' => 'user_profile_item',
       '#title' => strtr(variable_get('uc_roles_default_expiration_title', uc_get_message('uc_roles_user_expiration_title')), $substitution),
@@ -847,8 +847,8 @@ function uc_roles_feature_form_submit($form, &$form_state) {
     'end_time'     => $form_state['values']['expiration'  ] === 'abs' ? $form_state['values']['uc_roles_expire_absolute'] : NULL,
   );
 
-  $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br/>') : t('<strong>SKU:</strong> !sku<br/>', array('!sku' => $product_role['model']));
-  $description .=  t('<strong>Role:</strong> !role_name<br/>', array('!role_name' => _uc_roles_get_name($product_role['rid'])));
+  $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $product_role['model']));
+  $description .=  t('<strong>Role:</strong> @role_name<br />', array('@role_name' => _uc_roles_get_name($product_role['rid'])));
 
   if ($product_role['end_override']) {
     if ($product_role['end_time']) {
@@ -857,19 +857,19 @@ function uc_roles_feature_form_submit($form, &$form_state) {
     else {
       switch ($product_role['granularity']) {
         case 'never':
-          $description .= t('<strong>Expiration:</strong> never<br/>');
+          $description .= t('<strong>Expiration:</strong> never<br />');
           break;
         case 'day':
-          $description .= t('<strong>Expiration:</strong> !qty day(s)<br/>', array('!qty' => $product_role['duration']));
+          $description .= t('<strong>Expiration:</strong> !qty day(s)<br />', array('!qty' => $product_role['duration']));
           break;
         case 'week':
-          $description .= t('<strong>Expiration:</strong> !qty week(s)<br/>', array('!qty' => $product_role['duration']));
+          $description .= t('<strong>Expiration:</strong> !qty week(s)<br />', array('!qty' => $product_role['duration']));
           break;
         case 'month':
-          $description .= t('<strong>Expiration:</strong> !qty month(s)<br/>', array('!qty' => $product_role['duration']));
+          $description .= t('<strong>Expiration:</strong> !qty month(s)<br />', array('!qty' => $product_role['duration']));
           break;
         case 'year':
-          $description .= t('<strong>Expiration:</strong> !qty year(s)<br/>', array('!qty' => $product_role['duration']));
+          $description .= t('<strong>Expiration:</strong> !qty year(s)<br />', array('!qty' => $product_role['duration']));
           break;
         default:
           break;
@@ -877,9 +877,9 @@ function uc_roles_feature_form_submit($form, &$form_state) {
     }
   }
   else {
-    $description .= t('<strong>Expiration:</strong> !link (not overridden)<br/>', array('!link' => l(t('Global expiration'), 'admin/store/settings/products/edit/features')));
+    $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', array('!link' => l(t('Global expiration'), 'admin/store/settings/products/edit/features')));
   }
-  $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br/>') : t('<strong>Shippable:</strong> No<br/>');
+  $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
   $description .= $product_role['by_quantity'] ? t('<strong>Multiply by quantity:</strong> Yes') : t('<strong>Multiply by quantity:</strong> No');
 
   $data = array(
@@ -1151,8 +1151,6 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
 
   // Flush visible menu items, since our permissions could've changed.
   _uc_roles_flush_menu_cache($account);
-
-  return $result;
 }
 
 /**

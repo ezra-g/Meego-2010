@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.itpl.php,v 1.4.4.6 2009/08/17 21:27:53 islandusurper Exp $
+// $Id: uc_order-admin.tpl.php,v 1.1.2.1 2010/07/16 15:45:09 islandusurper Exp $
 
 /**
  * @file
@@ -8,10 +8,10 @@
 ?>
 
 <p>
-<?php echo t('Order number:'); ?> [order-admin-link]<br />
-<?php echo t('Customer:'); ?> [order-first-name] [order-last-name] - [order-email]<br />
-<?php echo t('Order total:'); ?> [order-total]<br />
-<?php echo t('Shipping method:'); ?> [order-shipping-method]
+<?php echo t('Order number:'); ?> <?php echo $order_admin_link; ?><br />
+<?php echo t('Customer:'); ?> <?php echo $order_first_name; ?> <?php echo $order_last_name; ?> - <?php echo $order_email; ?><br />
+<?php echo t('Order total:'); ?> <?php echo $order_total; ?><br />
+<?php echo t('Shipping method:'); ?> <?php echo $order_shipping_method; ?>
 </p>
 
 <p>
@@ -43,5 +43,5 @@ foreach ($products as $product) {
 
 <p>
 <?php echo t('Order comments:'); ?><br />
-[order-comments]
+<?php echo $order_comments; ?>
 </p>

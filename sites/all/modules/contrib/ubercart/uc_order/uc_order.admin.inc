@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_order.admin.inc,v 1.1.2.28 2009/11/18 21:08:06 islandusurper Exp $
+// $Id: uc_order.admin.inc,v 1.1.2.33 2010/07/16 15:45:09 islandusurper Exp $
 
 /**
  * @file
@@ -785,7 +785,7 @@ function uc_order_address_book_form($form_state, $uid = 0, $type = 'billing', $f
   $select = uc_select_address($uid, $type, $func);
 
   if ($uid == 0) {
-    $form['desc'] = array('#value' => '<br />'. t('You must select a customer before address<br>information is available.<br>') .'<br/>');
+    $form['desc'] = array('#value' => '<br />'. t('You must select a customer before address<br />information is available.<br />') .'<br />');
   }
   elseif (is_null($select)) {
     $form['desc'] = array('#value' => '<br />'. t('No addresses found for customer.') .'<br />');
@@ -869,7 +869,7 @@ function uc_order_select_customer($email = NULL) {
       $output .= '<b>'. t('Use this account now?') .'</b><br />'
                . t('User !uid - !mail', array('!uid' => $user->uid, '!mail' => $user->mail)) .' <input type="button" '
                 .'onclick="select_existing_customer('. $user->uid .', \''
-               . $user->mail .'\');" value="'. t('Apply') .'" /><br /><br /><hr><br/>';
+               . $user->mail .'\');" value="'. t('Apply') .'" /><br /><br /><hr /><br />';
     }
     else {
       $name = uc_store_email_to_username($email);
@@ -888,7 +888,7 @@ function uc_order_select_customer($email = NULL) {
         $account->password = $fields['pass'];
 
         // Send the e-mail through the user module.
-        drupal_mail('user', 'register_no_approval_required', $email, NULL, array('account' => $account), uc_store_email_from());
+        drupal_mail('user', 'register_admin_created', $email, NULL, array('account' => $account), uc_store_email_from());
 
         $output .= t('Account details sent to e-mail provided.<br /><br /><strong>Username:</strong> @username<br /><strong>Password:</strong> @password', array('@username' => $fields['name'], '@password' => $fields['pass'])) .'<br /><br />';
       }
@@ -896,7 +896,7 @@ function uc_order_select_customer($email = NULL) {
       $output .= '<strong>'. t('Use this account now?') .'</strong><br />'
                . t('User @uid - @mail', array('@uid' => $account->uid, '@mail' => $account->mail)) .' <input type="button" '
                 .'onclick="select_existing_customer('. $account->uid .', \''
-               . $account->mail .'\');" value="'. t('Apply') .'" /><br /><br /><hr><br/>';
+               . $account->mail .'\');" value="'. t('Apply') .'" /><br /><br /><hr /><br />';
     }
   }
 
@@ -916,7 +916,7 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
   if (is_null(arg(4))) {
     $form['desc'] = array(
       '#value' => '<div>'. t('Search for a customer based on these fields.')
-                 .'<br />'. t('Use * as a wildcard to match any character.') .'<br/>'
+                 .'<br />'. t('Use * as a wildcard to match any character.') .'<br />'
                  .'(<em>'. t('Leave a field empty to ignore it in the search.')
                  .'</em>)</div>',
     );
@@ -1046,7 +1046,7 @@ function uc_order_history($user) {
     $rows[] = array(
       array('data' => format_date($order->created, 'custom', variable_get('uc_date_format_default', 'm/d/Y'))),
       array('data' => $link, 'nowrap' => 'nowrap'),
-      array('data' => $order->title),
+      array('data' => check_plain($order->title)),
       array('data' => (!is_null($order->products) ? $order->products : 0), 'align' => 'center'),
       array('data' => uc_price($order->total, $context), 'align' => 'right'),
     );
@@ -1071,7 +1071,7 @@ function uc_order_view($order, $view = 'view') {
   }
 
   if ($view == 'invoice') {
-    $output = uc_order_load_invoice($order, 'print', variable_get('uc_cust_order_invoice_template', 'customer'));
+    $output = theme('uc_order', $order, 'print', variable_get('uc_cust_order_invoice_template', 'customer'));
     $output .= '<div align="right" style="margin-top: 1em; margin-right: 1em;"><input type="button" value="'. t('Print invoice') .'" onclick="window.print();" /> '
               .'<input type="button" value="'. t('Close window') .'" onclick="window.close();" /></div>';
     print $output;
@@ -1248,7 +1248,7 @@ function uc_order_edit_form_submit($form, &$form_state) {
         if (module_exists('uc_stock')) {
           $temp = $product->qty;
           $product->qty = $product->qty - $qtys[$product->order_product_id];
-          uc_stock_decrement_product_stock($product, 0, $order);
+          uc_stock_adjust_product_stock($product, 0, $order);
           $product->qty = $temp;
         }
       }
@@ -1339,7 +1339,7 @@ function uc_order_edit_products($order) {
 
       // Decrement stock?
       if (module_exists('uc_stock')) {
-        uc_stock_decrement_product_stock($product, 0, $order);
+        uc_stock_adjust_product_stock($product, 0, $order);
       }
       break;
     case 'remove':
@@ -1679,7 +1679,7 @@ function uc_order_add_product_form($form_state, $order, $node) {
  * Display an invoice in the browser, convert it to PDF, or e-mail it as HTML.
  */
 function uc_order_invoice($order, $op = 'view') {
-  $output = uc_order_load_invoice($order, $op, variable_get('uc_cust_order_invoice_template', 'customer'));
+  $output = theme('uc_order', $order, $op, variable_get('uc_cust_order_invoice_template', 'customer'));
 
   if ($op == 'print') {
     print $output;

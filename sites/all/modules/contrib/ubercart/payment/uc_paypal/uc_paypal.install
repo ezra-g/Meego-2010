@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_paypal.install,v 1.6.2.6 2009/08/17 21:27:56 islandusurper Exp $
+// $Id: uc_paypal.install,v 1.6.2.7 2010/03/19 21:27:17 tr Exp $
 
 /**
  * @file
@@ -35,59 +35,59 @@ function uc_paypal_schema() {
   $schema = array();
 
   $schema['uc_payment_paypal_ipn'] = array(
-    'description' => t('Logs PayPal Instant Payment Notifications.'),
+    'description' => 'Logs PayPal Instant Payment Notifications.',
     'fields' => array(
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The order ID.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'txn_id' => array(
-        'description' => t('The transaction ID from PayPal.'),
+        'description' => 'The transaction ID from PayPal.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'txn_type' => array(
-        'description' => t('The transaction type from PayPal.'),
+        'description' => 'The transaction type from PayPal.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'mc_gross' => array(
-        'description' => t('The payment amount from PayPal.'),
+        'description' => 'The payment amount from PayPal.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'status' => array(
-        'description' => t('The IPN status from PayPal.'),
+        'description' => 'The IPN status from PayPal.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'receiver_email' => array(
-        'description' => t('The e-mail address of the PayPal account.'),
+        'description' => 'The e-mail address of the PayPal account.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'payer_email' => array(
-        'description' => t('The e-mail address of the buyer.'),
+        'description' => 'The e-mail address of the buyer.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'received' => array(
-        'description' => t('The IPN receipt timestamp.'),
+        'description' => 'The IPN receipt timestamp.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

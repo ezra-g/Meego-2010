@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_price.inc,v 1.1.2.5 2009/08/17 21:27:55 islandusurper Exp $
+// $Id: uc_price.inc,v 1.1.2.6 2010/07/12 22:51:30 tr Exp $
 
 /**
  * @file
@@ -335,4 +335,3 @@ function uc_store_price_handler_format($price, $options) {
 
   return $output;
 }
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_paypal.pages.inc,v 1.1.2.11 2009/11/18 21:08:06 islandusurper Exp $
+// $Id: uc_paypal.pages.inc,v 1.1.2.12 2010/08/11 17:52:20 islandusurper Exp $
 
 /**
  * @file
@@ -39,6 +39,13 @@ function uc_paypal_ipn($order_id = 0) {
   $txn_id = check_plain($_POST['txn_id']);
   $txn_type = check_plain($_POST['txn_type']);
   $payer_email = check_plain($_POST['payer_email']);
+
+  // Express Checkout IPNs may not have the WPS email stored. But if it is, make
+  // sure that the right account is being paid.
+  if (variable_get('uc_paypal_wps_email', '') && $receiver_email != variable_get('uc_paypal_wps_email', '')) {
+    watchdog('uc_paypal', 'IPN for a different PayPal account attempted.', array(), WATCHDOG_ERROR);
+    return;
+  }
 
   $req = '';
 
@@ -92,6 +99,9 @@ function uc_paypal_ipn($order_id = 0) {
         break;
 
       case 'Completed':
+        if ($payment_amount != $order->order_total) {
+          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->order_id), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/'. $order->order_id));
+        }
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->uid, NULL, $comment);
         uc_cart_complete_sale($order);

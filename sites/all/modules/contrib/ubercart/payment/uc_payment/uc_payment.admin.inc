@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_payment.admin.inc,v 1.1.2.11 2009/08/17 21:27:55 islandusurper Exp $
+// $Id: uc_payment.admin.inc,v 1.1.2.12 2010/07/12 01:57:44 tr Exp $
 
 /**
  * @file
@@ -455,4 +455,3 @@ function uc_payment_delete_confirm_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'] .'/payments';
 }
-

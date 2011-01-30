@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_attribute.module,v 1.12.2.36 2009/10/20 20:58:06 islandusurper Exp $
+// $Id: uc_attribute.module,v 1.12.2.38 2010/01/27 22:23:31 islandusurper Exp $
 
 /**
  * @file
@@ -275,7 +275,7 @@ function uc_attribute_theme() {
 /**
  * Implementation of hook_form_alter().
  */
-function uc_attribute_form_alter(&$form, &$form_state, $form_id) {
+function uc_attribute_form_alter(&$form, $form_state, $form_id) {
   if (strpos($form_id, 'add_product_form')) {
     $node =& $form['node']['#value'];
     // If the node has a product list, add attributes to them
@@ -507,6 +507,7 @@ function uc_attribute_product_description($product) {
 
   // Cart version of the product has numeric attribute => option values so we
   // need to retrieve the right ones
+  $weight = 0;
   if (empty($product->order_id)) {
     foreach (_uc_cart_product_get_options($product) as $option) {
       if (!isset($desc[$option['aid']])) {
@@ -516,6 +517,7 @@ function uc_attribute_product_description($product) {
       else {
         $desc[$option['aid']]['#options'][] = $option['name'];
       }
+      $desc[$option['aid']]['#weight'] = $weight++;
     }
   }
   else {
@@ -523,6 +525,7 @@ function uc_attribute_product_description($product) {
       $desc[] = array(
         '#attribute_name' => $attribute,
         '#options' => $option,
+        '#weight' => $weight++,
       );
     }
   }

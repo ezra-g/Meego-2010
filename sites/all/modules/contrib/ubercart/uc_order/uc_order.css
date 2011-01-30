@@ -1,4 +1,4 @@
-/* $Id: uc_order.css,v 1.7.2.4 2009/02/04 13:44:31 islandusurper Exp $ */
+/* $Id: uc_order.css,v 1.7.2.5 2010/01/04 15:15:07 islandusurper Exp $ */
 
 .order-overview-form {
   float: left;
@@ -88,6 +88,10 @@
 
 .text-center {
   text-align: center;
+}
+
+.header-wide {
+  width: 80%;
 }
 
 .full-width {

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_payment_pack.module,v 1.6.2.10 2009/09/21 14:34:49 islandusurper Exp $
+// $Id: uc_payment_pack.module,v 1.6.2.11 2010/07/12 01:57:44 tr Exp $
 
 /**
  * @file Provides the check/money order, COD, and "other" payment methods.
@@ -384,4 +384,3 @@ function uc_payment_method_check($op, &$arg1) {
       return $form;
   }
 }
-

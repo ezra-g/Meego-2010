@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_payment_order_pane.inc,v 1.5.2.7 2009/09/21 14:34:46 islandusurper Exp $
+// $Id: uc_payment_order_pane.inc,v 1.5.2.8 2010/07/12 01:57:44 tr Exp $
 
 /**
  * @file
@@ -111,4 +111,3 @@ function uc_order_pane_payment($op, $arg1) {
       return $changes;
   }
 }
-

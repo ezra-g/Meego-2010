@@ -1,5 +1,5 @@
 <?php
-// $Id: hooks.php,v 1.1.2.20 2009/10/20 20:58:06 islandusurper Exp $
+// $Id: hooks.php,v 1.1.2.24 2010/07/16 15:45:09 islandusurper Exp $
 
 /**
  * @file
@@ -179,7 +179,7 @@ function hook_calculate_tax($order) {
  *   - "remove"
  *     - #type: checkbox
  *     - #value: If selected, removes the $item from the cart.
- *   - "options"
+ *   - "description"
  *     - #type: markup
  *     - #value: Themed markup (usually an unordered list) displaying extra information.
  *   - "title"
@@ -203,26 +203,37 @@ function hook_cart_display($item) {
   $element['nid'] = array('#type' => 'value', '#value' => $node->nid);
   $element['module'] = array('#type' => 'value', '#value' => 'uc_product');
   $element['remove'] = array('#type' => 'checkbox');
-  $op_names = '';
-  if (module_exists('uc_attribute')){
-    $op_names = "<ul class=\"cart-options\">\n";
-    foreach ($item->options as $option){
-      $op_names .= '<li>'. $option['attribute'] .': '. $option['name'] ."</li>\n";
-    }
-    $op_names .= "</ul>\n";
-  }
-  $element['options'] = array('#value' => $op_names);
+
   $element['title'] = array(
-    '#value' => l($node->title, 'node/'. $node->nid),
+    '#value' => node_access('view', $node) ? l($item->title, 'node/'. $node->nid) : check_plain($item->title),
   );
-  $element['#total'] = $item->price * $item->qty;
+
+  $context = array(
+    'revision' => 'altered',
+    'type' => 'cart_item',
+    'subject' => array(
+      'cart_item' => $item,
+      'node' => $node,
+    ),
+  );
+  $price_info = array(
+    'price' => $item->price,
+    'qty' => $item->qty,
+  );
+
+  $element['#total'] = uc_price($price_info, $context);
   $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data));
   $element['qty'] = array(
     '#type' => 'textfield',
     '#default_value' => $item->qty,
-    '#size' => 3,
-    '#maxlength' => 3
+    '#size' => 5,
+    '#maxlength' => 6
   );
+
+  if ($description = uc_product_get_description($item)) {
+    $element['description'] = array('#value' => $description);
+  }
+
   return $element;
 }
 
@@ -313,6 +324,24 @@ function hook_cart_pane($items) {
 }
 
 /**
+ * Alter cart pane definitions.
+ *
+ * @param $panes
+ *   The array of pane information in the format defined in hook_cart_pane(), passed
+ *   by reference.
+ *
+ * @param $items
+ *   The array of item information.
+ */
+function hook_cart_pane_alter(&$panes, $items) {
+  foreach ($panes as &$pane) {
+    if ($pane['id'] == 'cart') {
+      $pane['body'] = drupal_get_form('my_custom_pane_form_builder', $items);
+    }
+  }
+}
+
+/**
  * Register callbacks for a checkout pane.
  *
  * The checkout screen for Ubercart is a compilation of enabled checkout panes.
@@ -371,6 +400,21 @@ function hook_checkout_pane() {
     'collapsible' => FALSE,
   );
   return $panes;
+}
+
+/**
+ * Alter checkout pane definitions.
+ *
+ * @param $panes
+ *   Array with the panes information as defined in hook_checkout_pane(), passed
+ *   by reference.
+ */
+function hook_checkout_pane_alter(&$panes) {
+  foreach ($panes as &$pane) {
+    if ($pane['id'] == 'cart') {
+      $pane['callback'] = 'my_custom_module_callback';
+    }
+  }
 }
 
 /**
@@ -967,8 +1011,9 @@ function hook_product_description($product) {
 
   $desc =& $description['attributes'];
 
-  // Cart version of the product has numeric attribute ID => option ID values
-  // so we need to retrieve the right ones
+  // Cart version of the product has numeric attribute => option values so we
+  // need to retrieve the right ones
+  $weight = 0;
   if (empty($product->order_id)) {
     foreach (_uc_cart_product_get_options($product) as $option) {
       if (!isset($desc[$option['aid']])) {
@@ -978,6 +1023,7 @@ function hook_product_description($product) {
       else {
         $desc[$option['aid']]['#options'][] = $option['name'];
       }
+      $desc[$option['aid']]['#weight'] = $weight++;
     }
   }
   else {
@@ -985,6 +1031,7 @@ function hook_product_description($product) {
       $desc[] = array(
         '#attribute_name' => $attribute,
         '#options' => $option,
+        '#weight' => $weight++,
       );
     }
   }
@@ -1372,6 +1419,20 @@ function hook_uc_form_alter(&$form, &$form_state, $form_id) {
       $form['attributes']['#weight'] = -1;
     }
   }
+}
+
+/**
+ * Add invoice templates to the list of suggested template files.
+ *
+ * Allows modules to declare new "types" of invoice templates (other than the
+ * default 'admin' and 'customer').
+ *
+ * @return
+ *   Array of template names that are available choices when mailing an
+ *   invoice.
+ */
+function hook_uc_invoice_templates() {
+  return array('admin', 'customer');
 }
 
 /**

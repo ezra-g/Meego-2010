@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_order.ca.inc,v 1.1.2.28 2009/10/20 20:58:07 islandusurper Exp $
+// $Id: uc_order.ca.inc,v 1.1.2.30 2010/07/16 15:45:09 islandusurper Exp $
 
 /**
  * @file
@@ -374,17 +374,18 @@ function uc_order_condition_check_order_status_form($form_state, $settings = arr
  * @see uc_order_condition_total_form()
  */
 function uc_order_condition_total($order, $settings) {
+  $total = uc_order_get_total($order, TRUE);
   switch ($settings['order_total_comparison']) {
     case 'less':
-      return $order->order_total < $settings['order_total_value'];
+      return $total < $settings['order_total_value'];
     case 'less_equal':
-      return $order->order_total <= $settings['order_total_value'];
+      return $total <= $settings['order_total_value'];
     case 'equal':
-      return $order->order_total == $settings['order_total_value'];
+      return $total == $settings['order_total_value'];
     case 'greater_equal':
-      return $order->order_total >= $settings['order_total_value'];
+      return $total >= $settings['order_total_value'];
     case 'greater':
-      return $order->order_total > $settings['order_total_value'];
+      return $total > $settings['order_total_value'];
   }
 }
 
@@ -1242,7 +1243,7 @@ function uc_order_action_email_invoice($order, $settings) {
     $recipients[] = trim($address);
   }
 
-  $settings['message'] = uc_order_load_invoice($order, $settings['view'], $settings['template']);
+  $settings['message'] = theme('uc_order', $order, $settings['view'], $settings['template']);
 
   if (empty($recipients)) {
     watchdog('ca', 'Attempted to e-mail an invoice with no recipient.', array(), WATCHDOG_ERROR);

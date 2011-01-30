@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_product.pages.inc,v 1.1.2.7 2009/09/11 19:04:55 islandusurper Exp $
+// $Id: uc_product.pages.inc,v 1.1.2.8 2010/07/12 01:29:45 tr Exp $
 
 /**
  * @file
@@ -24,4 +24,3 @@ function uc_product_title_sku_autocomplete($string = '') {
 
   drupal_json($matches);
 }
-

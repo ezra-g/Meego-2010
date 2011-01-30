@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_authorizenet.admin.inc,v 1.1.2.2 2009/04/28 21:03:15 islandusurper Exp $
+// $Id: uc_authorizenet.admin.inc,v 1.1.2.3 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -93,4 +93,3 @@ function uc_authorizenet_arb_admin_cancel_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/orders/recurring';
 }
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_product.admin.inc,v 1.1.2.19 2009/10/20 20:58:06 islandusurper Exp $
+// $Id: uc_product.admin.inc,v 1.1.2.20 2010/07/12 01:30:05 tr Exp $
 
 /**
  * @file
@@ -687,4 +687,3 @@ function uc_product_class_delete_confirm_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/products/classes';
 }
-

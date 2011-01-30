@@ -1,5 +1,5 @@
 <?php
-// $Id: summaries.inc,v 1.1.2.11 2009/08/17 21:27:55 islandusurper Exp $
+// $Id: summaries.inc,v 1.1.2.12 2010/07/12 22:51:30 tr Exp $
 
 /**
  * @file
@@ -273,4 +273,3 @@ function theme_summary_overview($summaries, $link = TRUE) {
 
   return $output;
 }
-

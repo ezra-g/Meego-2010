@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_store.admin.inc,v 1.1.2.17 2009/09/23 15:45:55 islandusurper Exp $
+// $Id: uc_store.admin.inc,v 1.1.2.21 2010/07/12 01:28:18 tr Exp $
 
 /**
  * @file
@@ -370,6 +370,7 @@ function uc_country_import_form() {
   $files = _country_import_list();
 
   $header = array(t('Country'), t('Code'), t('Version'), t('Operations'));
+  $rows = array();
   if (is_array($countries)) {
     foreach ($countries as $country) {
       $row = array(
@@ -396,6 +397,7 @@ function uc_country_import_form() {
     }
   }
 
+  $import_list = array();
   foreach ($files as $file) {
     $import_list[$file['file']] = $file['file'];
   }
@@ -514,7 +516,7 @@ function uc_country_formats_form() {
   );
   $form['instructions']['text'] = array(
     '#value' => '<div>'. t('The following variables should be used in configuring addresses for the countries you ship to:') .'<p>'
-              . theme('table', $header, $rows) .'</p><p>'. t('*Adding _if to any country variable will make it only display for addresses<br />whose country is different than the default store country.') .'</div>',
+              . theme('table', $header, $rows) .'</p><p>'. t('*Adding _if to any country variable will make it display only for addresses<br />whose country is different than the default store country.') .'</div>',
   );
 
   $result = db_query("SELECT * FROM {uc_countries} ORDER BY country_name ASC");
@@ -813,7 +815,7 @@ function uc_store_format_settings_form() {
     '#collapsed' => TRUE,
   );
   $form['length']['instructions'] = array(
-    '#value' => '<div>'. t('Supply a format string for each unit. !value represents the weight value.') .'</div>',
+    '#value' => '<div>'. t('Supply a format string for each unit. !value represents the length value.') .'</div>',
   );
   $units = array(
     'in' => t('Inches'),
@@ -986,8 +988,10 @@ function uc_store_customer_orders($uid) {
     'revision' => 'formatted-original',
     'type' => 'amount',
   );
-  $output = '<p>'. l(t('Create an order for this customer.'),
-                     'admin/store/orders/create/'. $uid) .'</p>';
+  if (user_access('create orders')) {
+    $output = '<p>'. l(t('Create an order for this customer.'),
+                       'admin/store/orders/create/'. $uid) .'</p>';
+  }
   $output .= '<p>'. t('!totals_orders orders shown match that account with !totals_items items purchased and !totals_total spent:',
                      array('!totals_orders' => $totals['orders'],
                            '!totals_items' => $totals['items'],
@@ -1266,4 +1270,3 @@ function uc_price_settings_form_submit($form, &$form_state) {
 
   drupal_set_message(t('Price handler configuration saved.'));
 }
-

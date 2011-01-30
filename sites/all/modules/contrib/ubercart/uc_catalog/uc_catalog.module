@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_catalog.module,v 1.15.2.22 2009/09/21 14:34:49 islandusurper Exp $
+// $Id: uc_catalog.module,v 1.15.2.24 2010/03/10 23:24:20 tr Exp $
 
 /**
  * @file
@@ -342,7 +342,7 @@ function uc_catalog_taxonomy($op, $type, $object = NULL) {
  *
  * Add an image field to the catalog's taxonomy term form.
  */
-function uc_catalog_form_alter(&$form, &$form_state, $form_id) {
+function uc_catalog_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'taxonomy_form_term' && $form['vid']['#value'] == variable_get('uc_catalog_vid', 0)) {
     $form['#attributes'] = array("enctype" => "multipart/form-data");
 
@@ -402,6 +402,7 @@ function uc_catalog_block($op = 'list', $delta = 0, $edit = array()) {
   switch ($op) {
     case 'list':
       $blocks[0]['info'] = variable_get('uc_catalog_name', t('Catalog'));
+      $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE;
       return $blocks;
 
     case 'view':

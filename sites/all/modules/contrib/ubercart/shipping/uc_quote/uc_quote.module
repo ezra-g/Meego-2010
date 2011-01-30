@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_quote.module,v 1.5.2.25 2009/10/20 20:58:07 islandusurper Exp $
+// $Id: uc_quote.module,v 1.5.2.29 2010/02/23 18:36:53 tr Exp $
 
 /**
  * @file
@@ -145,7 +145,7 @@ function uc_quote_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
  * Add a default shipping address for products and manufacturers. If it is left
  * blank, products default to their manufacturers', which default to the store's.
  */
-function uc_quote_form_alter(&$form, &$form_state, $form_id) {
+function uc_quote_form_alter(&$form, $form_state, $form_id) {
   // Alter the product node form.
   if (uc_product_is_product_form($form)) {
     // Get the shipping address.
@@ -415,6 +415,14 @@ function uc_quote_action_get_quote($order, $method) {
     }
   }
   ob_start();
+  // Load include file containing quote callback, if there is one
+  if (isset($method['quote']['file'])) {
+    $inc_file = drupal_get_path('module', $method['module']) .'/'. $method['quote']['file'];
+    if (is_file($inc_file)) {
+      require_once $inc_file;
+    }
+  }
+
   if (function_exists($method['quote']['callback'])) {
     // This feels wrong, but it's the only way I can ensure that shipping
     // methods won't mess up the products in their methods.
@@ -695,7 +703,7 @@ function uc_cart_pane_quotes($items) {
   drupal_add_js(array(
     'uc_quote' => array(
       'progress_msg' => t('Receiving quotes:'),
-      'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery and product information and try again.\nIf this does not resolve the issue, please call in to complete your order.")), variable_get('uc_quote_msg_format', FILTER_DEFAULT_FORMAT), FALSE),
+      'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery and product information and try again.\nIf this does not resolve the issue, please call in to complete your order.")), variable_get('uc_quote_msg_format', FILTER_FORMAT_DEFAULT), FALSE),
     ),
     'ucURL' => array(
       'shippingQuotes' => url('cart/checkout/shipping/quote'),
@@ -778,7 +786,7 @@ function uc_checkout_pane_quotes($op, &$arg1, $arg2) {
       drupal_add_js(array(
         'uc_quote' => array(
           'progress_msg' => t('Receiving quotes...'),
-          'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order.", array('@phone' => variable_get('uc_store_phone', NULL)))), variable_get('uc_quote_msg_format', FILTER_DEFAULT_FORMAT), FALSE),
+          'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order.", array('@phone' => variable_get('uc_store_phone', NULL)))), variable_get('uc_quote_msg_format', FILTER_FORMAT_DEFAULT), FALSE),
         ),
         'ucURL' => array(
           'shippingQuotes' => url('cart/checkout/shipping/quote'),
@@ -952,7 +960,7 @@ function uc_order_pane_quotes($op, $arg1) {
       drupal_add_js(array(
         'uc_quote' => array(
           'progress_msg' => t('Receiving quotes...'),
-          'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery and product information and try again.\nIf this does not resolve the issue, please call in to complete your order.")), variable_get('uc_quote_msg_format', FILTER_DEFAULT_FORMAT), FALSE),
+          'err_msg' => check_markup(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery and product information and try again.\nIf this does not resolve the issue, please call in to complete your order.")), variable_get('uc_quote_msg_format', FILTER_FORMAT_DEFAULT), FALSE),
         ),
         'ucURL' => array(
           'shippingQuotes' => url('cart/checkout/shipping/quote'),
@@ -1215,7 +1223,9 @@ function uc_quote_shipping_method_options() {
   uasort($methods, '_uc_quote_type_sort');
   $types = array();
   foreach ($methods as $method) {
-    $types[$method['id']] = $method['title'];
+    if (isset($method['quote'])) {
+      $types[$method['id']] = $method['title'];
+    }
   }
   return $types;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_googleanalytics.module,v 1.6.2.8 2009/07/21 14:37:20 islandusurper Exp $
+// $Id: uc_googleanalytics.module,v 1.6.2.9 2010/07/12 01:31:31 tr Exp $
 
 /**
  * @file
@@ -199,4 +199,3 @@ function uc_googleanalytics_ecommerce_js($order) {
 
   return $script;
 }
-

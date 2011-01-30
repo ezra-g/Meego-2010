@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_order.install,v 1.9.2.18 2009/09/23 15:45:56 islandusurper Exp $
+// $Id: uc_order.install,v 1.9.2.20 2010/07/16 15:45:09 islandusurper Exp $
 
 /**
  * @file
@@ -13,30 +13,30 @@ function uc_order_schema() {
   $schema = array();
 
   $schema['uc_orders'] = array(
-    'description' => t('Main orders table.'),
+    'description' => 'Stores Ubercart order information.',
     'fields' => array(
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'Primary key: the order ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'uid' => array(
-        'description' => t('The ID of the user that placed the order.'),
+        'description' => 'The {user}.uid of the customer that placed the order.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'order_status' => array(
-        'description' => t('The order status.'),
+        'description' => 'The {uc_order_statuses}.order_status_id indicating the order status.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'order_total' => array(
-        'description' => t('The total amount to be paid for the order.'),
+        'description' => 'The total amount to be paid for the order.',
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -44,70 +44,70 @@ function uc_order_schema() {
         'default' => 0.0,
       ),
       'product_count' => array(
-        'description' => t('The total product quantity of the order.'),
+        'description' => 'The total product quantity of the order.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'primary_email' => array(
-        'description' => t('The email address of the customer.'),
+        'description' => 'The email address of the customer.',
         'type' => 'varchar',
         'length' => 96,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_first_name' => array(
-        'description' => t('The first name of the person receiving shipment.'),
+        'description' => 'The first name of the person receiving shipment.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_last_name' => array(
-        'description' => t('The last name of the person receiving shipment.'),
+        'description' => 'The last name of the person receiving shipment.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_phone' => array(
-        'description' => t('The phone number at the delivery location.'),
+        'description' => 'The phone number at the delivery location.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_company' => array(
-        'description' => t('The company at the delivery location.'),
+        'description' => 'The company at the delivery location.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_street1' => array(
-        'description' => t('The street address of the delivery location.'),
+        'description' => 'The street address of the delivery location.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_street2' => array(
-        'description' => t('The second line of the street address.'),
+        'description' => 'The second line of the street address.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_city' => array(
-        'description' => t('The city of the delivery location.'),
+        'description' => 'The city of the delivery location.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_zone' => array(
-        'description' => t('The state/zone/province id of the delivery location.'),
+        'description' => 'The state/zone/province id of the delivery location.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,
@@ -115,14 +115,14 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'delivery_postal_code' => array(
-        'description' => t('The postal code of the delivery location.'),
+        'description' => 'The postal code of the delivery location.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'delivery_country' => array(
-        'description' => t('The country ID of the delivery location.'),
+        'description' => 'The country ID of the delivery location.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,
@@ -130,56 +130,56 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'billing_first_name' => array(
-        'description' => t('The first name of the person paying for the order.'),
+        'description' => 'The first name of the person paying for the order.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_last_name' => array(
-        'description' => t('The last name of the person paying for the order.'),
+        'description' => 'The last name of the person paying for the order.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_phone' => array(
-        'description' => t('The phone number for the billing address.'),
+        'description' => 'The phone number for the billing address.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_company' => array(
-        'description' => t('The company of the billing address.'),
+        'description' => 'The company of the billing address.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_street1' => array(
-        'description' => t('The street address where the bill will be sent.'),
+        'description' => 'The street address where the bill will be sent.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_street2' => array(
-        'description' => t('The second line of the street address.'),
+        'description' => 'The second line of the street address.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_city' => array(
-        'description' => t('The city where the bill will be sent.'),
+        'description' => 'The city where the bill will be sent.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_zone' => array(
-        'description' => t('The state/zone/province ID where the bill will be sent.'),
+        'description' => 'The state/zone/province ID where the bill will be sent.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,
@@ -187,14 +187,14 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'billing_postal_code' => array(
-        'description' => t('The postal code where the bill will be sent.'),
+        'description' => 'The postal code where the bill will be sent.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'billing_country' => array(
-        'description' => t('The country ID where the bill will be sent.'),
+        'description' => 'The country ID where the bill will be sent.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,
@@ -202,31 +202,31 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'payment_method' => array(
-        'description' => t('The method of payment.'),
+        'description' => 'The method of payment.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'data' => array(
-        'description' => t('Serialized array of extra data.'),
+        'description' => 'A serialized array of extra data.',
         'type' => 'text',
         'serialize' => TRUE,
       ),
       'created' => array(
-        'description' => t('Timestamp of when the order was created.'),
+        'description' => 'The Unix timestamp indicating when the order was created.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'modified' => array(
-        'description' => t('Timestamp of when the order was last modified.'),
+        'description' => 'The Unix timestamp indicating when the order was last modified.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
       'host' => array(
-        'description' => t('Host IP address of the person paying for the order.'),
+        'description' => 'Host IP address of the person paying for the order.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -241,34 +241,34 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_admin_comments'] = array(
-    'description' => t('Comments on orders that only administrators can see.'),
+    'description' => 'Comments on orders that only administrators can see.',
     'fields' => array(
       'comment_id' => array(
-        'description' => t('The comment ID.'),
+        'description' => 'Primary key: the comment ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The {uc_orders}.order_id of the order.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'uid' => array(
-        'description' => t('The user ID who made the comment.'),
+        'description' => 'The {user}.uid of the author of the comment.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'message' => array(
-        'description' => t('The comment body.'),
+        'description' => 'The comment body.',
         'type' => 'text',
       ),
       'created' => array(
-        'description' => t('Timestamp of when the comment was created.'),
+        'description' => 'The Unix timestamp indicating when the comment was created.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -281,47 +281,48 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_comments'] = array(
-    'description' => t('Comments on the order that the customer can see.'),
+    'description' => 'Comments on the order that the customer can see.',
     'fields' => array(
       'comment_id' => array(
-        'description' => t('The comment ID.'),
+        'description' => 'Primary key: the comment ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The {uc_orders}.order_id of the order.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'uid' => array(
-        'description' => t('The user ID who made the comment.'),
+        'description' => 'The {users}.uid of the user who made the comment.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'order_status' => array(
-        'description' => t('The status the order had when the comment was made.'),
+        'description' => 'The status the order had when the comment was made, from {uc_order_statuses}.order_status_id.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'notified' => array(
-        'description' => t('Boolean flag; if set, the comment was emailed to the customer.'),
+        'description' => 'A flag indicating whether the comment was emailed to the customer. 1 => Yes. 0 => No.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'message' => array(
-        'description' => t('Timestamp of when the comment was created.'),
+        'description' => 'The comment body.',
         'type' => 'text',
       ),
       'created' => array(
+        'description' => 'The Unix timestamp indicating when the comment was created.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -334,37 +335,37 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_line_items'] = array(
-    'description' => t('Order line items other than products.'),
+    'description' => 'Order line items other than products.',
     'fields' => array(
       'line_item_id' => array(
-        'description' => t('The line item ID.'),
+        'description' => 'Primary key: the line item ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The {uc_orders}.order_id.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'type' => array(
-        'description' => t('The line item type.'),
+        'description' => 'The line item type.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'title' => array(
-        'description' => t('The label of the line item.'),
+        'description' => 'The label of the line item.',
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),
       'amount' => array(
-        'description' => t("The amount of the line item in the store's currency."),
+        'description' => "The amount of the line item in the store's currency.",
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -372,14 +373,14 @@ function uc_order_schema() {
         'default' => 0.0,
       ),
       'weight' => array(
-        'description' => t('The sort criteria of line items.'),
+        'description' => 'The sort criteria of line items.',
         'type' => 'int',
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       ),
       'data' => array(
-        'description' => t('Serialized array of extra data.'),
+        'description' => 'A serialized array of extra data.',
         'type' => 'text',
         'serialize' => TRUE,
       ),
@@ -391,34 +392,34 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_log'] = array(
-    'description' => t('Record of changes made to an order.'),
+    'description' => 'Record of changes made to an order.',
     'fields' => array(
       'order_log_id' => array(
-        'description' => t('The log entry ID.'),
+        'description' => 'Primary key: the log entry ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The {uc_orders}.order_id.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'uid' => array(
-        'description' => t('The user ID who made the changes.'),
+        'description' => 'The {users}.uid of the user who made the changes.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'changes' => array(
-        'description' => t('Description of what was changed.'),
+        'description' => 'The description of what was changed.',
         'type' => 'text',
       ),
       'created' => array(
-        'description' => t('Timestamp of when the change was made.'),
+        'description' => 'The Unix timestamp indicating when the change was made.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -431,51 +432,51 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_products'] = array(
-    'description' => t('The products that have been ordered.'),
+    'description' => 'The products that have been ordered.',
     'fields' => array(
       'order_product_id' => array(
-        'description' => t('The ordered product ID.'),
+        'description' => 'Primary key: the ordered product ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'order_id' => array(
-        'description' => t('The order ID.'),
+        'description' => 'The {uc_orders}.order_id.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'nid' => array(
-        'description' => t('The product node ID.'),
+        'description' => 'The {node}.nid of the product.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'title' => array(
-        'description' => t('The product title.'),
+        'description' => 'The product title, from {node}.title.',
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),
       'manufacturer' => array(
-        'description' => t('The product manufacturer. (Deprecated)'),
+        'description' => 'The product manufacturer. (Deprecated)',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'model' => array(
-        'description' => t('The product model/SKU.'),
+        'description' => 'The product model/SKU, from {uc_products}.model.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'qty' => array(
-        'description' => t('The number of the same product ordered.'),
+        'description' => 'The number of the same product ordered.',
         'type' => 'int',
         'size' => 'small',
         'unsigned' => TRUE,
@@ -483,7 +484,7 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'cost' => array(
-        'description' => t('The cost to the store for the product.'),
+        'description' => 'The cost to the store for the product.',
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -491,7 +492,7 @@ function uc_order_schema() {
         'default' => 0.0,
       ),
       'price' => array(
-        'description' => t('The price paid for the ordered product.'),
+        'description' => 'The price paid for the ordered product.',
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -499,13 +500,13 @@ function uc_order_schema() {
         'default' => 0.0,
       ),
       'weight' => array(
-        'description' => t('The physical weight.'),
+        'description' => 'The physical weight.',
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0.0,
       ),
       'data' => array(
-        'description' => t('Serialized array of extra data.'),
+        'description' => 'A serialized array of extra data.',
         'type' => 'text',
         'serialize' => TRUE,
       ),
@@ -517,38 +518,38 @@ function uc_order_schema() {
   );
 
   $schema['uc_order_statuses'] = array(
-    'description' => t('Statuses the order can be in during its lifecycle.'),
+    'description' => 'Statuses the order can have during its lifecycle.',
     'fields' => array(
       'order_status_id' => array(
-        'description' => t('The order status ID.'),
+        'description' => 'Primary key: the order status ID.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'title' => array(
-        'description' => t('The status title.'),
+        'description' => 'The status title.',
         'type' => 'varchar',
         'length' => 48,
         'not null' => TRUE,
         'default' => '',
       ),
       'state' => array(
-        'description' => t('The base order state the status is associated with.'),
+        'description' => 'The base order state with which the status is associated.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
       ),
       'weight' => array(
-        'description' => t('The sort criteria for statuses.'),
+        'description' => 'The sort criteria for statuses.',
         'type' => 'int',
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       ),
       'locked' => array(
-        'description' => t('Boolean flag; if set, users can not delete the status.'),
+        'description' => 'A flag indicating whether users can delete the status. 0 => Yes. 1 => No.',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
@@ -1135,6 +1136,22 @@ function uc_order_update_6014() {
   db_change_field($ret, 'uc_order_line_items', 'amount', 'amount', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => TRUE, 'default' => 0.0));
   db_change_field($ret, 'uc_order_products', 'cost', 'cost', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'uc_order_products', 'price', 'price', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => TRUE, 'default' => 0));
+
+  return $ret;
+}
+
+/**
+ * Check for old .itpl.php invoice template files.
+ */
+function uc_order_update_6015() {
+  $ret = array();
+
+  $dir = drupal_get_path('module', 'uc_order') .'/templates';
+  $templates = file_scan_directory($dir, '.*\.itpl\.php', array('.', '..', 'CVS'), 0, FALSE);
+
+  if (!empty($templates)) {
+    $ret[] = array('success' => FALSE, 'query' => 'Old Ubercart .itpl.php invoice templates were found! These must be manually upgraded to use the Drupal theme layer. See the <a href="http://www.ubercart.org/docs/developer/17385/changing_invoice_templates_ubercart_23_and_later">template upgrade guide on Ubercart.org</a> for details.');
+  }
 
   return $ret;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_product_kit.install,v 1.11.2.9 2009/07/21 14:37:20 islandusurper Exp $
+// $Id: uc_product_kit.install,v 1.11.2.12 2010/07/09 13:16:02 islandusurper Exp $
 
 /**
  * @file
@@ -11,32 +11,38 @@
  */
 function uc_product_kit_schema() {
   $schema['uc_product_kits'] = array(
+    'description' => 'Stores product kit information.',
     'fields' => array(
       'vid' => array(
+        'description' => 'The {node}.vid of the product kit.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'nid' => array(
+        'description' => 'The {node}.nid of the product kit.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'product_id' => array(
+        'description' => 'The {uc_products}.nid of a product contained in the kit.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'mutable' => array(
+        'description' => 'A flag indicating whether the contents of the kit can be changed by the customer. 1 => Mutable. 0 => Immutable.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'qty' => array(
+        'description' => 'The number of this product contained in the kit.',
         'type' => 'int',
         'size' => 'small',
         'unsigned' => TRUE,
@@ -44,17 +50,20 @@ function uc_product_kit_schema() {
         'default' => 0,
       ),
       'discount' => array(
+        'description' => 'The adjustment to the {uc_products}.sell_price of the product.',
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0.0,
       ),
       'ordering' => array(
+        'description' => 'The weight of this product in relation to other products in the kit.',
         'type' => 'int',
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       ),
       'synchronized' => array(
+        'description' => 'A flag indicating that changes to the sell price of this product will change the total price of the kit. 1 => Yes. 0 => No.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
@@ -80,6 +89,43 @@ function uc_product_kit_install() {
 function uc_product_kit_uninstall() {
   drupal_uninstall_schema('uc_product_kit');
   variable_del('uc_product_kit_mutable');
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function uc_product_kit_enable() {
+  // For some time in Drupal 5, CCK would delete its field data if a node
+  // type was unavailable because its module was disabled. This function
+  // worked around that by giving the product classes to node.module when
+  // uc_product_kit was disabled. This is no longer necessary as of CCK
+  // 5.x-1.9, but the workaround was left in to prevent accidents. This block
+  // of code is here to reclaim the product kit nodes after an upgrade to
+  // Drupal 6, and then should not be used again as the corresponding code in
+  // uc_product_kit_disable() was removed.
+  if (variable_get('uc_product_kit_enable_nodes', TRUE)) {
+    $node_type = node_get_types('type', 'product_kit');
+    if (is_object($node_type) && $node_type->module == 'node') {
+      $node_type->module = 'uc_product_kit';
+      $node_type->custom = 0;
+      node_type_save($node_type);
+    }
+    variable_set('uc_product_kit_enable_nodes', FALSE);
+  }
+
+  // Hack the product kit node type into the catalog if this module is enabled
+  // some time after uc_catalog.
+  if (module_exists('uc_catalog') && $vid = variable_get('uc_catalog_vid', 0)) {
+    $vocab = taxonomy_vocabulary_load($vid);
+    if (!isset($vocab->nodes['product_kit'])) {
+      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, 'product_kit');
+    }
+  }
+
+  // Add field_image_cache to product kits.
+  if (module_exists('imagefield')) {
+    uc_product_add_default_image_field('product_kit');
+  }
 }
 
 function uc_product_kit_update_1() {

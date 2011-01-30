@@ -1,4 +1,4 @@
-// $Id: uc_payment.js,v 1.5.2.7 2009/10/20 20:58:06 islandusurper Exp $
+// $Id: uc_payment.js,v 1.5.2.8 2010/07/12 01:57:44 tr Exp $
 
 /**
  * Calculate the number of bytes of a Unicode string.
@@ -227,6 +227,7 @@ function get_payment_details(path) {
   // Set the global timestamp for the update.
   payment_update = this_update.getTime();
 
+  var data;
   if ($('#edit-payment-details-data').length) {
     data = { 'payment-details-data' : $('#edit-payment-details-data').val() };
   }

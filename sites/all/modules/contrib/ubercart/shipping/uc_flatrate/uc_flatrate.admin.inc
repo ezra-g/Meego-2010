@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_flatrate.admin.inc,v 1.1.2.15 2009/08/17 21:27:57 islandusurper Exp $
+// $Id: uc_flatrate.admin.inc,v 1.1.2.16 2010/07/12 01:57:35 tr Exp $
 
 /**
  * @file
@@ -181,4 +181,3 @@ function uc_flatrate_admin_method_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('Flat rate shipping method deleted.'));
   $form_state['redirect'] = 'admin/store/settings/quotes/methods/flatrate';
 }
-

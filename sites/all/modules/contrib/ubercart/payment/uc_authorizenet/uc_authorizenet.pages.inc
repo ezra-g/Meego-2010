@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_authorizenet.pages.inc,v 1.1.2.2 2009/04/28 21:03:14 islandusurper Exp $
+// $Id: uc_authorizenet.pages.inc,v 1.1.2.4 2010/07/12 01:57:43 tr Exp $
 
 /**
  * @file
@@ -10,8 +10,17 @@
 
 // Receives a payment notification and handles it appropriately.
 function uc_authorizenet_silent_post() {
+  // Determine if this is an ARB notification or not
+  $arb = (isset($_POST['x_subscription_id']) and isset($_POST['x_subscription_paynum']));
+
+  // Log ARB payment notification, if enabled.
   if (variable_get('uc_authnet_report_arb_post', FALSE)) {
-    watchdog('uc_authorizenet', '!arbSilent POST received: <pre>@post</pre>', array('!arb' => (isset($_POST['x_subscription_id']) && isset($_POST['x_subscription_paynum'])) ? 'ARB ' : '', '@post' => print_r($_POST, TRUE)));
+    $args = array(
+      '!arb' => $arb ? 'ARB ' : '',
+      '@order_id' => $_POST['x_invoice_num'],
+      '@post' => print_r($_POST, true),
+    );
+    watchdog('uc_authorizenet', '!arbSilent POST received for order @order_id: <pre>@post</pre>', $args);
   }
 
   // Decrypt the Auth.Net API login data.
@@ -19,8 +28,9 @@ function uc_authorizenet_silent_post() {
 
   // TODO: Modify the MD5 hash to accommodate differences from AIM to ARB.
 
-  // If we're receiving notification for an ARB payment...
-  if (isset($_POST['x_subscription_id']) && isset($_POST['x_subscription_paynum'])) {
+  // This is an ARB notification.
+  if ($arb) {
+
     // Compare our expected MD5 Hash against what was received.
     $md5 = strtoupper(md5($login_data['md5_hash'] . $_POST['x_trans_id'] . $_POST['x_amount']));
 
@@ -28,29 +38,47 @@ function uc_authorizenet_silent_post() {
     if ($_POST['x_MD5_Hash'] != $md5) {
       watchdog('uc_authorizenet', 'Invalid ARB payment notification received.', array(), WATCHDOG_ERROR);
     }
+    // Otherwise, let other modules act on the data.
     else {
-      // Otherwise, update the recurring fee information in our database.
-      $fee = db_fetch_array(db_query("SELECT * FROM {uc_recurring_users} WHERE fee_handler = 'uc_authorizenet' AND data = '%s'", $_POST['x_subscription_id']));
+      /**
+       * @deprecated: uc_recurring is now a contrib module:
+       *   http://www.drupal.org/project/uc_recurring
+       *
+       * The function uc_recurring_fee_save() only exists in uc_recurring-1.x
+       * and the code below should be removed when that version of the module
+       * becomes unsupported.
+       *
+       * uc_recurring-2.x takes advantage of the hook_uc_auth_arb_payment()
+       */
+      // **** start @deprecated code ******
+      if (function_exists('uc_recurring_fee_save')) {
+        // Otherwise, update the recurring fee information in our database.
+        $fee = db_fetch_array(db_query("SELECT * FROM {uc_recurring_users} WHERE fee_handler = 'uc_authorizenet' AND data = '%s'", $_POST['x_subscription_id']));
 
-      // Only process if the fee actually exists!
-      if (!empty($fee)) {
-        // Update the interval counters.
-        $fee['remaining_intervals'] -= 1;
-        $fee['charged_intervals'] += 1;
+        // Only process if the fee actually exists!
+        if (!empty($fee)) {
+          // Update the interval counters.
+          $fee['remaining_intervals'] -= 1;
+          $fee['charged_intervals'] += 1;
 
-        // Set the next expected charge time.
-        $fee['next_charge'] = strtotime('+'. $fee['regular_interval'], $fee['next_charge']);
+          // Set the next expected charge time.
+          $fee['next_charge'] = strtotime('+'. $fee['regular_interval'], $fee['next_charge']);
 
-        // Save the new values.
-        uc_recurring_fee_save('user', $fee);
+          // Save the new values.
+          uc_recurring_fee_save('user', $fee);
 
-        // Log the ARB payment if enabled.
-        if (variable_get('uc_authnet_report_arb_post', FALSE)) {
-          watchdog('uc_authorizenet', 'ARB payment reported for order @order_id: <pre>@post</pre>', array('@order_id' => $fee['order_id'], '@post' => print_r($_POST, TRUE)));
+          // Log the ARB payment if enabled.
+          if (variable_get('uc_authnet_report_arb_post', FALSE)) {
+            watchdog('uc_authorizenet', 'ARB payment reported for order @order_id: <pre>@post</pre>', array('@order_id' => $fee['order_id'], '@post' => print_r($_POST, TRUE)));
+          }
+
+          // Let other modules act on the data.
+          module_invoke_all('uc_arb_payment', $_POST);
         }
-
-        // Let other modules act on the data.
-        module_invoke_all('uc_arb_payment', $fee);
+      }
+      // **** \end @deprecated code ******
+      else {
+        module_invoke_all('uc_auth_arb_payment', $_POST);
       }
     }
   }
@@ -151,4 +179,3 @@ function uc_authorizenet_arb_user_cancel_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'user/'. $form_state['values']['uid'];
 }
-

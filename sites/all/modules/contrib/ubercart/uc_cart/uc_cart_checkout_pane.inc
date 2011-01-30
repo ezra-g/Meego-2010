@@ -1,5 +1,5 @@
 <?php
-// $Id: uc_cart_checkout_pane.inc,v 1.5.2.10 2009/08/17 21:27:55 islandusurper Exp $
+// $Id: uc_cart_checkout_pane.inc,v 1.5.2.13 2010/07/15 17:20:09 islandusurper Exp $
 
 /**
  * @file
@@ -532,6 +532,9 @@ function _checkout_pane_list($action = NULL) {
   }
 
   $panes = module_invoke_all('checkout_pane', NULL);
+  // Allow other modules to alter the panes.
+  drupal_alter('checkout_pane', $panes);
+
   foreach ($panes as $i => $value) {
     $panes[$i]['enabled'] = variable_get('uc_pane_'. $panes[$i]['id'] .'_enabled', (!isset($panes[$i]['enabled']) ? TRUE : $panes[$i]['enabled']));
     $panes[$i]['weight'] = variable_get('uc_pane_'. $panes[$i]['id'] .'_weight', (!isset($panes[$i]['weight']) ? 0 : $panes[$i]['weight']));
@@ -617,11 +620,10 @@ function theme_cart_review_table($show_subtotal = TRUE) {
       'type' => 'amount',
     );
     $rows[] = array(
-      'data' => array(array('data' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ' . uc_price($subtotal, $context), 'colspan' => 4, 'class' => 'subtotal')),
+      'data' => array(array('data' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ' . uc_price($subtotal, $context), 'colspan' => 3, 'class' => 'subtotal')),
       'class' => 'subtotal',
     );
   }
 
   return theme('table', $header, $rows, array('class' => 'cart-review'));
 }
-
