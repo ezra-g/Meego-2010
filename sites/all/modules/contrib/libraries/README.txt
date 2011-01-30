@@ -1,4 +1,4 @@
-/* $Id: README.txt,v 1.1 2009/06/02 12:32:51 sun Exp $ */
+/* $Id: README.txt,v 1.1.2.1 2011/01/27 02:25:40 sun Exp $ */
 
 -- SUMMARY --
 
@@ -23,7 +23,8 @@ Bug reports, feature suggestions and latest developments:
 -- CONTACT --
 
 Current maintainers:
-* Daniel F. Kudwien (sun) - http://www.unleashedmind.com
+* Daniel F. Kudwien (sun) - http://drupal.org/user/54136
+* Tobias Stöckler (tstoeckler) - http://drupal.org/user/107158
 
 
 This project has been sponsored by:

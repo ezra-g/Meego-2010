@@ -1,5 +1,5 @@
 <?php
-// $Id: flag_handler_relationships.inc,v 1.1.2.9.2.1 2009/10/28 00:01:31 quicksketch Exp $
+// $Id: flag_handler_relationships.inc,v 1.1.2.9 2009/04/26 21:35:12 quicksketch Exp $
 
 /**
  * @file
@@ -43,15 +43,10 @@ class flag_handler_relationship_content extends views_handler_relationship {
     if (!$form['flag']['#options']) {
       $form = array(
         'error' => array(
-          '#value' => '<p class="error form-item">' . t('No %type flags exist. You must first <a href="@create-url">create a %type flag</a> before being able to use this relationship type.', array('%type' => $content_type, '@create-url' => url('admin/build/flags'))) . '</p>',
+          '#value' => '<p class="error">' . t('No %type flags exist. You must first <a href="@create-url">create a %type flag</a> before being able to use this relationship type.', array('%type' => $content_type, '@create-url' => url('admin/build/flags'))) . '</p>',
         ),
       );
       $form_state['no flags exist'] = TRUE;
-    }
-    if (module_exists('session_api')) {
-      $form['session_warning'] = array(
-        '#value' => '<p class="warning form-item">' . t('<strong>Warning</strong>: Adding this relationship for any flag that contains <strong>anonymous flagging access</strong> will disable page caching for anonymous users when this view is executed. It is recommended to create a dedicated page for views containing anonymous user data.', array('%type' => $content_type, '@create-url' => url('admin/build/flags'))) . '</p>',
-      );
     }
   }
 
@@ -86,17 +81,6 @@ class flag_handler_relationship_content extends views_handler_relationship {
         'value' => '***CURRENT_USER***',
         'numeric' => TRUE,
       );
-      if (array_search(DRUPAL_ANONYMOUS_RID, $flag->roles['flag']) !== FALSE) {
-        // Disable page caching for anonymous users.
-        $GLOBALS['conf']['cache'] = CACHE_DISABLED;
-
-        // Add in the SID from Session API for anonymous users.
-        $this->definition['extra'][] = array(
-          'field' => 'sid',
-          'value' => flag_get_sid(),
-          'numeric' => TRUE,
-        );
-      }
     }
     parent::query();
   }

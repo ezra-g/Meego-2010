@@ -1,5 +1,5 @@
 <?php
-// $Id: flag_plugin_argument_validate_flaggability.inc,v 1.1.2.3.2.2 2010/05/07 23:54:35 quicksketch Exp $
+// $Id: flag_plugin_argument_validate_flaggability.inc,v 1.1.2.3 2008/12/03 14:10:00 mooffie Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ class flag_plugin_argument_validate_flaggability extends views_plugin_argument_v
       }
     }
 
-    $ids = views_break_phrase($argument, $this);
+    $ids = views_break_phrase($argument);
     if ($ids->value == array(-1)) {
       // Malformed argument syntax. Invalidate.
       return FALSE;
@@ -197,7 +197,7 @@ class flag_plugin_argument_validate_flaggability extends views_plugin_argument_v
   //
 
   function test_flaggable($ids, $flag) {
-    return array_filter($ids, array($flag, 'applies_to_content_id'));
+    return array_keys($flag->applies_to_content_id_array($ids));
   }
 
   function test_flagged($ids, $flag) {

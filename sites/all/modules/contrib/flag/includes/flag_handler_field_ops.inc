@@ -1,5 +1,5 @@
 <?php
-// $Id: flag_handler_field_ops.inc,v 1.1.2.5.2.3 2010/01/08 04:43:17 quicksketch Exp $
+// $Id: flag_handler_field_ops.inc,v 1.1.2.6 2010/01/08 04:48:43 quicksketch Exp $
 
 /**
  * @file
@@ -82,11 +82,6 @@ class flag_handler_field_ops extends views_handler_field {
         'value' => '***CURRENT_USER***',
         'numeric' => TRUE,
       );
-      $join->extra[] = array(
-        'field' => 'sid',
-        'value' => flag_get_sid(),
-        'numeric' => TRUE,
-      );
     }
     $flag_table = $this->query->add_table('flag_content', $parent, $join);
     $this->aliases['is_flagged'] = $this->query->add_field($flag_table, 'content_id');
@@ -107,24 +102,33 @@ class flag_handler_field_ops extends views_handler_field {
   function pre_render($values) {
     $flag = $this->get_flag();
 
+    if (!$flag->user_access()) {
+      // User has no permission to use this flag.
+      return;
+    }
+
     $ids = array();
     foreach ($values as $row) {
       $content_id = $row->{$this->aliases['content_id']};
-      $is_flagged = $row->{$this->aliases['is_flagged']};
       if (isset($content_id)) {
-        $ids[$content_id] = $is_flagged ? 'unflag' : 'flag';
+        $ids[$content_id] = TRUE;
       }
     }
-    $this->flag_applies = $ids ? $flag->access_multiple($ids) : array();
+    $this->flag_applies = $ids ? $flag->applies_to_content_id_array(array_keys($ids)) : array();
   }
 
   function render($values) {
     $flag = $this->get_flag();
 
+    if (!$flag->user_access()) {
+      // User has no permission to use this flag.
+      return;
+    }
+
     $content_id = $values->{$this->aliases['content_id']};
     $is_flagged = $values->{$this->aliases['is_flagged']};
 
-    if (empty($this->flag_applies[$content_id])) {
+    if (!isset($this->flag_applies[$content_id])) {
       // Flag does not apply to this content.
       return;
     }

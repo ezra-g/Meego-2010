@@ -1,11 +1,13 @@
-// $Id: CHANGELOG.txt,v 1.2.2.1 2009/12/30 16:30:42 sun Exp $
-
-Libraries x.x-x.x, xxxx-xx-xx
------------------------------
-
+// $Id: CHANGELOG.txt,v 1.2.2.4 2011/01/27 02:25:40 sun Exp $
 
 Libraries 6.x-1.x, xxxx-xx-xx
 -----------------------------
+
+
+Libraries 6.x-1.0, 2010-01-27
+-----------------------------
+#1028744 by tstoeckler: Code clean-up.
+#496732 by tstoeckler, robphillips: Allow placing libraries in root directory.
 
 
 Libraries 6.x-1.0-ALPHA1, 2009-12-30

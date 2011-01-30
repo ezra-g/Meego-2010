@@ -1,5 +1,5 @@
 <?php
-// $Id: libraries.module,v 1.2 2009/06/04 00:01:55 sun Exp $
+// $Id: libraries.module,v 1.2.2.3 2011/01/27 02:25:40 sun Exp $
 
 /**
  * @file
@@ -7,10 +7,10 @@
  */
 
 /**
- * Helper function to build paths to libraries.
+ * Gets the path of a library.
  *
- * @param $library
- *   The external library name to return the path for.
+ * @param $name
+ *   The machine name of a library to return the path for.
  * @param $base_path
  *   Whether to prefix the resulting path with base_path().
  *
@@ -19,7 +19,7 @@
  *
  * @ingroup libraries
  */
-function libraries_get_path($library, $base_path = FALSE) {
+function libraries_get_path($name, $base_path = FALSE) {
   static $libraries;
 
   if (!isset($libraries)) {
@@ -27,20 +27,20 @@ function libraries_get_path($library, $base_path = FALSE) {
   }
 
   $path = ($base_path ? base_path() : '');
-  if (!isset($libraries[$library])) {
+  if (!isset($libraries[$name])) {
     // Most often, external libraries can be shared across multiple sites, so
     // we return sites/all/libraries as the default path.
-    $path .= 'sites/all/libraries/' . $library;
+    $path .= 'sites/all/libraries/' . $name;
   }
   else {
-    $path .= $libraries[$library];
+    $path .= $libraries[$name];
   }
 
   return $path;
 }
 
 /**
- * Return an array of library directories.
+ * Returns an array of library directories.
  *
  * Returns an array of library directories from the all-sites directory
  * (i.e. sites/all/libraries/), the profiles directory, and site-specific
@@ -70,6 +70,11 @@ function libraries_get_libraries() {
   $directory = 'libraries';
   $searchdir = array();
   $config = conf_path();
+
+  // Similar to 'modules' and 'themes' directories in the root directory,
+  // certain distributions may want to place libraries into a 'libraries'
+  // directory in Drupal's root directory.
+  $searchdir[] = $directory;
 
   // The 'profiles' directory contains pristine collections of modules and
   // themes as organized by a distribution.  It is pristine in the same way
