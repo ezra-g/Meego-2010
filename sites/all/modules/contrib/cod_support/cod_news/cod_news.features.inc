@@ -4,16 +4,27 @@
  * Implementation of hook_node_info().
  */
 function cod_news_node_info() {
-  module_load_include('inc', 'cod_news', 'cod_news.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_cod_news_node_info', $args);
+  $items = array(
+    'news' => array(
+      'name' => t('News'),
+      'module' => 'features',
+      'description' => t('Post news updates to the site using this content type. The default is that they will be shown in a view on /news and the most recent one (or few) will be shown on the home page.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_views_default_views().
+ * Implementation of hook_views_api().
  */
-function cod_news_views_default_views() {
-  module_load_include('inc', 'cod_news', 'cod_news.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_cod_news_views_default_views', $args);
+function cod_news_views_api() {
+  return array(
+    'api' => '2',
+  );
 }
