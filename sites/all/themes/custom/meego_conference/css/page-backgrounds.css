@@ -19,6 +19,10 @@ body {
   background-color: #a0dff2;
 }
 
+body.in-maintenance {
+  background-image: none;
+}
+
 #page-wrapper {
 }
 
